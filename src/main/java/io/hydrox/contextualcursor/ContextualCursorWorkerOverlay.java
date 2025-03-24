@@ -103,20 +103,10 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		{
 			return;
 		}
-		try
+		final Cursor currentCursor = clientUI.getCurrentCursor();
+		if (!currentCursor.getName().equals("blank"))
 		{
-			// All this because clientUI doesn't have a `getCursor` function.
-			Field f = clientUI.getClass().getDeclaredField("container");
-			f.setAccessible(true);
-			JPanel container = (JPanel) f.get(clientUI);
-			final Cursor currentCursor = container.getCursor();
-			if (!currentCursor.getName().equals("blank"))
-			{
-				originalCursor = container.getCursor();
-			}
-		}
-		catch (NoSuchFieldException | IllegalAccessException ignored)
-		{
+			originalCursor = clientUI.getCurrentCursor();
 		}
 	}
 
