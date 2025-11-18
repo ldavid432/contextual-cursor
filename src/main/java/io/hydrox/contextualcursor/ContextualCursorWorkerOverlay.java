@@ -214,7 +214,10 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 
 			final String spellText = spellFinder.group(1);
-			final SpellSprite spell = SpellSprite.get(spellText);
+			final SpellSprite spell = SpellSprite.get(Text.sanitize(spellText));
+			if (spell == null) {
+				return;
+			}
 
 			final BufferedImage magicSprite = spriteManager.getSprite(spell.spriteID, 0);
 			if (magicSprite == null)
