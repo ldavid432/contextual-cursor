@@ -9,4 +9,14 @@ public interface Sprite
 {
 	@Nullable
 	BufferedImage getImage(Client client, SpriteManager spriteManager);
+
+	static Sprite of(int id)
+	{
+		return new CacheSprite(id);
+	}
+
+	static Sprite of(String path)
+	{
+		return new ResourceSprite(path);
+	}
 }

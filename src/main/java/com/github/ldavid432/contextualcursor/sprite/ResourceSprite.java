@@ -14,6 +14,7 @@ public class ResourceSprite implements Sprite
 {
 	@Nonnull
 	String path;
+	@Nullable
 	BufferedImage image;
 
 	@Nullable

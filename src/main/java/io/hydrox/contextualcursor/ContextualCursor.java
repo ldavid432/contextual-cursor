@@ -24,8 +24,6 @@
  */
 package io.hydrox.contextualcursor;
 
-import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
-import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.Getter;
 import net.runelite.api.gameval.SpriteID;
@@ -91,18 +89,18 @@ public enum ContextualCursor
 	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack");
 
-	private String[] actions;
-	private Sprite sprite;
+	private final String[] actions;
+	private final Sprite sprite;
 
 	ContextualCursor(String cursor_path, String ... actions)
 	{
-		this.sprite = new ResourceSprite(cursor_path);
+		this.sprite = Sprite.of(cursor_path);
 		this.actions = actions;
 	}
 
 	ContextualCursor(int spriteID, String ... actions)
 	{
-		this.sprite = new CacheSprite(spriteID);
+		this.sprite = Sprite.of(spriteID);
 		this.actions = actions;
 	}
 

@@ -1,18 +1,17 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
 import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
+@RequiredArgsConstructor
 public class CacheSprite implements Sprite
 {
-	final int id;
+	private final int id;
+	@Nullable
 	BufferedImage image;
-
-	public CacheSprite(final int id)
-	{
-		this.id = id;
-	}
 
 	@Override
 	public BufferedImage getImage(final Client client, final SpriteManager spriteManager)
