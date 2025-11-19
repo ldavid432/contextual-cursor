@@ -40,7 +40,7 @@ public enum ContextualCursor
 
 	BANK("bank", "bank"),
 	CLOSE("close", "close"),
-	CONFIGURE(1654, "configure", "configuration"), // Wrench sprite
+	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
 	DRINK("drink", "drink"),
 	DROP("drop", "drop", "empty", "deposit"),
 	EAT("eat", "eat"),
