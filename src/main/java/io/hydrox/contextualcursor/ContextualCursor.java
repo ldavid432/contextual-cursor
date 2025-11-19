@@ -24,11 +24,12 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
+import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.Getter;
 import net.runelite.api.gameval.SpriteID;
-import net.runelite.client.util.ImageUtil;
 
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,19 +91,18 @@ public enum ContextualCursor
 	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack");
 
-	private BufferedImage cursor;
-	private Integer spriteID;
 	private String[] actions;
+	private Sprite sprite;
 
 	ContextualCursor(String cursor_path, String ... actions)
 	{
-		this.cursor = ImageUtil.loadImageResource(ContextualCursorPlugin.class, String.format("cursors/%s.png", cursor_path));
+		this.sprite = new ResourceSprite(cursor_path);
 		this.actions = actions;
 	}
 
 	ContextualCursor(int spriteID, String ... actions)
 	{
-		this.spriteID = spriteID;
+		this.sprite = new CacheSprite(spriteID);
 		this.actions = actions;
 	}
 

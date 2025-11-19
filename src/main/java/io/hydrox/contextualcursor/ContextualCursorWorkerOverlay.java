@@ -243,22 +243,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			return;
 		}
 
-		BufferedImage sprite = cursor.getCursor();
-		if (cursor.getSpriteID() != null)
-		{
-			if (client.getSpriteOverrides().containsKey(cursor.getSpriteID()))
-			{
-				sprite = client.getSpriteOverrides().get(cursor.getSpriteID()).toBufferedImage();
-			}
-			else
-			{
-				sprite = spriteManager.getSprite(cursor.getSpriteID(), 0);
-			}
-			if (sprite == null)
-			{
-				return;
-			}
-		}
+		BufferedImage sprite = cursor.getSprite().getImage(client, spriteManager);
 		if (sprite != null)
 		{
 			setSpriteToDraw(sprite);

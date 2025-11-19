@@ -24,6 +24,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.Overlay;
@@ -45,6 +46,8 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
 
+	private final BufferedImage blank = ResourceSprite.loadImage("blank");
+
 	@Inject
 	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin)
 	{
@@ -65,8 +68,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		}
 
 		final Point mousePos = client.getMouseCanvasPosition();
-		final ContextualCursor blank = ContextualCursor.BLANK;
-		graphics.drawImage(blank.getCursor(), mousePos.getX() + POINTER_OFFSET.getX(), mousePos.getY() + POINTER_OFFSET.getY(), null);
+		graphics.drawImage(blank, mousePos.getX() + POINTER_OFFSET.getX(), mousePos.getY() + POINTER_OFFSET.getY(), null);
 		final int spriteX = POINTER_OFFSET.getX() + CENTRAL_POINT.getX() - sprite.getWidth() / 2;
 		final int spriteY = POINTER_OFFSET.getY() + CENTRAL_POINT.getY() - sprite.getHeight() / 2;
 		graphics.drawImage(sprite, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
