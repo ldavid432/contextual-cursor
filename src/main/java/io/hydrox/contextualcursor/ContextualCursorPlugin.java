@@ -24,18 +24,25 @@
  */
 package io.hydrox.contextualcursor;
 
+import java.awt.Graphics2D;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginManager;
+import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
+import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.OverlayManager;
 import javax.inject.Inject;
 import java.awt.event.KeyEvent;
@@ -47,6 +54,7 @@ import java.awt.image.BufferedImage;
 	description = "RSHD-style image cursors"
 )
 @Slf4j
+@PluginDependency(CustomCursorPlugin.class)
 public class ContextualCursorPlugin extends Plugin implements KeyListener, MouseListener
 {
 	@Inject
@@ -63,6 +71,19 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 	@Inject
 	private MouseManager mouseManager;
 
+
+	@Inject
+	private CustomCursorPlugin customCursorPlugin;
+
+	@Inject
+	private PluginManager pluginManager;
+
+	@Inject
+	private ClientUI clientUI;
+
+	@Inject
+	private ClientThread clientThread;
+
 	@Getter
 	private boolean altPressed;
 
@@ -70,12 +91,33 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 	@Setter
 	private BufferedImage spriteToDraw;
 
+	private BufferedImage cursorGeneric;
+
+	private boolean customCursorPluginEnabled = false;
+
 	protected void startUp()
 	{
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(this);
+
+		cursorGeneric = createGeneric();
+		customCursorPluginEnabled = pluginManager.isPluginEnabled(customCursorPlugin);
+		updateCursor();
+
+	}
+
+	private BufferedImage createGeneric()
+	{
+		BufferedImage icon = ContextualCursor.GENERIC.getCursor();
+		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = result.createGraphics();
+		g.drawImage(icon, 0, 0, null);
+		g.dispose();
+
+		return result;
 	}
 
 	@Override
@@ -86,6 +128,40 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 		contextualCursorWorkerOverlay.resetCursor();
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(this);
+
+		if (!customCursorPluginEnabled)
+		{
+			clientUI.resetCursor();
+		}
+	}
+
+	private void updateCursor()
+	{
+
+		if (customCursorPluginEnabled)
+		{
+			return;
+		}
+
+		clientUI.setCursor(cursorGeneric, "contextual-generic");
+
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (!"runelite".equals(event.getGroup()) || !"customcursorplugin".equals(event.getKey()))
+		{
+			return;
+		}
+
+		boolean enabled = Boolean.parseBoolean(event.getNewValue());
+		customCursorPluginEnabled = enabled;
+
+		if (!enabled)
+		{
+			clientThread.invoke(this::updateCursor);
+		}
 	}
 
 	@Subscribe
