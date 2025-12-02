@@ -41,13 +41,11 @@ import net.runelite.client.ui.overlay.tooltip.Tooltip;
 import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 import net.runelite.client.util.Text;
 import javax.inject.Inject;
-import javax.swing.JPanel;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -214,7 +212,10 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 
 			final String spellText = spellFinder.group(1);
-			final SpellSprite spell = SpellSprite.get(spellText);
+			final SpellSprite spell = SpellSprite.get(Text.sanitize(spellText));
+			if (spell == null) {
+				return;
+			}
 
 			final BufferedImage magicSprite = spriteManager.getSprite(spell.spriteID, 0);
 			if (magicSprite == null)
