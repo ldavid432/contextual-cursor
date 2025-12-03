@@ -67,7 +67,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private static final int MENU_EXTRA_BOTTOM = 3;
 	private static final int MENU_BORDERS_TOTAL = MENU_EXTRA_TOP + MENU_OPTION_HEIGHT + MENU_EXTRA_BOTTOM;
 	private static final Set<MenuAction> IGNORED_ACTIONS = Sets.newHashSet(
-		MenuAction.WALK, MenuAction.CC_OP, MenuAction.CANCEL, MenuAction.CC_OP_LOW_PRIORITY
+		MenuAction.WALK, MenuAction.CC_OP, MenuAction.CANCEL, MenuAction.CC_OP_LOW_PRIORITY, MenuAction.SET_HEADING
 	);
 
 	private final Client client;
