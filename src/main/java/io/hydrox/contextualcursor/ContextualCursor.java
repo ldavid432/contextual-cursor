@@ -38,40 +38,48 @@ public enum ContextualCursor
 	BLANK("blank"),
 	GENERIC("generic"), //Cursor inside background
 
-	BANK("bank", "bank"),
-	CLOSE("close", "close"),
+	BANK("bank", "bank", "bank-cargo"),
+	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
 	DRINK("drink", "drink"),
-	DROP("drop", "drop", "empty", "deposit"),
+	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo"),
 	EAT("eat", "eat"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
 		"grand exchange", "watchtower", "go-through"),
 	EQUIP("equip", "wield", "wear", "equip"),
-	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, "exchange", "trade", "trade with", "collect"),
+	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, "exchange", "trade", "trade with", "collect", "buy-boat"),
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
-	IMPOSSIBLE("impossible", "destroy"),
+	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task"),
 	LADDER("ladder", "climb"),
 	LADDER_DOWN("ladder_down", "climb-down", "climb down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up"),
 	OPEN("open", "open"),
-	PICK_UP("pick_up", "take", "withdraw" ,"fill"),
+	PICK_UP("pick_up", "take", "withdraw" ,"fill", "take-cargo", "take-last-cargo", "collect-from", "take-from"),
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", "search", "lookup", "examine", "view", "look-inside"),
-	TALK("talk", "talk", "talk-to", "talk to"),
+	SEARCH("search", "search", "lookup", "examine", "view", "look-inside", "inspect"),
+	TALK("talk", "talk", "talk-to", "talk to", "command"),
 	UNTIE("untie", "tether"),
 	USE("use", "use"),
 	WIKI("wiki", "lookup-entity"),
+
+	// Sailing
+	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, "navigate"), // Ship's wheel
+	SALVAGE(SpriteID.IconSailingFacilities24x24._5, "deploy"), // Salvage hook
+	UNSET_SAILS(SpriteID.IconSailingFacilities24x24._0, "un-set"), // Empty sails
+	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"), // Sails
+	TRIM_SAILS(SpriteID.IconSailingFacilities24x24._2, "trim"), // Luffed sails
+	CANNON(SpriteID.IconSailingFacilities24x24._6, "check-ammunition", "reset-ammunition"),
 
 	// Skills
 	AGILITY(SpriteID.Staticons.AGILITY, "balance", "balance-across", "climb-across", "climb-on", "climb-over",
 		"cross", "grab", "grapple", "hurdle", "jump", "jump-up", "jump-to", "jump-off", "jump-in", "jump-on", "kick",
 		"leap", "shoot", "squeeze-past", "squeeze-through", "swing", "swing across", "swing-across", "swing-on", "tap",
-		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over"),
+		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over", "escape"),
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
-	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, "build", "remove"),
+	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, "build", "remove", "craft", "modify"),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
 	CRAFTING(SpriteID.Staticons.CRAFTING, "spin"),
 	FARMING(SpriteID.Staticons2.FARMING, "check-health", "harvest", "rake", "pick", "pick-fruit", "clear", "pay"),
@@ -88,7 +96,9 @@ public enum ContextualCursor
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
 	STRENGTH(SpriteID.Staticons.STRENGTH, "bang", "move"),
 	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
-	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack");
+	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
+	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
+		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data");
 
 	private BufferedImage cursor;
 	private Integer spriteID;
@@ -121,7 +131,6 @@ public enum ContextualCursor
 
 	static ContextualCursor get(String action)
 	{
-		//return cursorMap.get(action.toLowerCase());
 		return cursorMap.getOrDefault(action.toLowerCase(), GENERIC);
 	}
 }
