@@ -2,6 +2,8 @@
 Contextual Cursor</h1>
 Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it's (mostly) back!
 
+![Install Count](https://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/contextual-cursor) ![Install Count](https://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/contextual-cursor)
+
 ### Missing Features vs RSHD (and other known issues):
 * RL tooltips are partially underneath the cursor when they're displayed below the cursor
 * Many things that should have contextual cursors don't. Feel free to make an issue suggesting them.
