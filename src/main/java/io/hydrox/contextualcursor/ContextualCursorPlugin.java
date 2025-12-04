@@ -44,7 +44,8 @@ import java.awt.image.BufferedImage;
 
 @PluginDescriptor(
 	name = "Contextual Cursor",
-	description = "RSHD-style image cursors"
+	description = "RSHD-style image cursors",
+	tags = {"cursor", "rs3", "rs2", "rshd", "context"}
 )
 @Slf4j
 public class ContextualCursorPlugin extends Plugin implements KeyListener, MouseListener
