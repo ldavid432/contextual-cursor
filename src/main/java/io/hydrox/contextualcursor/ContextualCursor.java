@@ -97,7 +97,7 @@ public enum ContextualCursor
 	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
-		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data");
+		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank");
 
 	private final String[] actions;
 	private final Sprite sprite;
