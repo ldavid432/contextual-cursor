@@ -27,9 +27,9 @@ package io.hydrox.contextualcursor;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.Menu;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.Point;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.Overlay;
@@ -64,8 +64,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final int MENU_OPTION_HEIGHT = 15;
 	private static final int MENU_EXTRA_TOP = 4;
-	private static final int MENU_EXTRA_BOTTOM = 3;
-	private static final int MENU_BORDERS_TOTAL = MENU_EXTRA_TOP + MENU_OPTION_HEIGHT + MENU_EXTRA_BOTTOM;
 	private static final Set<MenuAction> IGNORED_ACTIONS = Sets.newHashSet(
 		MenuAction.WALK, MenuAction.CC_OP, MenuAction.CANCEL, MenuAction.CC_OP_LOW_PRIORITY, MenuAction.SET_HEADING
 	);
@@ -76,8 +74,9 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private final SpriteManager spriteManager;
 	private final TooltipManager tooltipManager;
 
-	private Point menuOpenPoint;
-
+	// Last top level menu entry that has a submenu
+	private MenuEntry lastSubmenuEntry;
+	private boolean isInSubmenu;
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
 
@@ -138,12 +137,13 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 		if (client.isMenuOpen())
 		{
-			menuEntry = processMenu();
+			menuEntry = processMenu(client.getMenu());
 		}
 		else
 		{
-			menuOpenPoint = client.getMouseCanvasPosition();
-			final MenuEntry[] menuEntries = client.getMenuEntries();
+			isInSubmenu = false;
+			lastSubmenuEntry = null;
+			final MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 			int last = menuEntries.length - 1;
 
 			if (last < 0)
@@ -155,7 +155,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 
 		if (menuEntry == null ||
-			(!menuEntry.isItemOp()
+			(!(menuEntry.isItemOp() || menuEntry.getItemId() > 0)
 			&& !menuEntry.getOption().equals("Examine")
 			&& IGNORED_ACTIONS.contains(menuEntry.getType())))
 		{
@@ -163,26 +163,63 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			return null;
 		}
 
-		processEntry(graphics,  menuEntry.getType(), menuEntry.getOption(),  menuEntry.getTarget());
+		processEntry(menuEntry.getType(), menuEntry.getOption(),  menuEntry.getTarget(), isInSubmenu);
 		return null;
 	}
 
-	private MenuEntry processMenu()
+	private MenuEntry processMenu(Menu menu)
 	{
-		final MenuEntry[] menuEntries = client.getMenuEntries();
-
-		final int menuTop;
-		final int menuHeight = (menuEntries.length * MENU_OPTION_HEIGHT) + MENU_BORDERS_TOTAL;
-		if (menuHeight + menuOpenPoint.getY() > client.getCanvasHeight())
+		final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
+		// This is slightly bugged since there is a small margin around menus where they will stay open (see other comment below)
+		//  so this may think you are in a submenu if you move just outside the parent menu where the submenu would appear
+		//  Not much we can do about it unless there is a way to determine if a submenu is open or closed
+		if (isCursorOutsideMenu(menu) && lastSubmenuEntry1 != null && lastSubmenuEntry1.getSubMenu() != null && !isCursorOutsideMenu(lastSubmenuEntry1.getSubMenu()))
 		{
-			menuTop = client.getCanvasHeight() - menuHeight;
+			return processSubmenu(lastSubmenuEntry1.getSubMenu());
 		}
-		else
+		// Outside of parent menu, not in a submenu
+		else if (isCursorOutsideMenu(menu))
 		{
-			menuTop = menuOpenPoint.getY();
+			return null;
 		}
 
-		final int fromTop = (client.getMouseCanvasPosition().getY() - MENU_EXTRA_TOP) - menuTop;
+		final MenuEntry hoveredMenuEntry = getHoveredMenuEntry(menu);
+		if (hoveredMenuEntry == null)
+		{
+			return null;
+		}
+
+		// This can bug out on stuff with submenus too close together (looking at you forestry basket)
+		//  since there is some logic to allow you to move over other entries and to the submenu without closing the submenu
+		//  https://github.com/runelite/runelite/issues/19670#issuecomment-3621605835
+		if (hoveredMenuEntry.getSubMenu() != null)
+		{
+			lastSubmenuEntry = hoveredMenuEntry;
+		}
+
+		isInSubmenu = false;
+
+		return hoveredMenuEntry;
+	}
+
+	private MenuEntry processSubmenu(Menu submenu)
+	{
+		final MenuEntry hoveredMenuEntry = getHoveredMenuEntry(submenu);
+		if (hoveredMenuEntry == null)
+		{
+			return null;
+		}
+
+		isInSubmenu = true;
+
+		return hoveredMenuEntry;
+	}
+
+	private MenuEntry getHoveredMenuEntry(Menu menu)
+	{
+		final MenuEntry[] menuEntries = menu.getMenuEntries();
+
+		final int fromTop = (client.getMouseCanvasPosition().getY() - MENU_EXTRA_TOP) - menu.getMenuY();
 
 		final int index = menuEntries.length - (fromTop / MENU_OPTION_HEIGHT);
 
@@ -194,12 +231,17 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		return menuEntries[index];
 	}
 
+	private boolean isCursorOutsideMenu(Menu menu)
+	{
+		return menu.getMenuX() > client.getMouseCanvasPosition().getX() || menu.getMenuX() + menu.getMenuWidth() < client.getMouseCanvasPosition().getX();
+	}
+
 	private static final Set<MenuAction> SPELL_TYPES = Sets.newHashSet(
 		MenuAction.WIDGET_TARGET_ON_GAME_OBJECT, MenuAction.WIDGET_TARGET_ON_NPC, MenuAction.WIDGET_TARGET_ON_PLAYER,
 		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
 	);
 
-	private void processEntry(Graphics2D graphics, MenuAction type, String option, String target)
+	private void processEntry(MenuAction type, String option, String target, boolean isSubMenu)
 	{
 		final ContextualCursor cursor;
 		if (SPELL_TYPES.contains(type) && option.equals("Cast"))
@@ -233,6 +275,13 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		else
 		{
 			cursor = ContextualCursor.get(Text.removeTags(option));
+		}
+
+		// If we don't have a cursor for the submenu entry then use the parent cursor
+		final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
+		if (cursor == ContextualCursor.GENERIC && isSubMenu && lastSubmenuEntry1 != null) {
+			processEntry(lastSubmenuEntry1.getType(), lastSubmenuEntry1.getOption(), lastSubmenuEntry1.getTarget(), false);
+			return;
 		}
 
 		if (cursor == null)

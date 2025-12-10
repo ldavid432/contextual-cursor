@@ -41,7 +41,7 @@ public enum ContextualCursor
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
 	DRINK("drink", "drink"),
-	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo"),
+	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket"),
 	EAT("eat", "eat"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
 		"grand exchange", "watchtower", "go-through"),
@@ -54,7 +54,7 @@ public enum ContextualCursor
 	LADDER_DOWN("ladder_down", "climb-down", "climb down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up"),
 	OPEN("open", "open"),
-	PICK_UP("pick_up", "take", "withdraw" ,"fill", "take-cargo", "take-last-cargo", "collect-from", "take-from"),
+	PICK_UP("pick_up", "take", "withdraw" ,"fill", "take-cargo", "take-last-cargo", "collect-from", "take-from", "pick-up", "take-knife"),
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
@@ -71,6 +71,9 @@ public enum ContextualCursor
 	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"), // Sails
 	TRIM_SAILS(SpriteID.IconSailingFacilities24x24._2, "trim"), // Luffed sails
 	CANNON(SpriteID.IconSailingFacilities24x24._6, "check-ammunition", "reset-ammunition"),
+	TRAWLING_NET(SpriteID.IconSailingFacilities24x24._12, "raise"),
+	TRAWLING_NET_LOWER(SpriteID.IconSailingFacilities24x24._15, "lower"),
+	WIND(SpriteID.IconSailingFacilities24x24._7, "release-mote"),
 
 	// Skills
 	AGILITY(SpriteID.Staticons.AGILITY, "balance", "balance-across", "climb-across", "climb-on", "climb-over",
@@ -85,14 +88,14 @@ public enum ContextualCursor
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, "net", "bait", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"),
+	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, "clean"),
 	HUNTER(SpriteID.Staticons2.HUNTER, "catch", "lay", "dismantle", "reset", "check"),
-	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu"), // `venerate` interferes with the Dark Altar's RC use
-	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
+	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu", "ancient", "lunar", "arceuus", "standard"), // `venerate` interferes with the Dark Altar's RC use
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
-	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, "craft-rune", "imbue"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
+	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, "craft-rune", "imbue"),
 	SMITHING(SpriteID.Staticons.SMITHING, "smelt", "smith", "hammer", "refine"),
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
 	STRENGTH(SpriteID.Staticons.STRENGTH, "bang", "move"),
