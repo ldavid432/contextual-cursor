@@ -92,7 +92,7 @@ public enum ContextualCursor
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, "clean"),
 	HUNTER(SpriteID.Staticons2.HUNTER, "catch", "lay", "dismantle", "reset", "check"),
-	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu"), // `venerate` interferes with the Dark Altar's RC use
+	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu", "ancient", "lunar", "arceuus", "standard"), // `venerate` interferes with the Dark Altar's RC use
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
