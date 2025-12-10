@@ -155,7 +155,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 
 		if (menuEntry == null ||
-			(!(menuEntry.isItemOp() || menuEntry.getItemId() > 0)
+			(!(menuEntry.isItemOp() || (isInSubmenu && menuEntry.getItemId() > 0))
 			&& !menuEntry.getOption().equals("Examine")
 			&& IGNORED_ACTIONS.contains(menuEntry.getType())))
 		{
