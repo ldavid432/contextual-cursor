@@ -42,7 +42,7 @@ public enum ContextualCursor
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
 	DRINK("drink", "drink"),
-	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo"),
+	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket"),
 	EAT("eat", "eat"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
 		"grand exchange", "watchtower", "go-through"),
