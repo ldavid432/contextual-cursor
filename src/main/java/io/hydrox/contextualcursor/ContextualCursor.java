@@ -86,6 +86,7 @@ public enum ContextualCursor
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, "net", "bait", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"),
+	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, "clean"),
 	HUNTER(SpriteID.Staticons2.HUNTER, "catch", "lay", "dismantle", "reset", "check"),
 	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu"), // `venerate` interferes with the Dark Altar's RC use
