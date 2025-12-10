@@ -55,7 +55,7 @@ public enum ContextualCursor
 	LADDER_DOWN("ladder_down", "climb-down", "climb down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up"),
 	OPEN("open", "open"),
-	PICK_UP("pick_up", "take", "withdraw" ,"fill", "take-cargo", "take-last-cargo", "collect-from", "take-from"),
+	PICK_UP("pick_up", "take", "withdraw" ,"fill", "take-cargo", "take-last-cargo", "collect-from", "take-from", "pick-up", "take-knife"),
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
@@ -72,6 +72,9 @@ public enum ContextualCursor
 	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"), // Sails
 	TRIM_SAILS(SpriteID.IconSailingFacilities24x24._2, "trim"), // Luffed sails
 	CANNON(SpriteID.IconSailingFacilities24x24._6, "check-ammunition", "reset-ammunition"),
+	TRAWLING_NET(SpriteID.IconSailingFacilities24x24._12, "raise"),
+	TRAWLING_NET_LOWER(SpriteID.IconSailingFacilities24x24._15, "lower"),
+	WIND(SpriteID.IconSailingFacilities24x24._7, "release-mote"),
 
 	// Skills
 	AGILITY(SpriteID.Staticons.AGILITY, "balance", "balance-across", "climb-across", "climb-on", "climb-over",
@@ -81,7 +84,7 @@ public enum ContextualCursor
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, "build", "remove", "craft", "modify"),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
-	CRAFTING(SpriteID.Staticons.CRAFTING, "spin"),
+	CRAFTING(SpriteID.Staticons.CRAFTING, "spin", "weave"),
 	FARMING(SpriteID.Staticons2.FARMING, "check-health", "harvest", "rake", "pick", "pick-fruit", "clear", "pay"),
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, "net", "bait", "lure", "small net", "harpoon", "cage", "big net",
@@ -100,7 +103,7 @@ public enum ContextualCursor
 	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
-		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data");
+		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank");
 
 	private BufferedImage cursor;
 	private Integer spriteID;
