@@ -92,6 +92,7 @@ public enum ContextualCursor
 	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu"), // `venerate` interferes with the Dark Altar's RC use
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
+	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
 	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, "craft-rune", "imbue"),
 	SMITHING(SpriteID.Staticons.SMITHING, "smelt", "smith", "hammer", "refine"),
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
