@@ -24,7 +24,11 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.common.collect.Sets;
+import java.util.Objects;
+import java.util.function.Consumer;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
@@ -58,6 +62,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		new java.awt.Point(0, 0),
 		"blank"
 	);
+	private static final Sprite GENERIC = Sprite.of("generic");
 	private static final Tooltip SPACER_TOOLTIP = new Tooltip(
 		new ImageComponent(new BufferedImage(1, 10, BufferedImage.TYPE_INT_ARGB))
 	);
@@ -163,7 +168,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			return null;
 		}
 
-		processEntry(menuEntry.getType(), menuEntry.getOption(),  menuEntry.getTarget(), isInSubmenu);
+		processEntry(menuEntry, isInSubmenu);
 		return null;
 	}
 
@@ -241,12 +246,13 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
 	);
 
-	private void processEntry(MenuAction type, String option, String target, boolean isSubMenu)
+	private void processEntry(MenuEntry menuEntry, boolean isSubMenu)
 	{
-		final ContextualCursor cursor;
-		if (SPELL_TYPES.contains(type) && option.equals("Cast"))
+		final Sprite sprite;
+		// TODO: Can the spell sprites be turned into a single "spell" cursor?
+		if (SPELL_TYPES.contains(menuEntry.getType()) && menuEntry.getOption().equals("Cast"))
 		{
-			final Matcher spellFinder = SPELL_FINDER.matcher(target.toLowerCase());
+			final Matcher spellFinder = SPELL_FINDER.matcher(menuEntry.getTarget().toLowerCase());
 
 			if (!spellFinder.find())
 			{
@@ -268,32 +274,27 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			setSpriteToDraw(magicSprite);
 			return;
 		}
-		else if (option.equals("Lookup") && Text.removeTags(target).startsWith("Wiki ->"))
-		{
-			cursor = ContextualCursor.WIKI;
-		}
 		else
 		{
-			cursor = ContextualCursor.get(Text.removeTags(option));
+			final Sprite newSprite = ContextualCursor.get(menuEntry);
+
+			// If we don't have a cursor for the submenu entry then use the parent cursor
+			final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
+			if (newSprite == null && isSubMenu && lastSubmenuEntry1 != null)
+			{
+				processEntry(lastSubmenuEntry1, false);
+				return;
+			}
+			else
+			{
+				sprite = Objects.requireNonNullElse(newSprite, GENERIC);
+			}
 		}
 
-		// If we don't have a cursor for the submenu entry then use the parent cursor
-		final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
-		if (cursor == ContextualCursor.GENERIC && isSubMenu && lastSubmenuEntry1 != null) {
-			processEntry(lastSubmenuEntry1.getType(), lastSubmenuEntry1.getOption(), lastSubmenuEntry1.getTarget(), false);
-			return;
-		}
-
-		if (cursor == null)
+		BufferedImage image = sprite.getImage(client, spriteManager);
+		if (image != null)
 		{
-			resetCursor();
-			return;
-		}
-
-		BufferedImage sprite = cursor.getSprite().getImage(client, spriteManager);
-		if (sprite != null)
-		{
-			setSpriteToDraw(sprite);
+			setSpriteToDraw(image);
 		}
 	}
 

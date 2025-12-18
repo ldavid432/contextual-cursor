@@ -30,4 +30,10 @@ public class CacheSprite implements Sprite
 
 		return image;
 	}
+
+	@Override
+	public void clearImage()
+	{
+		image = null;
+	}
 }

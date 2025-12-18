@@ -10,6 +10,8 @@ public interface Sprite
 	@Nullable
 	BufferedImage getImage(Client client, SpriteManager spriteManager);
 
+	void clearImage();
+
 	static Sprite of(int id)
 	{
 		return new CacheSprite(id);

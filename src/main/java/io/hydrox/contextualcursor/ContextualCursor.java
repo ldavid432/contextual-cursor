@@ -24,13 +24,14 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.SpriteID;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@Slf4j
 @Getter
 public enum ContextualCursor
 {
@@ -104,36 +105,56 @@ public enum ContextualCursor
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank");
 
-	private final String[] actions;
 	private final Sprite sprite;
+	private final MenuEntryMatcher matcher;
 
-	ContextualCursor(String cursor_path, String ... actions)
+	// Basic cursor with only global actions
+	ContextualCursor(String cursorPath, String... actions)
 	{
-		this.sprite = Sprite.of(cursor_path);
-		this.actions = actions;
+		this.sprite = Sprite.of(cursorPath);
+		this.matcher = optionIsAnyOf(actions);
 	}
 
-	ContextualCursor(int spriteID, String ... actions)
+	// Basic cursor with only global actions
+	ContextualCursor(int spriteID, String... actions)
 	{
 		this.sprite = Sprite.of(spriteID);
-		this.actions = actions;
+		this.matcher = optionIsAnyOf(actions);
 	}
 
-	private static final Map<String, ContextualCursor> cursorMap = new HashMap<>();
-
-	static
+	// Cursor with specific matchers
+	ContextualCursor(String cursorPath, MenuEntryMatcher... matchers)
 	{
-		for (ContextualCursor cursor : values())
+		this.sprite = Sprite.of(cursorPath);
+		this.matcher = hasAnyOf(matchers);
+	}
+
+	// Cursor with specific matchers
+	ContextualCursor(int spriteID, MenuEntryMatcher... matchers)
+	{
+		this.sprite = Sprite.of(spriteID);
+		this.matcher = hasAnyOf(matchers);
+	}
+
+	private static final ContextualCursor[] values = values();
+
+	static Sprite get(MenuEntry menuEntry)
+	{
+		for (ContextualCursor cursor : values)
 		{
-			for (String action : cursor.actions)
+			if (cursor.matcher.matches(menuEntry))
 			{
-				cursorMap.put(action, cursor);
+				return cursor.getSprite();
 			}
 		}
+		return null;
 	}
 
-	static ContextualCursor get(String action)
+	static void clearImages()
 	{
-		return cursorMap.getOrDefault(action.toLowerCase(), GENERIC);
+		for (ContextualCursor cursor : values)
+		{
+			cursor.sprite.clearImage();
+		}
 	}
 }

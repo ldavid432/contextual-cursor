@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.util.ImageUtil;
+import org.slf4j.LoggerFactory;
 
 @RequiredArgsConstructor
 public class ResourceSprite implements Sprite
@@ -26,6 +27,12 @@ public class ResourceSprite implements Sprite
 			image = loadImage(path);
 		}
 		return image;
+	}
+
+	@Override
+	public void clearImage()
+	{
+		image = null;
 	}
 
 	public static BufferedImage loadImage(String path)

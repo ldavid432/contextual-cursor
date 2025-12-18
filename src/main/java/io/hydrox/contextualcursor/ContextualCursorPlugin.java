@@ -85,6 +85,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
 		contextualCursorWorkerOverlay.resetCursor();
+		ContextualCursor.clearImages();
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(this);
 	}
