@@ -10,6 +10,7 @@ import net.runelite.client.game.SpriteManager;
 public class CacheSprite implements Sprite
 {
 	private final int id;
+
 	@Nullable
 	BufferedImage image;
 

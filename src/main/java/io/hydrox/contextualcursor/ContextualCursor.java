@@ -36,6 +36,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
+import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -69,12 +70,13 @@ public enum ContextualCursor
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", optionIsAnyOf("search", "lookup", "examine", "view", "look-inside", "inspect"),
-		hasAllOf(hasOption("check"), not(isGroundItem()))), // Avoid hunter traps
+	SEARCH("search", optionIsAnyOf("lookup", "examine", "view", "look-inside", "inspect"),
+		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
+		hasAllOf(hasOption("search"), not(targetNamed("wiki")))),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
 	UNTIE("untie", "tether"),
 	USE("use", "use", "pet"),
-	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("Wiki"))),
+	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("wiki"))),
 
 	// Sailing
 	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, "navigate"), // Ship's wheel
@@ -88,7 +90,7 @@ public enum ContextualCursor
 		hasAllOf(targetEndsWith("trawling net"), optionIsAnyOf("operate"))),
 	TRAWLING_NET_LOWER(SpriteID.IconSailingFacilities24x24._15, "lower"),
 	CHUM_STATION(SpriteID.IconSailingFacilities24x24._16, hasAllOf(optionIsAnyOf("operate"),
-		hasAnyOf(targetNamed("chum spreader"), targetNamed("chum station"), targetNamed("advanced chum station")))),
+		hasAnyOf(targetStartsWith("chum"), targetNamed("advanced chum station")))),
 	WIND(SpriteID.IconSailingFacilities24x24._7, optionIsAnyOf("release-mote"),
 		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor")),
 		hasAllOf(hasOption("activate"), targetNamed("gale catcher"))),
@@ -100,25 +102,22 @@ public enum ContextualCursor
 		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over", "escape"),
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade"),
-		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))), // shipwrights' workbench
+		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
 	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench")))), // crafting table / clockmaker's benches
 	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "clear",
-		"pay", "guide"),
-		hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor")))), // Harvesting crops only
+		"pay", "guide"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor")))), // Harvesting crops only
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
-		"use-rod", "fish", "take-net"),
-		hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
+		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
 	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "dismantle", "reset", "set-trap"),
 		hasAllOf(hasOption("check"), isGroundItem()), // Various hunter traps
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
 	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "ancient", "lunar",
-		"arceuus", "standard", "study"),
-		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
+		"arceuus", "standard", "study"), hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
@@ -178,11 +177,17 @@ public enum ContextualCursor
 		return null;
 	}
 
+	static final ResourceSprite BLANK_CURSOR = new ResourceSprite("blank");
+	static final ResourceSprite GENERIC_CURSOR = new ResourceSprite("generic");
+
 	static void clearImages()
 	{
 		for (ContextualCursor cursor : values)
 		{
 			cursor.sprite.clearImage();
 		}
+
+		BLANK_CURSOR.clearImage();
+		GENERIC_CURSOR.clearImage();
 	}
 }

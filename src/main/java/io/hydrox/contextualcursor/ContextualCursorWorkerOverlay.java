@@ -26,9 +26,8 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.common.collect.Sets;
+import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
 import java.util.Objects;
-import java.util.function.Consumer;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
@@ -58,11 +57,10 @@ import java.util.regex.Pattern;
 public class ContextualCursorWorkerOverlay extends Overlay
 {
 	private static final Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(
-		new BufferedImage(32, 32,BufferedImage.TYPE_INT_ARGB),
+		new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB),
 		new java.awt.Point(0, 0),
 		"blank"
 	);
-	private static final Sprite GENERIC = Sprite.of("generic");
 	private static final Tooltip SPACER_TOOLTIP = new Tooltip(
 		new ImageComponent(new BufferedImage(1, 10, BufferedImage.TYPE_INT_ARGB))
 	);
@@ -161,8 +159,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 		if (menuEntry == null ||
 			(!(menuEntry.isItemOp() || (isInSubmenu && menuEntry.getItemId() > 0))
-			&& !menuEntry.getOption().equals("Examine")
-			&& IGNORED_ACTIONS.contains(menuEntry.getType())))
+				&& !menuEntry.getOption().equals("Examine")
+				&& IGNORED_ACTIONS.contains(menuEntry.getType())))
 		{
 			resetCursor();
 			return null;
@@ -261,7 +259,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 			final String spellText = spellFinder.group(1);
 			final SpellSprite spell = SpellSprite.get(Text.sanitize(spellText));
-			if (spell == null) {
+			if (spell == null)
+			{
 				return;
 			}
 
@@ -287,7 +286,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 			else
 			{
-				sprite = Objects.requireNonNullElse(newSprite, GENERIC);
+				sprite = Objects.requireNonNullElse(newSprite, GENERIC_CURSOR);
 			}
 		}
 
