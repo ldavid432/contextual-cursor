@@ -25,6 +25,17 @@
 package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isGroundItem;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isNpc;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -35,46 +46,52 @@ import net.runelite.api.gameval.SpriteID;
 @Getter
 public enum ContextualCursor
 {
-	BLANK("blank"),
-	GENERIC("generic"), //Cursor inside background
-
-	BANK("bank", "bank", "bank-cargo"),
+	BANK("bank", "bank", "coffer"),
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
 	DRINK("drink", "drink"),
-	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket"),
+	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
 	EAT("eat", "eat"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
-		"grand exchange", "watchtower", "go-through"),
+		"grand exchange", "watchtower", "go-through", "pass-through", "pass"),
 	EQUIP("equip", "wield", "wear", "equip"),
 	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, "exchange", "trade", "trade with", "collect", "buy-boat"),
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
 	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task"),
 	LADDER("ladder", "climb"),
-	LADDER_DOWN("ladder_down", "climb-down", "climb down"),
-	LADDER_UP("ladder_up", "climb-up", "climb up"),
+	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor"),
+	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
 	OPEN("open", "open"),
-	PICK_UP("pick_up", "take", "withdraw" ,"fill", "take-cargo", "take-last-cargo", "collect-from", "take-from", "pick-up", "take-knife"),
+	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "take-cargo", "take-last-cargo",
+		"collect-from", "take-from", "pick-up", "take-knife", "take-any-cargo"),
+		hasAllOf(hasOption("harvest"), isNpc())), // Various NPC corpses
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", "search", "lookup", "examine", "view", "look-inside", "inspect"),
+	SEARCH("search", optionIsAnyOf("search", "lookup", "examine", "view", "look-inside", "inspect"),
+		hasAllOf(hasOption("check"), not(isGroundItem()))), // Avoid hunter traps
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
 	UNTIE("untie", "tether"),
-	USE("use", "use"),
-	WIKI("wiki", "lookup-entity"),
+	USE("use", "use", "pet"),
+	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("Wiki"))),
 
 	// Sailing
 	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, "navigate"), // Ship's wheel
 	SALVAGE(SpriteID.IconSailingFacilities24x24._5, "deploy"), // Salvage hook
-	UNSET_SAILS(SpriteID.IconSailingFacilities24x24._0, "un-set"), // Empty sails
-	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"), // Sails
-	TRIM_SAILS(SpriteID.IconSailingFacilities24x24._2, "trim"), // Luffed sails
-	CANNON(SpriteID.IconSailingFacilities24x24._6, "check-ammunition", "reset-ammunition"),
-	TRAWLING_NET(SpriteID.IconSailingFacilities24x24._12, "raise"),
+	UNSET_SAILS(SpriteID.IconSailingFacilities24x24._0, "un-set"),
+	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"),
+	TRIM_SAILS(SpriteID.IconSailingFacilities24x24._2, hasAllOf(hasOption("trim"), isObject())), // Avoid trimmable capes
+	CANNON(SpriteID.IconSailingFacilities24x24._6, optionIsAnyOf("check-ammunition", "reset-ammunition"),
+		hasAllOf(targetEndsWith("cannon"), optionIsAnyOf("operate"))),
+	TRAWLING_NET(SpriteID.IconSailingFacilities24x24._12, optionIsAnyOf("raise"),
+		hasAllOf(targetEndsWith("trawling net"), optionIsAnyOf("operate"))),
 	TRAWLING_NET_LOWER(SpriteID.IconSailingFacilities24x24._15, "lower"),
-	WIND(SpriteID.IconSailingFacilities24x24._7, "release-mote"),
+	CHUM_STATION(SpriteID.IconSailingFacilities24x24._16, hasAllOf(optionIsAnyOf("operate"),
+		hasAnyOf(targetNamed("chum spreader"), targetNamed("chum station"), targetNamed("advanced chum station")))),
+	WIND(SpriteID.IconSailingFacilities24x24._7, optionIsAnyOf("release-mote"),
+		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor")),
+		hasAllOf(hasOption("activate"), targetNamed("gale catcher"))),
 
 	// Skills
 	AGILITY(SpriteID.Staticons.AGILITY, "balance", "balance-across", "climb-across", "climb-on", "climb-over",
@@ -82,28 +99,39 @@ public enum ContextualCursor
 		"leap", "shoot", "squeeze-past", "squeeze-through", "swing", "swing across", "swing-across", "swing-on", "tap",
 		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over", "escape"),
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
-	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, "build", "remove", "craft", "modify"),
+	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade"),
+		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))), // shipwrights' workbench
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
-	FARMING(SpriteID.Staticons2.FARMING, "check-health", "harvest", "rake", "pick", "pick-fruit", "clear", "pay"),
-	CRAFTING(SpriteID.Staticons.CRAFTING, "spin", "weave"),
+	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave"),
+		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench")))), // crafting table / clockmaker's benches
+	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "clear",
+		"pay", "guide"),
+		hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor")))), // Harvesting crops only
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
-	FISHING(SpriteID.Staticons.FISHING, "net", "bait", "lure", "small net", "harpoon", "cage", "big net",
+	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"),
+		hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
-	HERBLORE(SpriteID.Staticons.HERBLORE, "clean"),
-	HUNTER(SpriteID.Staticons2.HUNTER, "catch", "lay", "dismantle", "reset", "check"),
-	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu", "ancient", "lunar", "arceuus", "standard"), // `venerate` interferes with the Dark Altar's RC use
-	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits"),
+	HERBLORE(SpriteID.Staticons.HERBLORE, hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
+	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "dismantle", "reset", "set-trap"),
+		hasAllOf(hasOption("check"), isGroundItem()), // Various hunter traps
+		hasAllOf(hasOption("bait"), isObject())), // Crab traps
+	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "ancient", "lunar",
+		"arceuus", "standard", "study"),
+		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
+	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
-	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, "craft-rune", "imbue"),
+	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, optionIsAnyOf("craft-rune", "imbue"),
+		hasAllOf(hasOption("venerate"), targetNamed("dark altar"))), // Avoid PoH spellbook altars
 	SMITHING(SpriteID.Staticons.SMITHING, "smelt", "smith", "hammer", "refine"),
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
 	STRENGTH(SpriteID.Staticons.STRENGTH, "bang", "move"),
 	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
-		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank");
+		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank"),
+	;
 
 	private final Sprite sprite;
 	private final MenuEntryMatcher matcher;
