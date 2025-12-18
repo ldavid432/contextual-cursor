@@ -93,8 +93,7 @@ public enum ContextualCursor
 	CHUM_STATION(SpriteID.IconSailingFacilities24x24._16, hasAllOf(optionIsAnyOf("operate"),
 		hasAnyOf(targetStartsWith("chum"), targetNamed("advanced chum station")))),
 	WIND(SpriteID.IconSailingFacilities24x24._7, optionIsAnyOf("release-mote"),
-		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor")),
-		hasAllOf(hasOption("activate"), targetNamed("gale catcher"))),
+		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor"))),
 
 	// Skills
 	AGILITY(SpriteID.Staticons.AGILITY, "balance", "balance-across", "climb-across", "climb-on", "climb-over",
