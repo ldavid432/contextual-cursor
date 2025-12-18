@@ -56,7 +56,8 @@ public enum ContextualCursor
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
 		"grand exchange", "watchtower", "go-through", "pass-through", "pass"),
 	EQUIP("equip", "wield", "wear", "equip"),
-	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, "exchange", "trade", "trade with", "collect", "buy-boat"),
+	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, optionIsAnyOf("exchange", "trade", "trade with", "buy-boat"),
+		hasAllOf(hasOption("collect"), not(targetEndsWith("coral")))),
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
 	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task"),
@@ -107,7 +108,8 @@ public enum ContextualCursor
 	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench")))), // crafting table / clockmaker's benches
 	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "clear",
-		"pay", "guide"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor")))), // Harvesting crops only
+		"pay", "guide"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
+		hasAllOf(hasOption("collect"), targetEndsWith("coral"))), // Collecting coral
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
