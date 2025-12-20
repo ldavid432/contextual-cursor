@@ -32,6 +32,7 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
+import net.runelite.client.input.MouseAdapter;
 import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
@@ -48,7 +49,7 @@ import java.awt.image.BufferedImage;
 	tags = {"cursor", "rs3", "rs2", "rshd", "context"}
 )
 @Slf4j
-public class ContextualCursorPlugin extends Plugin implements KeyListener, MouseListener
+public class ContextualCursorPlugin extends Plugin implements KeyListener
 {
 	@Inject
 	private ContextualCursorDrawOverlay contextualCursorDrawOverlay;
@@ -71,12 +72,29 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 	@Setter
 	private BufferedImage spriteToDraw;
 
+	private final MouseListener mouseListener = new MouseAdapter()
+	{
+		@Override
+		public MouseEvent mouseEntered(MouseEvent mouseEvent)
+		{
+			altPressed = mouseEvent.isAltDown();
+			return mouseEvent;
+		}
+
+		@Override
+		public MouseEvent mouseExited(MouseEvent mouseEvent)
+		{
+			altPressed = mouseEvent.isAltDown();
+			return mouseEvent;
+		}
+	};
+
 	protected void startUp()
 	{
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
 		keyManager.registerKeyListener(this);
-		mouseManager.registerMouseListener(this);
+		mouseManager.registerMouseListener(mouseListener);
 	}
 
 	@Override
@@ -87,7 +105,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 		contextualCursorWorkerOverlay.resetCursor();
 		ContextualCursor.clearImages();
 		keyManager.unregisterKeyListener(this);
-		mouseManager.unregisterMouseListener(this);
+		mouseManager.unregisterMouseListener(mouseListener);
 	}
 
 	@Subscribe
@@ -109,53 +127,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener, Mouse
 	public void keyReleased(KeyEvent keyEvent)
 	{
 		altPressed = keyEvent.isAltDown();
-	}
-
-	@Override
-	public MouseEvent mouseEntered(MouseEvent mouseEvent)
-	{
-		altPressed = mouseEvent.isAltDown();
-		return mouseEvent;
-	}
-
-	@Override
-	public MouseEvent mouseExited(MouseEvent mouseEvent)
-	{
-		altPressed = mouseEvent.isAltDown();
-		return mouseEvent;
-	}
-
-	// Beyond this point is junk.
-	// Look upon this method-bloat and despair!
-
-	@Override
-	public MouseEvent mouseDragged(MouseEvent mouseEvent)
-	{
-		return mouseEvent;
-	}
-
-	@Override
-	public MouseEvent mouseMoved(MouseEvent mouseEvent)
-	{
-		return mouseEvent;
-	}
-
-	@Override
-	public MouseEvent mouseClicked(MouseEvent mouseEvent)
-	{
-		return mouseEvent;
-	}
-
-	@Override
-	public MouseEvent mousePressed(MouseEvent mouseEvent)
-	{
-		return mouseEvent;
-	}
-
-	@Override
-	public MouseEvent mouseReleased(MouseEvent mouseEvent)
-	{
-		return mouseEvent;
 	}
 
 	@Override
