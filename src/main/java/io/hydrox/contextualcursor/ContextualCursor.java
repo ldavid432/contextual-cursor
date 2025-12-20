@@ -80,7 +80,7 @@ public enum ContextualCursor
 	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("wiki"))),
 
 	// Sailing
-	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, "navigate"), // Ship's wheel
+	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, hasAllOf(hasOption("navigate"), targetNamed("helm"))), // Ship's wheel
 	SALVAGE(SpriteID.IconSailingFacilities24x24._5, "deploy"), // Salvage hook
 	UNSET_SAILS(SpriteID.IconSailingFacilities24x24._0, "un-set"),
 	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"),
@@ -96,10 +96,11 @@ public enum ContextualCursor
 		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor"))),
 
 	// Skills
-	AGILITY(SpriteID.Staticons.AGILITY, "balance", "balance-across", "climb-across", "climb-on", "climb-over",
+	AGILITY(SpriteID.Staticons.AGILITY, optionIsAnyOf("balance", "balance-across", "climb-across", "climb-on", "climb-over",
 		"cross", "grab", "grapple", "hurdle", "jump", "jump-up", "jump-to", "jump-off", "jump-in", "jump-on", "kick",
 		"leap", "shoot", "squeeze-past", "squeeze-through", "swing", "swing across", "swing-across", "swing-on", "tap",
 		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over", "escape"),
+		hasAllOf(hasOption("navigate"), not(targetNamed("helm")))), // underwater agility obstacles
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade"),
 		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))),
