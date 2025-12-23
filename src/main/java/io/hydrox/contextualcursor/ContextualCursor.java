@@ -47,7 +47,8 @@ import net.runelite.api.gameval.SpriteID;
 @Getter
 public enum ContextualCursor
 {
-	BANK("bank", "bank", "coffer"),
+	BANK("bank", optionIsAnyOf("bank", "coffer"),
+		hasAllOf(hasOption("use"), not(targetNamed("bank chest")))),
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
 	DRINK("drink", "drink"),
