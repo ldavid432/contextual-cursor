@@ -124,7 +124,7 @@ public enum ContextualCursor
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
-	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, optionIsAnyOf("craft-rune", "imbue"),
+	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, optionIsAnyOf("craft-rune", "imbue", "reinvigorate"),
 		hasAllOf(hasOption("venerate"), targetNamed("dark altar"))), // Avoid PoH spellbook altars
 	SMITHING(SpriteID.Staticons.SMITHING, "smelt", "smith", "hammer", "refine"),
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
