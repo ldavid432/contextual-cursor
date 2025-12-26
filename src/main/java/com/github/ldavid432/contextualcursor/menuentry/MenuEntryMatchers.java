@@ -38,6 +38,16 @@ public class MenuEntryMatchers
 		return menuEntry -> Objects.equals(menuEntry.getOption().toLowerCase(), option);
 	}
 
+	public static MenuEntryMatcher optionStartsWith(String optionPrefix)
+	{
+		return onOption(optionPrefix, String::startsWith);
+	}
+
+	private static MenuEntryMatcher onOption(String option, BiFunction<String, String, Boolean> test)
+	{
+		return menuEntry -> test.apply(sanitize(menuEntry.getOption()), option);
+	}
+
 	// NPCs
 
 	public static MenuEntryMatcher isNpc()
@@ -71,24 +81,24 @@ public class MenuEntryMatchers
 
 	// Targets
 
-	private static MenuEntryMatcher target(String target, BiFunction<String, String, Boolean> test)
+	private static MenuEntryMatcher onTarget(String target, BiFunction<String, String, Boolean> test)
 	{
 		return menuEntry -> test.apply(sanitize(menuEntry.getTarget()), target);
 	}
 
 	public static MenuEntryMatcher targetNamed(String target)
 	{
-		return target(target, String::equals);
+		return onTarget(target, String::equals);
 	}
 
 	public static MenuEntryMatcher targetStartsWith(String targetPrefix)
 	{
-		return target(targetPrefix, String::startsWith);
+		return onTarget(targetPrefix, String::startsWith);
 	}
 
 	public static MenuEntryMatcher targetEndsWith(String targetSuffix)
 	{
-		return target(targetSuffix, String::endsWith);
+		return onTarget(targetSuffix, String::endsWith);
 	}
 
 	// Util

@@ -33,6 +33,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionStartsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
@@ -110,7 +111,9 @@ public enum ContextualCursor
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench")))), // crafting table / clockmaker's benches
 	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "clear",
 		"pay", "guide", "cure"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
-		hasAllOf(hasOption("collect"), targetEndsWith("coral"))), // Collecting coral
+		hasAllOf(hasOption("collect"), targetEndsWith("coral")), // Collecting coral
+		hasAllOf(optionStartsWith("pay"), isNpc())
+	),
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
