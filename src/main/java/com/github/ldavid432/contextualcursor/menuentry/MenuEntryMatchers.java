@@ -35,7 +35,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher hasOption(String option)
 	{
-		return menuEntry -> Objects.equals(menuEntry.getOption().toLowerCase(), option);
+		return onOption(option, String::equals);
 	}
 
 	public static MenuEntryMatcher optionStartsWith(String optionPrefix)
