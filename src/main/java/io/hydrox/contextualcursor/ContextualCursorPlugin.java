@@ -24,12 +24,25 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
+import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
+import com.google.inject.Provides;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.input.MouseAdapter;
@@ -38,10 +51,6 @@ import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
-import javax.inject.Inject;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 @PluginDescriptor(
 	name = "Contextual Cursor",
@@ -65,12 +74,18 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Inject
 	private MouseManager mouseManager;
 
+	@Inject
+	private ContextualCursorConfig config;
+
 	@Getter
 	private boolean altPressed;
 
 	@Getter
 	@Setter
 	private BufferedImage spriteToDraw;
+
+	@Getter
+	private final Map<MenuTarget, Boolean> excludedTargets = new HashMap<>();
 
 	private final MouseListener mouseListener = new MouseAdapter()
 	{
@@ -95,6 +110,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		overlayManager.add(contextualCursorDrawOverlay);
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(mouseListener);
+
+		updateIgnores();
 	}
 
 	@Override
@@ -134,6 +151,33 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 
 	}
+
+	@Provides
+	ContextualCursorConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(ContextualCursorConfig.class);
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (Objects.equals(event.getGroup(), ContextualCursorConfig.GROUP))
+		{
+			if (event.getKey().startsWith("ignore"))
+			{
+				updateIgnores();
+			}
+		}
+	}
+
+	private void updateIgnores()
+	{
+		for (MenuTarget target : MenuTarget.VALUES)
+		{
+			excludedTargets.put(target, target.isExcluded(config));
+		}
+	}
+
 	private void clearImages()
 	{
 		ContextualCursor.clearImages();

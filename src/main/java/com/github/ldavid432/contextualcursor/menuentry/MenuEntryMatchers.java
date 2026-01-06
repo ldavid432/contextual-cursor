@@ -1,6 +1,5 @@
 package com.github.ldavid432.contextualcursor.menuentry;
 
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 import net.runelite.api.MenuAction;
@@ -64,7 +63,7 @@ public class MenuEntryMatchers
 
 	private static final MenuAction[] OBJECT_TYPES = {
 		MenuAction.GAME_OBJECT_FIRST_OPTION, MenuAction.GAME_OBJECT_SECOND_OPTION, MenuAction.GAME_OBJECT_THIRD_OPTION,
-		MenuAction.GAME_OBJECT_FOURTH_OPTION, MenuAction.GAME_OBJECT_FIFTH_OPTION
+		MenuAction.GAME_OBJECT_FOURTH_OPTION, MenuAction.GAME_OBJECT_FIFTH_OPTION, MenuAction.EXAMINE_OBJECT
 	};
 
 	// Ground Items
@@ -76,7 +75,7 @@ public class MenuEntryMatchers
 
 	private static final MenuAction[] GROUND_ITEM_TYPES = {
 		MenuAction.GROUND_ITEM_FIRST_OPTION, MenuAction.GROUND_ITEM_SECOND_OPTION, MenuAction.GROUND_ITEM_THIRD_OPTION,
-		MenuAction.GROUND_ITEM_FOURTH_OPTION, MenuAction.GROUND_ITEM_FIFTH_OPTION
+		MenuAction.GROUND_ITEM_FOURTH_OPTION, MenuAction.GROUND_ITEM_FIFTH_OPTION, MenuAction.EXAMINE_ITEM_GROUND
 	};
 
 	// Targets
@@ -108,9 +107,39 @@ public class MenuEntryMatchers
 		return menuEntry -> Stream.of(actions).anyMatch(action -> menuEntry.getType() == action);
 	}
 
+	public static MenuEntryMatcher isMovement()
+	{
+		return isTypeAnyOf(MenuAction.WALK, MenuAction.SET_HEADING);
+	}
+
+	public static MenuEntryMatcher isCancel()
+	{
+		return isTypeAnyOf(MenuAction.CANCEL);
+	}
+
+	// this doesn't work great
+	public static MenuEntryMatcher isInterface()
+	{
+		return isTypeAnyOf(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY);
+	}
+
+	// Spellbook spells
+
+	private static final MenuAction[] SPELL_TYPES = new MenuAction[]{
+		MenuAction.WIDGET_TARGET_ON_GAME_OBJECT, MenuAction.WIDGET_TARGET_ON_NPC, MenuAction.WIDGET_TARGET_ON_PLAYER,
+		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
+	};
+
 	public static MenuEntryMatcher isSpell()
 	{
 		return hasAllOf(isTypeAnyOf(SPELL_TYPES), hasOption("cast"));
+	}
+
+	// Players
+
+	public static MenuEntryMatcher isPlayer()
+	{
+		return menuEntry -> menuEntry.getPlayer() != null;
 	}
 
 	// Util

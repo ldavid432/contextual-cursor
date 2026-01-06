@@ -24,14 +24,22 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import com.google.common.collect.Sets;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
-import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.ClientUI;
@@ -41,13 +49,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.ImageComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
 import net.runelite.client.ui.overlay.tooltip.TooltipManager;
-import net.runelite.client.util.Text;
-import javax.inject.Inject;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.util.Set;
+import net.runelite.client.util.ColorUtil;
 
 @Slf4j
 public class ContextualCursorWorkerOverlay extends Overlay
@@ -63,9 +65,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final int MENU_OPTION_HEIGHT = 15;
 	private static final int MENU_EXTRA_TOP = 4;
-	private static final Set<MenuAction> IGNORED_ACTIONS = Sets.newHashSet(
-		MenuAction.WALK, MenuAction.CC_OP, MenuAction.CANCEL, MenuAction.CC_OP_LOW_PRIORITY, MenuAction.SET_HEADING
-	);
 
 	private final Client client;
 	private final ClientUI clientUI;
@@ -153,10 +152,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			menuEntry = menuEntries[last];
 		}
 
-		if (menuEntry == null ||
-			(!(menuEntry.isItemOp() || (isInSubmenu && menuEntry.getItemId() > 0))
-				&& !menuEntry.getOption().equals("Examine")
-				&& IGNORED_ACTIONS.contains(menuEntry.getType())))
+		if (menuEntry == null || isEntryIgnored(menuEntry, isInSubmenu))
 		{
 			resetCursor();
 			return null;
@@ -256,6 +252,27 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		{
 			setSpriteToDraw(image);
 		}
+	}
+
+	private boolean isEntryIgnored(MenuEntry entry, boolean isInSubmenu)
+	{
+
+		MenuTarget target = mapTarget(entry, isInSubmenu);
+		return plugin.getExcludedTargets().getOrDefault(target, false);
+	}
+
+	private MenuTarget mapTarget(MenuEntry entry, boolean isInSubmenu)
+	{
+		for (MenuTarget target : MenuTarget.VALUES)
+		{
+			if (target.getMatcher().matches(entry) ||
+				// isInSubmenu isn't available in the MenuEntryMatcher
+				(target == MenuTarget.ITEM && isInSubmenu && entry.getItemId() > 0))
+			{
+				return target;
+			}
+		}
+		return MenuTarget.OTHER;
 	}
 
 	private void setSpriteToDraw(BufferedImage sprite)
