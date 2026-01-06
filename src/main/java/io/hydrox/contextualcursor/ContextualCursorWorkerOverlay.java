@@ -47,10 +47,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 public class ContextualCursorWorkerOverlay extends Overlay
@@ -238,55 +235,20 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		return menu.getMenuX() > client.getMouseCanvasPosition().getX() || menu.getMenuX() + menu.getMenuWidth() < client.getMouseCanvasPosition().getX();
 	}
 
-	private static final Set<MenuAction> SPELL_TYPES = Sets.newHashSet(
-		MenuAction.WIDGET_TARGET_ON_GAME_OBJECT, MenuAction.WIDGET_TARGET_ON_NPC, MenuAction.WIDGET_TARGET_ON_PLAYER,
-		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
-	);
-
 	private void processEntry(MenuEntry menuEntry, boolean isSubMenu)
 	{
-		final Sprite sprite;
-		// TODO: Can the spell sprites be turned into a single "spell" cursor?
-		if (SPELL_TYPES.contains(menuEntry.getType()) && menuEntry.getOption().equals("Cast"))
+		Sprite sprite = ContextualCursor.get(menuEntry);
+
+		// If we don't have a cursor for the submenu entry then use the parent cursor
+		final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
+		if (sprite == null && isSubMenu && lastSubmenuEntry1 != null)
 		{
-			final Matcher spellFinder = SPELL_FINDER.matcher(menuEntry.getTarget().toLowerCase());
-
-			if (!spellFinder.find())
-			{
-				return;
-			}
-
-			final String spellText = spellFinder.group(1);
-			final SpellSprite spell = SpellSprite.get(Text.sanitize(spellText));
-			if (spell == null)
-			{
-				return;
-			}
-
-			final BufferedImage magicSprite = spriteManager.getSprite(spell.spriteID, 0);
-			if (magicSprite == null)
-			{
-				return;
-			}
-
-			setSpriteToDraw(magicSprite);
+			processEntry(lastSubmenuEntry1, false);
 			return;
 		}
 		else
 		{
-			final Sprite newSprite = ContextualCursor.get(menuEntry);
-
-			// If we don't have a cursor for the submenu entry then use the parent cursor
-			final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
-			if (newSprite == null && isSubMenu && lastSubmenuEntry1 != null)
-			{
-				processEntry(lastSubmenuEntry1, false);
-				return;
-			}
-			else
-			{
-				sprite = Objects.requireNonNullElse(newSprite, GENERIC_CURSOR);
-			}
+			sprite = Objects.requireNonNullElse(sprite, GENERIC_CURSOR);
 		}
 
 		BufferedImage image = sprite.getImage(client, spriteManager);

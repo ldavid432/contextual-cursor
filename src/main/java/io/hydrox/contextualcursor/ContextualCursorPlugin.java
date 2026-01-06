@@ -103,7 +103,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
 		contextualCursorWorkerOverlay.resetCursor();
-		ContextualCursor.clearImages();
+		clearImages();
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(mouseListener);
 	}
@@ -133,5 +133,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	public void keyTyped(KeyEvent keyEvent)
 	{
 
+	}
+	private void clearImages()
+	{
+		ContextualCursor.clearImages();
+		SpellSprite.clearImages();
 	}
 }

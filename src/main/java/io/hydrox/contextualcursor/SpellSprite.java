@@ -24,9 +24,11 @@
  */
 package io.hydrox.contextualcursor;
 
-import lombok.AllArgsConstructor;
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.runelite.api.gameval.SpriteID;
 
 @AllArgsConstructor
@@ -132,11 +134,17 @@ public enum SpellSprite
 	DARK_DEMONBANE(SpriteID.MagicNecroOn.DARK_DEMONBANE);
 
 	private final String name;
-	final int spriteID;
+	@Getter
+	private final Sprite sprite;
 
 	SpellSprite(int spriteID)
 	{
-		this(null, spriteID);
+		this(null, Sprite.of(spriteID));
+	}
+
+	SpellSprite(String name, int spriteID)
+	{
+		this(name, Sprite.of(spriteID));
 	}
 
 	private String getName()
@@ -157,5 +165,13 @@ public enum SpellSprite
 	static SpellSprite get(String spell)
 	{
 		return map.get(spell);
+	}
+
+	static void clearImages()
+	{
+		for (SpellSprite spell : map.values())
+		{
+			spell.sprite.clearImage();
+		}
 	}
 }

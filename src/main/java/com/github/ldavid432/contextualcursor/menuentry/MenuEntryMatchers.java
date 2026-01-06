@@ -101,6 +101,18 @@ public class MenuEntryMatchers
 		return onTarget(targetSuffix, String::endsWith);
 	}
 
+	// Action types
+
+	private static MenuEntryMatcher isTypeAnyOf(MenuAction... actions)
+	{
+		return menuEntry -> Stream.of(actions).anyMatch(action -> menuEntry.getType() == action);
+	}
+
+	public static MenuEntryMatcher isSpell()
+	{
+		return hasAllOf(isTypeAnyOf(SPELL_TYPES), hasOption("cast"));
+	}
+
 	// Util
 
 	private static String sanitize(String text)

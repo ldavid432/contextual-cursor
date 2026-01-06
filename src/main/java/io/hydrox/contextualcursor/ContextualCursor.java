@@ -31,6 +31,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isGroundItem;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isNpc;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionStartsWith;
@@ -39,13 +40,14 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
 import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import lombok.Getter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.SpriteID;
+import net.runelite.client.util.Text;
 
 @Slf4j
-@Getter
 public enum ContextualCursor
 {
 	BANK("bank", optionIsAnyOf("bank", "coffer"),
@@ -136,6 +138,29 @@ public enum ContextualCursor
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank"),
+
+	SPELL("", isSpell())
+		{
+			@Override
+			protected Sprite getSprite(MenuEntry menuEntry)
+			{
+				final Matcher spellFinder = SPELL_FINDER.matcher(menuEntry.getTarget().toLowerCase());
+
+				if (!spellFinder.find())
+				{
+					return null;
+				}
+
+				final String spellText = spellFinder.group(1);
+				final SpellSprite spell = SpellSprite.get(Text.sanitize(spellText));
+				if (spell == null)
+				{
+					return null;
+				}
+
+				return spell.getSprite();
+			}
+		},
 	;
 
 	private final Sprite sprite;
@@ -169,6 +194,12 @@ public enum ContextualCursor
 		this.matcher = hasAnyOf(matchers);
 	}
 
+	protected Sprite getSprite(MenuEntry menuEntry)
+	{
+		return sprite;
+	}
+
+	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final ContextualCursor[] values = values();
 
 	static Sprite get(MenuEntry menuEntry)
@@ -177,7 +208,7 @@ public enum ContextualCursor
 		{
 			if (cursor.matcher.matches(menuEntry))
 			{
-				return cursor.getSprite();
+				return cursor.getSprite(menuEntry);
 			}
 		}
 		return null;
