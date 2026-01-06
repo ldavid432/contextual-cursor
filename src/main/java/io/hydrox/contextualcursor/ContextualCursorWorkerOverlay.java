@@ -154,10 +154,12 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 		if (menuEntry == null || isEntryIgnored(menuEntry, isInSubmenu))
 		{
+			createTooltip(true, menuEntry);
 			resetCursor();
 			return null;
 		}
 
+		createTooltip(false, menuEntry);
 		processEntry(menuEntry, isInSubmenu);
 		return null;
 	}
@@ -283,5 +285,52 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		plugin.setSpriteToDraw(sprite);
 		// Add an empty tooltip to keep real tooltips out of the way
 		tooltipManager.addFront(SPACER_TOOLTIP);
+	}
+
+	private void createTooltip(boolean isIgnored, MenuEntry entry)
+	{
+		if (entry == null || !plugin.isDebugTooltipEnabled())
+		{
+			return;
+		}
+
+		String ignored = null;
+		if (isIgnored)
+		{
+			ignored = ColorUtil.wrapWithColorTag("Ignored", Color.RED);
+		}
+
+		String name = String.format("option=%s, type=%s", entry.getOption(), entry.getType());
+		if (entry.getTarget() != null && !entry.getTarget().isBlank())
+		{
+			name += String.format(", target=%s", entry.getTarget());
+		}
+
+		String item = null;
+		if (entry.isItemOp() || entry.getItemId() > 0)
+		{
+			item = String.format("Item: isItemOp=%s, id=%s", entry.isItemOp(), entry.getItemId());
+		}
+
+		String npc = null;
+		if (entry.getNpc() != null)
+		{
+			npc = String.format("NPC: %s", entry.getNpc().getName());
+		}
+
+		String player = null;
+		if (entry.getPlayer() != null)
+		{
+			player = String.format("PLayer: %s", entry.getPlayer().getName());
+		}
+
+		tooltipManager.addFront(
+			new Tooltip(
+				Stream.of(ignored, name, item, npc, player)
+					.filter(Objects::nonNull)
+					.reduce((s1, s2) -> s1 + "<br>" + s2)
+					.get()
+			)
+		);
 	}
 }

@@ -81,6 +81,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean altPressed;
 
 	@Getter
+	private boolean isDebugTooltipEnabled;
+
+	@Getter
 	@Setter
 	private BufferedImage spriteToDraw;
 
@@ -166,6 +169,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			if (event.getKey().startsWith("ignore"))
 			{
 				updateIgnores();
+			}
+			else if (Objects.equals(event.getKey(), DEBUG_TOOLTIP))
+			{
+				isDebugTooltipEnabled = config.isDebugTooltipEnabled();
 			}
 		}
 	}
