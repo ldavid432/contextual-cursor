@@ -2,7 +2,6 @@ package com.github.ldavid432.contextualcursor.menuentry;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isCancel;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isGroundItem;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isInterface;
@@ -20,10 +19,7 @@ public enum MenuTarget
 {
 	ALWAYS_IGNORED(c -> true, isMovement(), isCancel()),
 	ITEM(ContextualCursorConfig::shouldIgnoreItems, MenuEntry::isItemOp,
-		hasAllOf(
-			entry -> entry.getItemId() > 0,
-			optionIsAnyOf("use", "examine")
-		)),
+		hasAllOf(entry -> entry.getItemId() > 0, optionIsAnyOf("use", "examine"))),
 	SPELL(ContextualCursorConfig::shouldIgnoreSpells, isSpell()),
 	INTERFACE(ContextualCursorConfig::shouldIgnoreInterfaces, isInterface()),
 	NPC(ContextualCursorConfig::shouldIgnoreNpcs, isNpc()),
@@ -36,7 +32,7 @@ public enum MenuTarget
 	@Getter
 	private final MenuEntryMatcher matcher;
 
-	public boolean isExcluded(ContextualCursorConfig config)
+	public boolean isIgnored(ContextualCursorConfig config)
 	{
 		return isIgnored.apply(config);
 	}

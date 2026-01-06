@@ -88,7 +88,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private BufferedImage spriteToDraw;
 
 	@Getter
-	private final Map<MenuTarget, Boolean> excludedTargets = new HashMap<>();
+	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
 
 	private final MouseListener mouseListener = new MouseAdapter()
 	{
@@ -181,7 +181,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		for (MenuTarget target : MenuTarget.VALUES)
 		{
-			excludedTargets.put(target, target.isExcluded(config));
+			ignoredTargets.put(target, target.isIgnored(config));
 		}
 	}
 

@@ -154,12 +154,12 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 		if (menuEntry == null || isEntryIgnored(menuEntry, isInSubmenu))
 		{
-			createTooltip(true, menuEntry);
+			debugTooltip(true, menuEntry);
 			resetCursor();
 			return null;
 		}
 
-		createTooltip(false, menuEntry);
+		debugTooltip(false, menuEntry);
 		processEntry(menuEntry, isInSubmenu);
 		return null;
 	}
@@ -258,9 +258,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private boolean isEntryIgnored(MenuEntry entry, boolean isInSubmenu)
 	{
-
 		MenuTarget target = mapTarget(entry, isInSubmenu);
-		return plugin.getExcludedTargets().getOrDefault(target, false);
+		return plugin.getIgnoredTargets().getOrDefault(target, false);
 	}
 
 	private MenuTarget mapTarget(MenuEntry entry, boolean isInSubmenu)
@@ -287,7 +286,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		tooltipManager.addFront(SPACER_TOOLTIP);
 	}
 
-	private void createTooltip(boolean isIgnored, MenuEntry entry)
+	private void debugTooltip(boolean isIgnored, MenuEntry entry)
 	{
 		if (entry == null || !plugin.isDebugTooltipEnabled())
 		{
