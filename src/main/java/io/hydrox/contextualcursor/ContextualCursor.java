@@ -134,7 +134,7 @@ public enum ContextualCursor
 	SMITHING(SpriteID.Staticons.SMITHING, "smelt", "smith", "hammer", "refine"),
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
 	STRENGTH(SpriteID.Staticons.STRENGTH, "bang", "move"),
-	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock"),
+	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock", "picklock"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank"),
