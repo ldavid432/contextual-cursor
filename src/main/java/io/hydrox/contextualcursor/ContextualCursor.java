@@ -86,8 +86,8 @@ public enum ContextualCursor
 	// Sailing
 	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, hasAllOf(hasOption("navigate"), targetNamed("helm"))), // Ship's wheel
 	SALVAGE(SpriteID.IconSailingFacilities24x24._5, "deploy"), // Salvage hook
-	UNSET_SAILS(SpriteID.IconSailingFacilities24x24._0, "un-set"),
-	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, "set"),
+	UNSET_SAILS(SpriteID.IconSailingFacilities24x24._0, hasAllOf(hasOption("un-set"), targetNamed("sails"))),
+	SET_SAILS(SpriteID.IconSailingFacilities24x24._1, hasAllOf(hasOption("set"), targetNamed("sails"))),
 	TRIM_SAILS(SpriteID.IconSailingFacilities24x24._2, hasAllOf(hasOption("trim"), isObject())), // Avoid trimmable capes
 	CANNON(SpriteID.IconSailingFacilities24x24._6, optionIsAnyOf("check-ammunition", "reset-ammunition"),
 		hasAllOf(targetEndsWith("cannon"), optionIsAnyOf("operate"))),
