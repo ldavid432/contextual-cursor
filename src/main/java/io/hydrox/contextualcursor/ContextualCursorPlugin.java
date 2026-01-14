@@ -27,6 +27,8 @@ package io.hydrox.contextualcursor;
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_METHOD;
+import com.github.ldavid432.contextualcursor.config.ScaleMethod;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
@@ -35,6 +37,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
@@ -86,10 +89,14 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Getter
 	@Setter
+	@Nullable
 	private Sprite spriteToDraw;
 
 	@Getter
-	private double cursorScale;
+	private double cursorScale = 1.0;
+
+	@Getter
+	private ScaleMethod scaleMethod = ScaleMethod.Smooth;
 
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
@@ -118,8 +125,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(mouseListener);
 
+		scaleMethod = config.getCursorScaleMethod();
 		updateIgnores();
-		updateScale(config.getCursorScale());
+		updateScale();
 	}
 
 	@Override
@@ -181,7 +189,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			}
 			else if (event.getKey().equals(SCALE))
 			{
-				updateScale(config.getCursorScale());
+				updateScale();
+			}
+			 else if (event.getKey().equals(SCALE_METHOD))
+			{
+				scaleMethod = config.getCursorScaleMethod();
+				contextualCursorDrawOverlay.rescaleImages();
 			}
 		}
 	}
@@ -194,11 +207,18 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		}
 	}
 
-	private void updateScale(double scale)
+	private void updateScale()
 	{
-		contextualCursorWorkerOverlay.updateScale(scale);
-		contextualCursorDrawOverlay.updateScale(scale);
-		cursorScale = scale;
+		if (config.getCursorScale() <= 0)
+		{
+			cursorScale = 0.1;
+		}
+		else
+		{
+			cursorScale = config.getCursorScale();
+		}
+		contextualCursorWorkerOverlay.updateScale();
+		contextualCursorDrawOverlay.updateScale();
 	}
 
 	private void clearImages()

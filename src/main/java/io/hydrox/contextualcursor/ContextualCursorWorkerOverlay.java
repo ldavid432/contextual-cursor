@@ -328,13 +328,13 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		);
 	}
 
-	public void updateScale(double scale)
+	public void updateScale()
 	{
-		int spacerHeight = (int) ((40 * scale) - 30);
+		int spacerHeight = (int) ((40 * plugin.getCursorScale()) - 30);
 		if (spacerHeight > 0)
 		{
 			spacerTooltip = new Tooltip(
-				new ImageComponent(new BufferedImage(1, (int) ((40 * scale) - 30), BufferedImage.TYPE_INT_ARGB))
+				new ImageComponent(new BufferedImage(1, (int) ((40 * plugin.getCursorScale()) - 30), BufferedImage.TYPE_INT_ARGB))
 			);
 		}
 		else

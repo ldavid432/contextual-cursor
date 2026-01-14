@@ -85,7 +85,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		if (sprite != currentSprite || currentScaledSprite == null)
 		{
 			currentSprite = sprite;
-			currentScaledSprite = scaleImage(image, plugin.getCursorScale());
+			currentScaledSprite = scaleImage(image);
 		}
 
 		if (currentScaledSprite == null)
@@ -101,17 +101,33 @@ public class ContextualCursorDrawOverlay extends Overlay
 		return null;
 	}
 
-	private Image scaleImage(BufferedImage image, double scale)
+	private Image scaleImage(BufferedImage image)
 	{
-		return image.getScaledInstance((int) (image.getWidth() * scale), (int) (image.getHeight() * scale), Image.SCALE_FAST);
+		if (plugin.getCursorScale() == 1.0)
+		{
+			return image;
+		}
+		else
+		{
+			return image.getScaledInstance(
+				(int) (image.getWidth() * plugin.getCursorScale()),
+				(int) (image.getHeight() * plugin.getCursorScale()),
+				plugin.getScaleMethod().getFlag()
+			);
+		}
 	}
 
-	public void updateScale(double scale)
+	public void updateScale()
 	{
-		scaledCenterPoint = new Point((int) (CENTRAL_POINT.getX() * scale), (int) (CENTRAL_POINT.getY() * scale));
+		scaledCenterPoint = new Point((int) (CENTRAL_POINT.getX() * plugin.getCursorScale()), (int) (CENTRAL_POINT.getY() * plugin.getCursorScale()));
+		rescaleImages();
+	}
+
+	public void rescaleImages()
+	{
 		if (blankCursor != null)
 		{
-			scaledBlankCursor = scaleImage(blankCursor, scale);
+			scaledBlankCursor = scaleImage(blankCursor);
 		}
 		currentScaledSprite = null;
 	}

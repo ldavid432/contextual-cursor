@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GROUP;
+import com.github.ldavid432.contextualcursor.config.ScaleMethod;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -12,18 +13,37 @@ public interface ContextualCursorConfig extends Config
 	String GROUP = "contextualcursor";
 	String DEBUG_TOOLTIP = "showDebugTooltip";
 	String SCALE = "scale";
+	String SCALE_METHOD = "scaleMethod";
+
+	@ConfigSection(
+		name = "Scale",
+		description = "Adjust the cursor scaling",
+		position = 0
+	)
+	String scaleSection = "scaleSection";
 
 	@ConfigItem(
 		name = "Cursor Scale",
-		description = "Scale the contextual cursor size<br>." +
-			"Smaller sizes can have issues with spacing.<br>" +
-			"The quality tends to be better when you use a whole number (1, 2 etc.)",
+		description = "Scale the contextual cursors size",
 		keyName = SCALE,
-		position = 0
+		position = 0,
+		section = scaleSection
 	)
 	default double getCursorScale()
 	{
 		return 1.0;
+	}
+
+	@ConfigItem(
+		name = "Scale Method",
+		description = "Algorithm used to scale the cursor. Has no effect if Cursor Scale is 1",
+		keyName = SCALE_METHOD,
+		position = 1,
+		section = scaleSection
+	)
+	default ScaleMethod getCursorScaleMethod()
+	{
+		return ScaleMethod.Smooth;
 	}
 
 	@ConfigSection(
