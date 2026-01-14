@@ -209,14 +209,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	private void updateScale()
 	{
-		if (config.getCursorScale() <= 0)
-		{
-			cursorScale = 0.1;
-		}
-		else
-		{
-			cursorScale = config.getCursorScale();
-		}
+		cursorScale = (double) config.getCursorScale() / 100;
 		contextualCursorWorkerOverlay.updateScale();
 		contextualCursorDrawOverlay.updateScale();
 	}

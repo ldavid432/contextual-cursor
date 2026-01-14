@@ -6,6 +6,8 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
+import net.runelite.client.config.Range;
+import net.runelite.client.config.Units;
 
 @ConfigGroup(GROUP)
 public interface ContextualCursorConfig extends Config
@@ -22,6 +24,8 @@ public interface ContextualCursorConfig extends Config
 	)
 	String scaleSection = "scaleSection";
 
+	@Range(min = 5)
+	@Units(Units.PERCENT)
 	@ConfigItem(
 		name = "Cursor Scale",
 		description = "Scale the contextual cursors size",
@@ -29,9 +33,9 @@ public interface ContextualCursorConfig extends Config
 		position = 0,
 		section = scaleSection
 	)
-	default double getCursorScale()
+	default int getCursorScale()
 	{
-		return 1.0;
+		return 100;
 	}
 
 	@ConfigItem(
