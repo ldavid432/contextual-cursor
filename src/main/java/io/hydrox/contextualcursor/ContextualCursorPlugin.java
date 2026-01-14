@@ -27,8 +27,7 @@ package io.hydrox.contextualcursor;
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_METHOD;
-import com.github.ldavid432.contextualcursor.config.ScaleMethod;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
@@ -96,7 +95,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private double cursorScale = 1.0;
 
 	@Getter
-	private ScaleMethod scaleMethod = ScaleMethod.Smooth;
+	private boolean isSmoothScalingEnabled;
 
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
@@ -125,7 +124,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(mouseListener);
 
-		scaleMethod = config.getCursorScaleMethod();
+		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 		updateIgnores();
 		updateScale();
 	}
@@ -191,9 +190,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				updateScale();
 			}
-			 else if (event.getKey().equals(SCALE_METHOD))
+			 else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
-				scaleMethod = config.getCursorScaleMethod();
+				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 				contextualCursorDrawOverlay.rescaleImages();
 			}
 		}

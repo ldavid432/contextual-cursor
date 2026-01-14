@@ -1,7 +1,6 @@
 package com.github.ldavid432.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GROUP;
-import com.github.ldavid432.contextualcursor.config.ScaleMethod;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -15,7 +14,7 @@ public interface ContextualCursorConfig extends Config
 	String GROUP = "contextualcursor";
 	String DEBUG_TOOLTIP = "showDebugTooltip";
 	String SCALE = "scale";
-	String SCALE_METHOD = "scaleMethod";
+	String SCALE_SMOOTHING = "scaleSmoothing";
 
 	@ConfigSection(
 		name = "Scale",
@@ -39,15 +38,15 @@ public interface ContextualCursorConfig extends Config
 	}
 
 	@ConfigItem(
-		name = "Scale Method",
-		description = "Algorithm used to scale the cursor. Has no effect if Cursor Scale is 1",
-		keyName = SCALE_METHOD,
+		name = "Smooth Scaling",
+		description = "Use a smooth scaling algorithm to scale the cursor",
+		keyName = SCALE_SMOOTHING,
 		position = 1,
 		section = scaleSection
 	)
-	default ScaleMethod getCursorScaleMethod()
+	default boolean isCursorSmoothScalingEnabled()
 	{
-		return ScaleMethod.Smooth;
+		return false;
 	}
 
 	@ConfigSection(

@@ -112,7 +112,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 			return image.getScaledInstance(
 				(int) (image.getWidth() * plugin.getCursorScale()),
 				(int) (image.getHeight() * plugin.getCursorScale()),
-				plugin.getScaleMethod().getFlag()
+				plugin.isSmoothScalingEnabled() ? Image.SCALE_SMOOTH : Image.SCALE_FAST
 			);
 		}
 	}
