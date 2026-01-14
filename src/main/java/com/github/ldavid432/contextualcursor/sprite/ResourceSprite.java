@@ -4,11 +4,13 @@ import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.util.ImageUtil;
 
+@EqualsAndHashCode(of = "fileName")
 @RequiredArgsConstructor
 public class ResourceSprite implements Sprite
 {

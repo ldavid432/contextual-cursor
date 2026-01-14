@@ -34,7 +34,6 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -59,10 +58,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		new java.awt.Point(0, 0),
 		"blank"
 	);
-	private static final Tooltip SPACER_TOOLTIP = new Tooltip(
-		new ImageComponent(new BufferedImage(1, 10, BufferedImage.TYPE_INT_ARGB))
-	);
-	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final int MENU_OPTION_HEIGHT = 15;
 	private static final int MENU_EXTRA_TOP = 4;
 
@@ -77,6 +72,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private boolean isInSubmenu;
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
+	private Tooltip spacerTooltip;
 
 	@Inject
 	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,
@@ -249,11 +245,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			sprite = Objects.requireNonNullElse(sprite, GENERIC_CURSOR);
 		}
 
-		BufferedImage image = sprite.getImage(client, spriteManager);
-		if (image != null)
-		{
-			setSpriteToDraw(image);
-		}
+		setSpriteToDraw(sprite);
 	}
 
 	private boolean isEntryIgnored(MenuEntry entry, boolean isInSubmenu)
@@ -276,14 +268,17 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		return MenuTarget.OTHER;
 	}
 
-	private void setSpriteToDraw(BufferedImage sprite)
+	private void setSpriteToDraw(Sprite sprite)
 	{
 		storeOriginalCursor();
 		clientUI.setCursor(BLANK_MOUSE);
 		cursorOverriden = true;
 		plugin.setSpriteToDraw(sprite);
 		// Add an empty tooltip to keep real tooltips out of the way
-		tooltipManager.addFront(SPACER_TOOLTIP);
+		if (spacerTooltip != null)
+		{
+			tooltipManager.addFront(spacerTooltip);
+		}
 	}
 
 	private void debugTooltip(boolean isIgnored, MenuEntry entry)
@@ -331,5 +326,20 @@ public class ContextualCursorWorkerOverlay extends Overlay
 					.get()
 			)
 		);
+	}
+
+	public void updateScale(double scale)
+	{
+		int spacerHeight = (int) ((40 * scale) - 30);
+		if (spacerHeight > 0)
+		{
+			spacerTooltip = new Tooltip(
+				new ImageComponent(new BufferedImage(1, (int) ((40 * scale) - 30), BufferedImage.TYPE_INT_ARGB))
+			);
+		}
+		else
+		{
+			spacerTooltip = null;
+		}
 	}
 }

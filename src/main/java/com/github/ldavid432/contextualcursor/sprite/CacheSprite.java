@@ -2,10 +2,12 @@ package com.github.ldavid432.contextualcursor.sprite;
 
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
+@EqualsAndHashCode(of = "id")
 @RequiredArgsConstructor
 public class CacheSprite implements Sprite
 {

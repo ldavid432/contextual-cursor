@@ -24,16 +24,19 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
+import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import javax.inject.Inject;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 public class ContextualCursorDrawOverlay extends Overlay
 {
@@ -44,31 +47,72 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
+	private final SpriteManager spriteManager;
+
+	private Point scaledCenterPoint = CENTRAL_POINT;
+	private final BufferedImage blankCursor = BLANK_CURSOR.getImage();
+	private Image scaledBlankCursor = blankCursor;
+	private Sprite currentSprite;
+	private Image currentScaledSprite;
 
 	@Inject
-	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin)
+	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteManager spriteManager)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
 		setPriority(1f);
 		this.client = client;
 		this.plugin = plugin;
+		this.spriteManager = spriteManager;
 	}
 
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		BufferedImage sprite = plugin.getSpriteToDraw();
+		Sprite sprite = plugin.getSpriteToDraw();
+
 		if (sprite == null)
 		{
 			return null;
 		}
 
+		BufferedImage image = sprite.getImage(client, spriteManager);
+		if (image == null)
+		{
+			return null;
+		}
+
+		if (sprite != currentSprite || currentScaledSprite == null)
+		{
+			currentSprite = sprite;
+			currentScaledSprite = scaleImage(image, plugin.getCursorScale());
+		}
+
+		if (currentScaledSprite == null)
+		{
+			return null;
+		}
+
 		final Point mousePos = client.getMouseCanvasPosition();
-		graphics.drawImage(BLANK_CURSOR.getImage(), mousePos.getX() + POINTER_OFFSET.getX(), mousePos.getY() + POINTER_OFFSET.getY(), null);
-		final int spriteX = POINTER_OFFSET.getX() + CENTRAL_POINT.getX() - sprite.getWidth() / 2;
-		final int spriteY = POINTER_OFFSET.getY() + CENTRAL_POINT.getY() - sprite.getHeight() / 2;
-		graphics.drawImage(sprite, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+		graphics.drawImage(scaledBlankCursor, mousePos.getX() + POINTER_OFFSET.getX(), mousePos.getY() + POINTER_OFFSET.getY(), null);
+		final int spriteX = POINTER_OFFSET.getX() + scaledCenterPoint.getX() - currentScaledSprite.getWidth(null) / 2;
+		final int spriteY = POINTER_OFFSET.getY() + scaledCenterPoint.getY() - currentScaledSprite.getHeight(null) / 2;
+		graphics.drawImage(currentScaledSprite, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
 		return null;
+	}
+
+	private Image scaleImage(BufferedImage image, double scale)
+	{
+		return image.getScaledInstance((int) (image.getWidth() * scale), (int) (image.getHeight() * scale), Image.SCALE_FAST);
+	}
+
+	public void updateScale(double scale)
+	{
+		scaledCenterPoint = new Point((int) (CENTRAL_POINT.getX() * scale), (int) (CENTRAL_POINT.getY() * scale));
+		if (blankCursor != null)
+		{
+			scaledBlankCursor = scaleImage(blankCursor, scale);
+		}
+		currentScaledSprite = null;
 	}
 }

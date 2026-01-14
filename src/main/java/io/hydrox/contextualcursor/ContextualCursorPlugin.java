@@ -26,11 +26,12 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -85,7 +86,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Getter
 	@Setter
-	private BufferedImage spriteToDraw;
+	private Sprite spriteToDraw;
+
+	@Getter
+	private double cursorScale;
 
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
@@ -115,6 +119,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		mouseManager.registerMouseListener(mouseListener);
 
 		updateIgnores();
+		updateScale(config.getCursorScale());
 	}
 
 	@Override
@@ -170,9 +175,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				updateIgnores();
 			}
-			else if (Objects.equals(event.getKey(), DEBUG_TOOLTIP))
+			else if (event.getKey().equals(DEBUG_TOOLTIP))
 			{
 				isDebugTooltipEnabled = config.isDebugTooltipEnabled();
+			}
+			else if (event.getKey().equals(SCALE))
+			{
+				updateScale(config.getCursorScale());
 			}
 		}
 	}
@@ -183,6 +192,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		{
 			ignoredTargets.put(target, target.isIgnored(config));
 		}
+	}
+
+	private void updateScale(double scale)
+	{
+		contextualCursorWorkerOverlay.updateScale(scale);
+		contextualCursorDrawOverlay.updateScale(scale);
+		cursorScale = scale;
 	}
 
 	private void clearImages()

@@ -11,11 +11,25 @@ public interface ContextualCursorConfig extends Config
 {
 	String GROUP = "contextualcursor";
 	String DEBUG_TOOLTIP = "showDebugTooltip";
+	String SCALE = "scale";
+
+	@ConfigItem(
+		name = "Cursor Scale",
+		description = "Scale the contextual cursor size<br>." +
+			"Smaller sizes can have issues with spacing.<br>" +
+			"The quality tends to be better when you use a whole number (1, 2 etc.)",
+		keyName = SCALE,
+		position = 0
+	)
+	default double getCursorScale()
+	{
+		return 1.0;
+	}
 
 	@ConfigSection(
 		name = "Ignores",
 		description = "Don't show the contextual cursor for certain targets",
-		position = 0
+		position = 1
 	)
 	String ignoreSection = "ignoreSection";
 
