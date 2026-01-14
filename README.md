@@ -11,3 +11,10 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 * Submenus have a few small unavoidable bugs that you will likely never notice
   * If you hover over multiple menu entries that create submenus that are close together (i.e. forestry backpack/basket) and don't actually trigger the opening of the 2nd one (but do hover over it) it may show the icon for the not open submenu
   * If you pass over a menu entry that opens a submenu and then proceed to the one next to it (closing the menu), then moving your cursor slightly out of the menu (without closing it) you may see the submenu icon pop up
+
+
+### Configuration
+- Ignores - Disables the contextual cursor from appear on certain targets
+  - NPCs, Objects, Ground Items, Inventory Items and/or Spells
+- Scale - Scale up or down the size of the contextual cursor
+  - Scaling is supported but the quality of scaled cursors is not guaranteed
