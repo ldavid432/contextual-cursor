@@ -125,14 +125,9 @@ public class MenuEntryMatchers
 
 	// Spellbook spells
 
-	private static final MenuAction[] SPELL_TYPES = new MenuAction[]{
-		MenuAction.WIDGET_TARGET_ON_GAME_OBJECT, MenuAction.WIDGET_TARGET_ON_NPC, MenuAction.WIDGET_TARGET_ON_PLAYER,
-		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
-	};
-
 	public static MenuEntryMatcher isSpell()
 	{
-		return hasAllOf(isTypeAnyOf(SPELL_TYPES), hasOption("cast"));
+		return hasAllOf(isWidgetTarget(), hasOption("cast"));
 	}
 
 	// Players
@@ -140,6 +135,22 @@ public class MenuEntryMatchers
 	public static MenuEntryMatcher isPlayer()
 	{
 		return menuEntry -> menuEntry.getPlayer() != null;
+	}
+
+	// Widget
+
+	private static final MenuAction[] WIDGET_TYPES = new MenuAction[]{
+		MenuAction.WIDGET_TARGET_ON_GAME_OBJECT, MenuAction.WIDGET_TARGET_ON_NPC, MenuAction.WIDGET_TARGET_ON_PLAYER,
+		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
+	};
+
+	public static MenuEntryMatcher isWidgetTarget()
+	{
+		return isTypeAnyOf(WIDGET_TYPES);
+	}
+
+	public static MenuEntryMatcher isWidgetTarget(String option, String fromTarget) {
+		return hasAllOf(hasOption(option), isWidgetTarget(), targetStartsWith(fromTarget + " ->"));
 	}
 
 	// Util

@@ -32,6 +32,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isNpc;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionStartsWith;
@@ -79,7 +80,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
 		hasAllOf(hasOption("search"), not(targetNamed("wiki")))),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
-	UNTIE("untie", "tether"),
+	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet"),
 	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("wiki"))),
 
