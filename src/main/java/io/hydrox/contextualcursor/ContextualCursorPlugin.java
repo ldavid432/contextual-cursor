@@ -193,7 +193,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			 else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
 				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-				contextualCursorDrawOverlay.rescaleImages();
+				contextualCursorDrawOverlay.rerenderImages();
 			}
 		}
 	}

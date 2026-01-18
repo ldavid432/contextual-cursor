@@ -24,6 +24,8 @@
  */
 package io.hydrox.contextualcursor;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
 import java.awt.Dimension;
@@ -50,6 +52,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private final SpriteManager spriteManager;
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
+	private Point scaledOffset = POINTER_OFFSET;
 	private final BufferedImage blankCursor = BLANK_CURSOR.getImage();
 	private Image scaledBlankCursor = blankCursor;
 	private Sprite currentSprite;
@@ -85,7 +88,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		if (sprite != currentSprite || currentScaledSprite == null)
 		{
 			currentSprite = sprite;
-			currentScaledSprite = scaleImage(image);
+			currentScaledSprite = scaleImage(image, plugin);
 		}
 
 		if (currentScaledSprite == null)
@@ -94,40 +97,25 @@ public class ContextualCursorDrawOverlay extends Overlay
 		}
 
 		final Point mousePos = client.getMouseCanvasPosition();
-		graphics.drawImage(scaledBlankCursor, mousePos.getX() + POINTER_OFFSET.getX(), mousePos.getY() + POINTER_OFFSET.getY(), null);
-		final int spriteX = POINTER_OFFSET.getX() + scaledCenterPoint.getX() - currentScaledSprite.getWidth(null) / 2;
-		final int spriteY = POINTER_OFFSET.getY() + scaledCenterPoint.getY() - currentScaledSprite.getHeight(null) / 2;
+		graphics.drawImage(scaledBlankCursor, mousePos.getX() + scaledOffset.getX(), mousePos.getY() + scaledOffset.getY(), null);
+		final int spriteX = scaledOffset.getX() + scaledCenterPoint.getX() - currentScaledSprite.getWidth(null) / 2;
+		final int spriteY = scaledOffset.getY() + scaledCenterPoint.getY() - currentScaledSprite.getHeight(null) / 2;
 		graphics.drawImage(currentScaledSprite, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
 		return null;
 	}
 
-	private Image scaleImage(BufferedImage image)
-	{
-		if (plugin.getCursorScale() == 1.0)
-		{
-			return image;
-		}
-		else
-		{
-			return image.getScaledInstance(
-				(int) (image.getWidth() * plugin.getCursorScale()),
-				(int) (image.getHeight() * plugin.getCursorScale()),
-				plugin.isSmoothScalingEnabled() ? Image.SCALE_SMOOTH : Image.SCALE_FAST
-			);
-		}
-	}
-
 	public void updateScale()
 	{
-		scaledCenterPoint = new Point((int) (CENTRAL_POINT.getX() * plugin.getCursorScale()), (int) (CENTRAL_POINT.getY() * plugin.getCursorScale()));
-		rescaleImages();
+		scaledCenterPoint = scalePoint(CENTRAL_POINT, plugin.getCursorScale());
+		scaledOffset = scalePoint(POINTER_OFFSET, plugin.getCursorScale());
+		rerenderImages();
 	}
 
-	public void rescaleImages()
+	public void rerenderImages()
 	{
 		if (blankCursor != null)
 		{
-			scaledBlankCursor = scaleImage(blankCursor);
+			scaledBlankCursor = scaleImage(blankCursor, plugin);
 		}
 		currentScaledSprite = null;
 	}
