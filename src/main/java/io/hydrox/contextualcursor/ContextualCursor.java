@@ -170,29 +170,31 @@ public enum ContextualCursor
 	// Basic cursor with only global actions
 	ContextualCursor(String cursorPath, String... actions)
 	{
-		this.sprite = Sprite.of(cursorPath);
-		this.matcher = optionIsAnyOf(actions);
+		this(Sprite.of(cursorPath), optionIsAnyOf(actions));
 	}
 
 	// Basic cursor with only global actions
 	ContextualCursor(int spriteID, String... actions)
 	{
-		this.sprite = Sprite.of(spriteID);
-		this.matcher = optionIsAnyOf(actions);
+		this(Sprite.of(spriteID), optionIsAnyOf(actions));
 	}
 
 	// Cursor with specific matchers
 	ContextualCursor(String cursorPath, MenuEntryMatcher... matchers)
 	{
-		this.sprite = Sprite.of(cursorPath);
-		this.matcher = hasAnyOf(matchers);
+		this(Sprite.of(cursorPath), hasAnyOf(matchers));
 	}
 
 	// Cursor with specific matchers
 	ContextualCursor(int spriteID, MenuEntryMatcher... matchers)
 	{
-		this.sprite = Sprite.of(spriteID);
-		this.matcher = hasAnyOf(matchers);
+		this(Sprite.of(spriteID), hasAnyOf(matchers));
+	}
+
+	ContextualCursor(Sprite sprite, MenuEntryMatcher matcher)
+	{
+		this.sprite = sprite;
+		this.matcher = matcher;
 	}
 
 	protected Sprite getSprite(MenuEntry menuEntry)
