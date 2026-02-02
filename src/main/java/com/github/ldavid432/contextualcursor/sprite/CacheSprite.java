@@ -39,4 +39,10 @@ public class CacheSprite implements Sprite
 	{
 		image = null;
 	}
+
+	@Override
+	public boolean isFullCursor()
+	{
+		return false;
+	}
 }

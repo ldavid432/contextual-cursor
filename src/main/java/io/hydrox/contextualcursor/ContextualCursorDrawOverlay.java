@@ -44,6 +44,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 {
 	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
 	private static final Point POINTER_OFFSET = new Point(-5, 0);
+	private static final Point POINTER_OFFSET2 = new Point(-3, 0);
 	//The centre of the circle (biased bottom right since it's an even size), for use with sprites
 	private static final Point CENTRAL_POINT = new Point(16, 18);
 
@@ -53,6 +54,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point scaledOffset = POINTER_OFFSET;
+	private Point scaledOffset2 = POINTER_OFFSET2;
 	private final BufferedImage blankCursor = BLANK_CURSOR.getImage();
 	private Image scaledBlankCursor = blankCursor;
 	private Sprite currentSprite;
@@ -97,10 +99,18 @@ public class ContextualCursorDrawOverlay extends Overlay
 		}
 
 		final Point mousePos = client.getMouseCanvasPosition();
-		graphics.drawImage(scaledBlankCursor, mousePos.getX() + scaledOffset.getX(), mousePos.getY() + scaledOffset.getY(), null);
-		final int spriteX = scaledOffset.getX() + scaledCenterPoint.getX() - currentScaledSprite.getWidth(null) / 2;
-		final int spriteY = scaledOffset.getY() + scaledCenterPoint.getY() - currentScaledSprite.getHeight(null) / 2;
-		graphics.drawImage(currentScaledSprite, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+		if (sprite.isFullCursor())
+		{
+			graphics.drawImage(currentScaledSprite, mousePos.getX() + scaledOffset2.getX(), mousePos.getY() + scaledOffset2.getY(), null);
+		}
+		else
+		{
+			graphics.drawImage(scaledBlankCursor, mousePos.getX() + scaledOffset.getX(), mousePos.getY() + scaledOffset.getY(), null);
+			final int spriteX = scaledOffset.getX() + scaledCenterPoint.getX() - currentScaledSprite.getWidth(null) / 2;
+			final int spriteY = scaledOffset.getY() + scaledCenterPoint.getY() - currentScaledSprite.getHeight(null) / 2;
+			graphics.drawImage(currentScaledSprite, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+		}
+
 		return null;
 	}
 
@@ -108,6 +118,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 	{
 		scaledCenterPoint = scalePoint(CENTRAL_POINT, plugin.getCursorScale());
 		scaledOffset = scalePoint(POINTER_OFFSET, plugin.getCursorScale());
+		scaledOffset2 = scalePoint(POINTER_OFFSET2, plugin.getCursorScale());
 		rerenderImages();
 	}
 

@@ -12,6 +12,8 @@ public interface Sprite
 
 	void clearImage();
 
+	boolean isFullCursor();
+
 	static Sprite of(int id)
 	{
 		return new CacheSprite(id);
@@ -20,5 +22,10 @@ public interface Sprite
 	static Sprite of(String path)
 	{
 		return new ResourceSprite(path);
+	}
+
+	static Sprite of(String path, boolean isFullCursor)
+	{
+		return new ResourceSprite(path, isFullCursor);
 	}
 }

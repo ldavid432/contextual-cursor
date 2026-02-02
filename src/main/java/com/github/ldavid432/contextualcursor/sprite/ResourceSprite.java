@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
@@ -15,10 +16,19 @@ import net.runelite.client.util.ImageUtil;
 public class ResourceSprite implements Sprite
 {
 	@Nonnull
-	String fileName;
+	private final String fileName;
 
 	@Nullable
-	BufferedImage image;
+	private BufferedImage image;
+
+	@Getter
+	private final boolean isFullCursor;
+
+	ResourceSprite(@Nonnull String fileName)
+	{
+		this.fileName = fileName;
+		this.isFullCursor = false;
+	}
 
 	@Nullable
 	@Override
