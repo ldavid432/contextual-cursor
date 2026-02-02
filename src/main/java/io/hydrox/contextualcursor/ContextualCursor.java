@@ -74,7 +74,7 @@ public enum ContextualCursor
 		"collect-from", "take-from", "pick-up", "take-knife", "take-any-cargo"),
 		hasAllOf(hasOption("harvest"), isNpc())), // Various NPC corpses
 	PLANK("plank", "buy-plank"),
-	READ("read", "read", "story"),
+	READ("read", "read", "story", "guide"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
 	SEARCH("search", optionIsAnyOf("lookup", "examine", "view", "look-inside", "inspect", "investigate"),
 		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
