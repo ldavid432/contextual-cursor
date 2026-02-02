@@ -72,10 +72,11 @@ public enum ContextualCursor
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
 	OPEN("open", "open"),
 	PICK_LOCK(Sprite.of("picklock", true), optionIsAnyOf("pick-lock", "picklock")),
-	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "take-cargo", "take-last-cargo",
-		"collect-from", "take-from", "pick-up", "take-knife", "take-any-cargo"),
+	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "collect-from", "pick-up"),
 		hasAllOf(hasOption("harvest"), isNpc()),  // Various NPC corpses
-		hasAllOf(optionIsAnyOf("search", "big-search"), targetStartsWith("reward"))), // various minigame reward objects
+		hasAllOf(optionIsAnyOf("search", "big-search"), targetStartsWith("reward")),  // various minigame reward objects
+		optionStartsWith("take-")
+	),
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story", "guide"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
