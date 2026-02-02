@@ -82,6 +82,8 @@ public enum ContextualCursor
 		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
 		hasAllOf(hasOption("search"), not(targetNamed("wiki")))),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
+	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter"),
+		optionStartsWith("last-destination"), optionStartsWith("charter-to"))),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet"),
 	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("wiki"))),
