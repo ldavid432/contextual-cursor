@@ -55,6 +55,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("use"), targetNamed("bank chest"))),
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
+	DIG(Sprite.of("dig", true), optionIsAnyOf("dig", "clear")),
 	DRINK("drink", "drink"),
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
 	EAT("eat", "eat"),
@@ -112,8 +113,8 @@ public enum ContextualCursor
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
 	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench")))), // crafting table / clockmaker's benches
-	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "clear",
-		"pay", "guide", "cure", "prune"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
+	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "pay",
+		"cure", "prune"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
 		hasAllOf(hasOption("collect"), targetEndsWith("coral")), // Collecting coral
 		hasAllOf(optionStartsWith("pay"), isNpc()) // Paying farmers
 	),
