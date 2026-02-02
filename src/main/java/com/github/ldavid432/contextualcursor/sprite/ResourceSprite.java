@@ -24,7 +24,7 @@ public class ResourceSprite implements Sprite
 	@Getter
 	private final boolean isFullCursor;
 
-	ResourceSprite(@Nonnull String fileName)
+	public ResourceSprite(@Nonnull String fileName)
 	{
 		this.fileName = fileName;
 		this.isFullCursor = false;
