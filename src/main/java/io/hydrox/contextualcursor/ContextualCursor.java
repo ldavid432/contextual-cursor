@@ -71,6 +71,7 @@ public enum ContextualCursor
 	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor"),
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
 	OPEN("open", "open"),
+	PICK_LOCK(Sprite.of("picklock", true), optionIsAnyOf("pick-lock", "picklock")),
 	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "take-cargo", "take-last-cargo",
 		"collect-from", "take-from", "pick-up", "take-knife", "take-any-cargo"),
 		hasAllOf(hasOption("harvest"), isNpc())), // Various NPC corpses
@@ -136,7 +137,7 @@ public enum ContextualCursor
 	SMITHING(SpriteID.Staticons.SMITHING, "smelt", "smith", "hammer", "refine"),
 	SLAYER(SpriteID.Staticons2.SLAYER, "assignment"),
 	STRENGTH(SpriteID.Staticons.STRENGTH, "bang", "move"),
-	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "pick-lock", "picklock", "bribe"),
+	THIEVING(SpriteID.Staticons.THIEVING, "steal-from", "pickpocket", "search for traps", "bribe"),
 	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank", "manage-crew"),
