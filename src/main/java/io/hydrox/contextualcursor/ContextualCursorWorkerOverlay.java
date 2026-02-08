@@ -24,6 +24,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
@@ -40,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
 import net.runelite.api.MenuEntry;
-import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -64,8 +64,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private final Client client;
 	private final ClientUI clientUI;
 	private final ContextualCursorPlugin plugin;
-	private final SpriteManager spriteManager;
 	private final TooltipManager tooltipManager;
+	private final ContextualCursorConfig config;
 
 	// Last top level menu entry that has a submenu
 	private MenuEntry lastSubmenuEntry;
@@ -73,10 +73,11 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
 	private Tooltip spacerTooltip;
+	private Cursor genericCursor;
 
 	@Inject
 	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,
-								  SpriteManager spriteManager, TooltipManager tooltipManager)
+								  TooltipManager tooltipManager, ContextualCursorConfig config)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -84,8 +85,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		this.client = client;
 		this.clientUI = clientUI;
 		this.plugin = plugin;
-		this.spriteManager = spriteManager;
 		this.tooltipManager = tooltipManager;
+		this.config = config;
 	}
 
 	private void storeOriginalCursor()
@@ -101,6 +102,15 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 	}
 
+	void shutdown()
+	{
+		genericCursor = null;
+		if (!plugin.isCustomCursorPluginEnabled())
+		{
+			clientUI.resetCursor();
+		}
+	}
+
 	void resetCursor()
 	{
 		if (cursorOverriden)
@@ -111,11 +121,43 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			{
 				clientUI.setCursor(originalCursor);
 			}
+			else if (!plugin.isCustomCursorPluginEnabled() && config.isCustomCursorEnabled())
+			{
+				if (genericCursor == null)
+				{
+					genericCursor = createGenericCursor();
+				}
+				clientUI.setCursor(genericCursor);
+			}
 			else
 			{
 				clientUI.resetCursor();
 			}
 		}
+		else if (!plugin.isCustomCursorPluginEnabled() && config.isCustomCursorEnabled())
+		{
+			if (genericCursor == null)
+			{
+				genericCursor = createGenericCursor();
+			}
+			clientUI.setCursor(genericCursor);
+		}
+	}
+
+	private Cursor createGenericCursor()
+	{
+		BufferedImage icon = ContextualCursor.GENERIC_CURSOR.getImage();
+		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = result.createGraphics();
+		g.drawImage(icon, 0, 0, null);
+		g.dispose();
+
+		return Toolkit.getDefaultToolkit().createCustomCursor(
+			result,
+			new java.awt.Point(0, 0),
+			"generic"
+		);
 	}
 
 	@Override

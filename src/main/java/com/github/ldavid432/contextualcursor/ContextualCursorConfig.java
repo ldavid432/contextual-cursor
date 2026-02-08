@@ -16,10 +16,21 @@ public interface ContextualCursorConfig extends Config
 	String SCALE = "scale";
 	String SCALE_SMOOTHING = "scaleSmoothing";
 
+	@ConfigItem(
+		name = "Override default cursor",
+		description = "Override the default cursor with the RS2 version (if custom cursor plugin is OFF)",
+		keyName = "customCursor",
+		position = 0
+	)
+	default boolean isCustomCursorEnabled()
+	{
+		return false;
+	}
+
 	@ConfigSection(
 		name = "Scale",
 		description = "Adjust the cursor scaling",
-		position = 0
+		position = 1
 	)
 	String scaleSection = "scaleSection";
 
@@ -52,7 +63,7 @@ public interface ContextualCursorConfig extends Config
 	@ConfigSection(
 		name = "Ignores",
 		description = "Don't show the contextual cursor for certain targets",
-		position = 1
+		position = 2
 	)
 	String ignoreSection = "ignoreSection";
 

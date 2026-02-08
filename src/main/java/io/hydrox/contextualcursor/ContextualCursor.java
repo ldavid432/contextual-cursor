@@ -146,7 +146,7 @@ public enum ContextualCursor
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank", "manage-crew"),
 
-	SPELL("", isSpell())
+	SPELL(null, isSpell())
 		{
 			@Override
 			protected Sprite getSprite(MenuEntry menuEntry)
@@ -211,7 +211,7 @@ public enum ContextualCursor
 	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final ContextualCursor[] values = values();
 
-	static Sprite get(MenuEntry menuEntry)
+	public static Sprite get(MenuEntry menuEntry)
 	{
 		for (ContextualCursor cursor : values)
 		{

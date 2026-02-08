@@ -43,6 +43,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -52,7 +53,10 @@ import net.runelite.client.input.MouseAdapter;
 import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginManager;
+import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
@@ -61,6 +65,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 	tags = {"cursor", "rs3", "rs2", "rshd", "context"}
 )
 @Slf4j
+@PluginDependency(CustomCursorPlugin.class)
 public class ContextualCursorPlugin extends Plugin implements KeyListener
 {
 	@Inject
@@ -80,6 +85,15 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Inject
 	private ContextualCursorConfig config;
 
+	@Inject
+	private CustomCursorPlugin customCursorPlugin;
+
+	@Inject
+	private PluginManager pluginManager;
+
+	@Inject
+	private ClientThread clientThread;
+
 	@Getter
 	private boolean altPressed;
 
@@ -96,6 +110,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Getter
 	private boolean isSmoothScalingEnabled;
+
+	@Getter
+	private boolean isCustomCursorPluginEnabled;
 
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
@@ -127,6 +144,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 		updateIgnores();
 		updateScale();
+		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
+		contextualCursorWorkerOverlay.resetCursor();
 	}
 
 	@Override
@@ -134,7 +153,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
-		contextualCursorWorkerOverlay.resetCursor();
+		contextualCursorWorkerOverlay.shutdown();
 		clearImages();
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(mouseListener);
@@ -190,11 +209,17 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				updateScale();
 			}
-			 else if (event.getKey().equals(SCALE_SMOOTHING))
+			else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
 				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 				contextualCursorDrawOverlay.rerenderImages();
 			}
+		}
+		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))
+		{
+			isCustomCursorPluginEnabled = Boolean.parseBoolean(event.getNewValue());
+			// Delaying this until after CustomCursorPlugin has run its shutdown which clears the cursor
+			clientThread.invoke(() -> contextualCursorWorkerOverlay.resetCursor());
 		}
 	}
 
