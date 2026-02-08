@@ -8,7 +8,7 @@ import net.runelite.client.game.SpriteManager;
 public interface Sprite
 {
 	@Nullable
-	BufferedImage getImage(Client client, SpriteManager spriteManager);
+	BufferedImage getImage(Client client, SpriteManager spriteManager,boolean isOsrSkin);
 
 	void clearImage();
 

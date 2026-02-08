@@ -17,7 +17,7 @@ public class CacheSprite implements Sprite
 	BufferedImage image;
 
 	@Override
-	public BufferedImage getImage(final Client client, final SpriteManager spriteManager)
+	public BufferedImage getImage(final Client client, final SpriteManager spriteManager, boolean isOsrsSkin)
 	{
 		if (image == null)
 		{

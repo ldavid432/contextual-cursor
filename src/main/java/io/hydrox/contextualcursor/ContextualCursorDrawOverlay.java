@@ -26,6 +26,7 @@ package io.hydrox.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
+import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
 import java.awt.Dimension;
@@ -55,13 +56,13 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point scaledOffset = POINTER_OFFSET;
 	private Point scaledOffset2 = POINTER_OFFSET2;
-	private final BufferedImage blankCursor = BLANK_CURSOR.getImage();
-	private Image scaledBlankCursor = blankCursor;
+	private BufferedImage blankCursor = null;
+	private Image scaledBlankCursor = null;
 	private Sprite currentSprite;
 	private Image currentScaledSprite;
 
 	@Inject
-	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteManager spriteManager)
+	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteManager spriteManager, ContextualCursorConfig config)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
@@ -69,6 +70,13 @@ public class ContextualCursorDrawOverlay extends Overlay
 		this.client = client;
 		this.plugin = plugin;
 		this.spriteManager = spriteManager;
+		this.setBlankCursor();
+	}
+
+	public void setBlankCursor()
+	{
+		blankCursor = BLANK_CURSOR.getImage(plugin.isOSRSSkin());
+		scaledBlankCursor = null;
 	}
 
 	@Override
@@ -81,7 +89,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 			return null;
 		}
 
-		BufferedImage image = sprite.getImage(client, spriteManager);
+		BufferedImage image = sprite.getImage(client, spriteManager,plugin.isOSRSSkin());
 		if (image == null)
 		{
 			return null;

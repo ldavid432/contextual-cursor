@@ -15,6 +15,7 @@ public interface ContextualCursorConfig extends Config
 	String DEBUG_TOOLTIP = "showDebugTooltip";
 	String SCALE = "scale";
 	String SCALE_SMOOTHING = "scaleSmoothing";
+	String SKIN = "cursorskin";
 
 	@ConfigItem(
 		name = "Override default cursor",
@@ -27,10 +28,21 @@ public interface ContextualCursorConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+		keyName = "cursorskin",
+		name = "Cursor Style",
+		description = "Pick what style cursor you would like",
+		position = 1
+	)
+	default CursorSkin skin()
+	{
+		return CursorSkin.RS2;
+	}
+
 	@ConfigSection(
 		name = "Scale",
 		description = "Adjust the cursor scaling",
-		position = 1
+		position = 2
 	)
 	String scaleSection = "scaleSection";
 
