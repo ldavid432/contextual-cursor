@@ -25,8 +25,11 @@
 package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.*;
-import com.github.ldavid432.contextualcursor.CursorSkin;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_THEME;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
@@ -109,7 +112,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean altPressed;
 
 	@Getter
-	private boolean isOSRSSkin;
+	private CursorTheme cursorTheme;
 
 	@Getter
 	private boolean isDebugTooltipEnabled;
@@ -156,7 +159,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		mouseManager.registerMouseListener(mouseListener);
 
 		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-		isOSRSSkin = config.skin() == CursorSkin.OSRS;
+		cursorTheme = config.getCursorTheme();
 		updateIgnores();
 		updateScale();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
@@ -265,12 +268,11 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				contextualCursorWorkerOverlay.resetCursor(Boolean.parseBoolean(event.getNewValue()));
 			}
-			else if (event.getKey().equals(SKIN))
+			else if (event.getKey().equals(CURSOR_THEME))
 			{
-				isOSRSSkin = config.skin() == CursorSkin.OSRS;
-				ContextualCursor.clearImages();
-				contextualCursorWorkerOverlay.genericCursor = null;
-				contextualCursorDrawOverlay.setBlankCursor(isOSRSSkin);
+				cursorTheme = config.getCursorTheme();
+				clearImages();
+				contextualCursorWorkerOverlay.updateTheme();
 				contextualCursorDrawOverlay.rerenderImages();
 			}
 		}

@@ -24,10 +24,10 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
-import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
-import com.github.ldavid432.contextualcursor.CursorSkin;
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
 import java.awt.Dimension;
@@ -71,12 +71,12 @@ public class ContextualCursorDrawOverlay extends Overlay
 		this.client = client;
 		this.plugin = plugin;
 		this.spriteManager = spriteManager;
-		this.setBlankCursor(config.skin() == CursorSkin.OSRS);
+		this.setBlankCursor(config.getCursorTheme());
 	}
 
-	public void setBlankCursor(boolean isOSRS)
+	public void setBlankCursor(CursorTheme theme)
 	{
-		blankCursor = BLANK_CURSOR.getImage(isOSRS);
+		blankCursor = BLANK_CURSOR.getImage(theme);
 		scaledBlankCursor = null;
 	}
 
@@ -90,7 +90,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 			return null;
 		}
 
-		BufferedImage image = sprite.getImage(client, spriteManager,plugin.isOSRSSkin());
+		BufferedImage image = sprite.getImage(client, spriteManager, plugin.getCursorTheme());
 		if (image == null)
 		{
 			return null;
@@ -133,6 +133,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 	public void rerenderImages()
 	{
+		blankCursor = BLANK_CURSOR.getImage(plugin.getCursorTheme());
 		if (blankCursor != null)
 		{
 			scaledBlankCursor = scaleImage(blankCursor, plugin);

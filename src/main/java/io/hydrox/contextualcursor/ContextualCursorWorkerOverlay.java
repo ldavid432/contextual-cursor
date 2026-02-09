@@ -25,7 +25,6 @@
 package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
-import com.github.ldavid432.contextualcursor.CursorSkin;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
@@ -42,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
 import net.runelite.api.MenuEntry;
-import net.runelite.client.plugins.interfacestyles.Skin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -157,7 +155,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = ContextualCursor.GENERIC_CURSOR.getImage(plugin.isOSRSSkin());
+		BufferedImage icon = ContextualCursor.GENERIC_CURSOR.getImage(plugin.getCursorTheme());
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();
@@ -394,5 +392,10 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		{
 			spacerTooltip = null;
 		}
+	}
+
+	public void updateTheme()
+	{
+		genericCursor = createGenericCursor();
 	}
 }

@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GROUP;
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -15,11 +16,11 @@ public interface ContextualCursorConfig extends Config
 	String DEBUG_TOOLTIP = "showDebugTooltip";
 	String SCALE = "scale";
 	String SCALE_SMOOTHING = "scaleSmoothing";
-	String SKIN = "cursorskin";
+	String CURSOR_THEME = "cursorTheme";
 
 	@ConfigItem(
 		name = "Override default cursor",
-		description = "Override the default cursor with the RS2 version (if custom cursor plugin is OFF)",
+		description = "Override the default cursor with one that matches your cursor theme (if custom cursor plugin is OFF)",
 		keyName = "customCursor",
 		position = 0
 	)
@@ -36,14 +37,16 @@ public interface ContextualCursorConfig extends Config
 	void setCustomCursorEnabled(boolean enabled);
 
 	@ConfigItem(
-		keyName = "cursorskin",
-		name = "Cursor Style",
-		description = "Pick what style cursor you would like",
+		keyName = CURSOR_THEME,
+		name = "Cursor Theme",
+		description = "Theme for the contextual cursor frame and default cursor<br>" +
+			"OldSchool: Custom-made theme to match the osrs UI<br>" +
+			"RuneScape 2: Sprites taken directly from RS2",
 		position = 1
 	)
-	default CursorSkin skin()
+	default CursorTheme getCursorTheme()
 	{
-		return CursorSkin.RS2;
+		return CursorTheme.RS2;
 	}
 
 	@ConfigSection(
@@ -82,7 +85,7 @@ public interface ContextualCursorConfig extends Config
 	@ConfigSection(
 		name = "Ignores",
 		description = "Don't show the contextual cursor for certain targets",
-		position = 2
+		position = 3
 	)
 	String ignoreSection = "ignoreSection";
 

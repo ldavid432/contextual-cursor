@@ -4,6 +4,7 @@ import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import net.runelite.api.Point;
+import net.runelite.client.util.ImageUtil;
 
 public class ContextualCursorUtil
 {
@@ -38,5 +39,10 @@ public class ContextualCursorUtil
 		{
 			return new Point((int) (point.getX() * scale), (int) (point.getY() * scale));
 		}
+	}
+
+	public static BufferedImage loadImage(String fileName)
+	{
+		return ImageUtil.loadImageResource(ContextualCursorPlugin.class, String.format("cursors/%s.png", fileName));
 	}
 }

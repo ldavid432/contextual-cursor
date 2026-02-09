@@ -1,16 +1,14 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
-import io.hydrox.contextualcursor.ContextualCursorPlugin;
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
-import net.runelite.client.util.ImageUtil;
 
 @EqualsAndHashCode(of = "fileName")
 @RequiredArgsConstructor
@@ -33,26 +31,17 @@ public class ResourceSprite implements Sprite
 
 	@Nullable
 	@Override
-	public BufferedImage getImage(Client client, SpriteManager spriteManager, boolean isOsrSkin)
+	public BufferedImage getImage(Client client, SpriteManager spriteManager, CursorTheme theme)
 	{
-		return getImage(isOsrSkin);
+		return getImage(theme);
 	}
 
 	@Nullable
-	public BufferedImage getImage(boolean isOsrSkin)
+	public BufferedImage getImage(CursorTheme theme)
 	{
 		if (image == null)
 		{
-			if (isOsrSkin)
-			{
-				String osrsPath = String.format("cursors/%s_osrs.png", fileName);
-				if (resourceExists(osrsPath))
-				{
-					image = ImageUtil.loadImageResource(ContextualCursorPlugin.class, osrsPath);
-					return image;
-				}
-			}
-			image = loadImage(fileName);
+			image = theme.getImage(fileName);
 		}
 		return image;
 	}
@@ -63,13 +52,4 @@ public class ResourceSprite implements Sprite
 		image = null;
 	}
 
-	private static boolean resourceExists(String resourcePath)
-	{
-		return ContextualCursorPlugin.class.getResourceAsStream(resourcePath) != null;
-	}
-
-	public static BufferedImage loadImage(String fileName)
-	{
-		return ImageUtil.loadImageResource(ContextualCursorPlugin.class, String.format("cursors/%s.png", fileName));
-	}
 }

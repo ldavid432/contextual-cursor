@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
@@ -17,7 +18,7 @@ public class CacheSprite implements Sprite
 	BufferedImage image;
 
 	@Override
-	public BufferedImage getImage(final Client client, final SpriteManager spriteManager, boolean isOsrsSkin)
+	public BufferedImage getImage(final Client client, final SpriteManager spriteManager, CursorTheme theme)
 	{
 		if (image == null)
 		{
