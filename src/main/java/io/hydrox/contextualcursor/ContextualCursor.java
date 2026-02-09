@@ -43,6 +43,7 @@ import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.SpriteID;
@@ -80,15 +81,17 @@ public enum ContextualCursor
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story", "guide"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", optionIsAnyOf("lookup", "examine", "view", "look-inside", "inspect", "investigate", "peek"),
+	SEARCH("search", optionIsAnyOf("examine", "view", "look-inside", "inspect", "investigate", "peek"),
 		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
-		hasAllOf(hasOption("search"), not(targetNamed("wiki")))),
+		hasAllOf(hasOption("search"), not(targetNamed("wiki"))),
+		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
+	),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
 	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to"))),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet"),
-	WIKI("wiki", hasOption("lookup-entity"), hasAllOf(hasOption("search"), targetNamed("wiki"))),
+	WIKI("wiki", hasOption("lookup-entity"), targetNamed("wiki"), targetStartsWith("wiki ->")),
 
 	// Sailing
 	NAVIGATE(SpriteID.IconSailingFacilities24x24._4, hasAllOf(hasOption("navigate"), targetNamed("helm"))), // Ship's wheel
@@ -171,6 +174,7 @@ public enum ContextualCursor
 	;
 
 	private final Sprite sprite;
+	@Getter
 	private final MenuEntryMatcher matcher;
 
 	// Basic cursor with only global actions

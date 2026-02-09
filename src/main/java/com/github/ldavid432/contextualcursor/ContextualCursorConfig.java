@@ -28,6 +28,13 @@ public interface ContextualCursorConfig extends Config
 		return false;
 	}
 
+  @ConfigItem(
+    name = "",
+		description = "",
+		keyName = "customCursor"
+	)
+	void setCustomCursorEnabled(boolean enabled);
+
 	@ConfigItem(
 		keyName = "cursorskin",
 		name = "Cursor Style",
@@ -187,6 +194,26 @@ public interface ContextualCursorConfig extends Config
 	{
 		return false;
 	}
+
+	int CURRENT_VERSION = 1;
+
+	@ConfigItem(
+		name = "",
+		description = "",
+		keyName = "lastUpdateSeen",
+		hidden = true
+	)
+	default int getLastSeenVersion()
+	{
+		return 0;
+	}
+
+	@ConfigItem(
+		name = "",
+		description = "",
+		keyName = "lastUpdateSeen"
+	)
+	void setLastSeenVersion(int lastSeenVersion);
 
 }
 
