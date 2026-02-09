@@ -10,7 +10,9 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isPlayer;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
+import io.hydrox.contextualcursor.ContextualCursor;
 import java.util.function.Function;
 import lombok.Getter;
 import net.runelite.api.MenuEntry;
@@ -21,7 +23,7 @@ public enum MenuTarget
 	ITEM(ContextualCursorConfig::shouldIgnoreItems, MenuEntry::isItemOp,
 		hasAllOf(entry -> entry.getItemId() > 0, optionIsAnyOf("use", "examine"))),
 	SPELL(ContextualCursorConfig::shouldIgnoreSpells, isSpell()),
-	INTERFACE(ContextualCursorConfig::shouldIgnoreInterfaces, isInterface()),
+	INTERFACE(ContextualCursorConfig::shouldIgnoreInterfaces, hasAllOf(isInterface(), not(ContextualCursor.WIKI.getMatcher()))),
 	NPC(ContextualCursorConfig::shouldIgnoreNpcs, isNpc()),
 	GROUND_ITEM(ContextualCursorConfig::shouldIgnoreGroundItems, isGroundItem()),
 	OBJECT(ContextualCursorConfig::shouldIgnoreObjects, isObject()),
