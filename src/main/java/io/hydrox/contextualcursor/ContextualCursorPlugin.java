@@ -31,6 +31,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -41,9 +42,13 @@ import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
+import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.chat.ChatMessageManager;
+import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -58,11 +63,12 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.ColorUtil;
 
 @PluginDescriptor(
 	name = "Contextual Cursor",
 	description = "RSHD-style image cursors",
-	tags = {"cursor", "rs3", "rs2", "rshd", "context"}
+	tags = {"cursor", "rs3", "rs2", "rshd", "context", "theme"}
 )
 @Slf4j
 @PluginDependency(CustomCursorPlugin.class)
@@ -93,6 +99,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private Client client;
+
+	@Inject
+	private ChatMessageManager chatMessageManager;
 
 	@Getter
 	private boolean altPressed;
@@ -146,6 +158,38 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		updateScale();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
+
+		// Since last seen version wasn't in 1.0 checking for only it will trigger for everyone who installs the plugin.
+		//  By only triggering this during startup while not logged in we can "better" attempt to determine if this is a previous install or not.
+		//  Still not totally accurate but better than nothing.
+		if (config.getLastSeenVersion() < ContextualCursorConfig.CURRENT_VERSION)
+		{
+			if (client.getGameState() != GameState.LOGGED_IN)
+			{
+				// Existing install (theoretically)
+				chatMessageManager.queue(
+					QueuedMessage.builder()
+						.type(ChatMessageType.CONSOLE)
+						.runeLiteFormattedMessage(
+							ColorUtil.wrapWithColorTag("Contextual Cursor has been updated!<br>", Color.RED) +
+								ColorUtil.wrapWithColorTag("* The plugin has a new maintainer (for a few months now) if you have any feedback please leave it on the *new* github<br>", Color.RED) +
+								ColorUtil.wrapWithColorTag("* Cursor themes are now supported! Currently includes osrs and rs2 (default)", Color.RED)
+						)
+						.build()
+				);
+			}
+			else if (client.getGameState() == GameState.LOGGED_IN)
+			{
+				// New install (theoretically)
+				if (!isCustomCursorPluginEnabled)
+				{
+					// Ideally this would be true by default, but we don't want to suddenly enable it for everyone who's been using this plugin for years.
+					// For now only enable by default for new users (if they don't already have a custom cursor)
+					config.setCustomCursorEnabled(true);
+				}
+			}
+			config.setLastSeenVersion(ContextualCursorConfig.CURRENT_VERSION);
+		}
 	}
 
 	@Override
