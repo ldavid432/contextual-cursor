@@ -28,10 +28,6 @@ public class ResourceSprite implements Sprite
 	@Getter
 	private final boolean isFullCursor;
 
-	@Getter
-	@Setter
-	private Boolean isOsrSkin = false;
-
 	public ResourceSprite(@Nonnull String fileName)
 	{
 		this.fileName = fileName;
