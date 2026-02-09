@@ -22,9 +22,6 @@ public class ResourceSprite implements Sprite
 	@Nullable
 	private BufferedImage image;
 
-	@Nullable
-	private BufferedImage imageOSRS;
-
 	@Getter
 	private final boolean isFullCursor;
 
@@ -44,25 +41,17 @@ public class ResourceSprite implements Sprite
 	@Nullable
 	public BufferedImage getImage(boolean isOsrSkin)
 	{
-		if (isOsrSkin)
+		if (image == null)
 		{
-			if (imageOSRS == null)
+			if (isOsrSkin)
 			{
 				String osrsPath = String.format("cursors/%s_osrs.png", fileName);
 				if (resourceExists(osrsPath))
 				{
-					imageOSRS = ImageUtil.loadImageResource(ContextualCursorPlugin.class, osrsPath);
+					image = ImageUtil.loadImageResource(ContextualCursorPlugin.class, osrsPath);
+					return image;
 				}
 			}
-
-			if (imageOSRS != null)
-			{
-				return imageOSRS;
-			}
-		}
-
-		if (image == null)
-		{
 			image = loadImage(fileName);
 		}
 		return image;

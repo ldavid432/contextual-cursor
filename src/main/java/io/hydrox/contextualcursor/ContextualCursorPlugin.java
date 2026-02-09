@@ -220,9 +220,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(SKIN))
 			{
 				isOSRSSkin = config.skin() == CursorSkin.OSRS;
-				contextualCursorDrawOverlay.setBlankCursor();
+				ContextualCursor.clearImages();
+				contextualCursorWorkerOverlay.genericCursor = null;
+				contextualCursorDrawOverlay.setBlankCursor(isOSRSSkin);
 				contextualCursorDrawOverlay.rerenderImages();
-				contextualCursorWorkerOverlay.resetCursor();
 			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))

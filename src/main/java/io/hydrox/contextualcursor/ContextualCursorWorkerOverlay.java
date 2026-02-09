@@ -75,7 +75,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
 	private Tooltip spacerTooltip;
-	private Cursor genericCursor;
+	public Cursor genericCursor;
 
 	@Inject
 	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,

@@ -27,6 +27,7 @@ package io.hydrox.contextualcursor;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
+import com.github.ldavid432.contextualcursor.CursorSkin;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
 import java.awt.Dimension;
@@ -70,12 +71,12 @@ public class ContextualCursorDrawOverlay extends Overlay
 		this.client = client;
 		this.plugin = plugin;
 		this.spriteManager = spriteManager;
-		this.setBlankCursor();
+		this.setBlankCursor(config.skin() == CursorSkin.OSRS);
 	}
 
-	public void setBlankCursor()
+	public void setBlankCursor(boolean isOSRS)
 	{
-		blankCursor = BLANK_CURSOR.getImage(plugin.isOSRSSkin());
+		blankCursor = BLANK_CURSOR.getImage(isOSRS);
 		scaledBlankCursor = null;
 	}
 
