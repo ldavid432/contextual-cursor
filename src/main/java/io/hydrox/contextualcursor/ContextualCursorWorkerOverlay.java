@@ -115,6 +115,11 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	void resetCursor()
 	{
+		resetCursor(config.isCustomCursorEnabled());
+	}
+
+	void resetCursor(boolean isCustomCursorEnabled)
+	{
 		if (cursorOverriden)
 		{
 			cursorOverriden = false;
@@ -123,7 +128,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			{
 				clientUI.setCursor(originalCursor);
 			}
-			else if (!plugin.isCustomCursorPluginEnabled() && config.isCustomCursorEnabled())
+			else if (!plugin.isCustomCursorPluginEnabled() && isCustomCursorEnabled)
 			{
 				if (genericCursor == null)
 				{
@@ -136,13 +141,17 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				clientUI.resetCursor();
 			}
 		}
-		else if (!plugin.isCustomCursorPluginEnabled() && config.isCustomCursorEnabled())
+		else if (!plugin.isCustomCursorPluginEnabled() && isCustomCursorEnabled)
 		{
 			if (genericCursor == null)
 			{
 				genericCursor = createGenericCursor();
 			}
 			clientUI.setCursor(genericCursor);
+		}
+		else if (!isCustomCursorEnabled)
+		{
+			clientUI.resetCursor();
 		}
 	}
 

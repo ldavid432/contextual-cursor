@@ -261,6 +261,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 				contextualCursorDrawOverlay.rerenderImages();
 			}
+			else if (event.getKey().equals("customCursor"))
+			{
+				contextualCursorWorkerOverlay.resetCursor(Boolean.parseBoolean(event.getNewValue()));
+			}
 			else if (event.getKey().equals(SKIN))
 			{
 				isOSRSSkin = config.skin() == CursorSkin.OSRS;
