@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.util.ImageUtil;
@@ -32,16 +33,25 @@ public class ResourceSprite implements Sprite
 
 	@Nullable
 	@Override
-	public BufferedImage getImage(Client client, SpriteManager spriteManager)
+	public BufferedImage getImage(Client client, SpriteManager spriteManager, boolean isOsrSkin)
 	{
-		return getImage();
+		return getImage(isOsrSkin);
 	}
 
 	@Nullable
-	public BufferedImage getImage()
+	public BufferedImage getImage(boolean isOsrSkin)
 	{
 		if (image == null)
 		{
+			if (isOsrSkin)
+			{
+				String osrsPath = String.format("cursors/%s_osrs.png", fileName);
+				if (resourceExists(osrsPath))
+				{
+					image = ImageUtil.loadImageResource(ContextualCursorPlugin.class, osrsPath);
+					return image;
+				}
+			}
 			image = loadImage(fileName);
 		}
 		return image;
@@ -51,6 +61,11 @@ public class ResourceSprite implements Sprite
 	public void clearImage()
 	{
 		image = null;
+	}
+
+	private static boolean resourceExists(String resourcePath)
+	{
+		return ContextualCursorPlugin.class.getResourceAsStream(resourcePath) != null;
 	}
 
 	public static BufferedImage loadImage(String fileName)

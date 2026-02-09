@@ -25,9 +25,8 @@
 package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.*;
+import com.github.ldavid432.contextualcursor.CursorSkin;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
@@ -110,6 +109,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean altPressed;
 
 	@Getter
+	private boolean isOSRSSkin;
+
+	@Getter
 	private boolean isDebugTooltipEnabled;
 
 	@Getter
@@ -154,6 +156,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		mouseManager.registerMouseListener(mouseListener);
 
 		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+		isOSRSSkin = config.skin() == CursorSkin.OSRS;
 		updateIgnores();
 		updateScale();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
@@ -256,6 +259,14 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
 				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+				contextualCursorDrawOverlay.rerenderImages();
+			}
+			else if (event.getKey().equals(SKIN))
+			{
+				isOSRSSkin = config.skin() == CursorSkin.OSRS;
+				ContextualCursor.clearImages();
+				contextualCursorWorkerOverlay.genericCursor = null;
+				contextualCursorDrawOverlay.setBlankCursor(isOSRSSkin);
 				contextualCursorDrawOverlay.rerenderImages();
 			}
 		}

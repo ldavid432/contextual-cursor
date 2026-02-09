@@ -234,7 +234,10 @@ public enum ContextualCursor
 	{
 		for (ContextualCursor cursor : values)
 		{
-			cursor.sprite.clearImage();
+			if (cursor.sprite != null)
+			{
+				cursor.sprite.clearImage();
+			}
 		}
 
 		BLANK_CURSOR.clearImage();
