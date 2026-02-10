@@ -219,5 +219,3 @@ public interface ContextualCursorConfig extends Config
 	void setLastSeenVersion(int lastSeenVersion);
 
 }
-
-// TODO: ignore players

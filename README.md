@@ -17,4 +17,8 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 - Ignores - Disables the contextual cursor from appear on certain targets
   - NPCs, Objects, Ground Items, Inventory Items and/or Spells
 - Scale - Scale up or down the size of the contextual cursor
-  - Scaling is supported but the quality of scaled cursors is not guaranteed
+  - Scaling is supported but the quality of scaled cursors is not guaranteed (whole numbers work best)
+  - There is also a smooth scaling option which may help for non-whole numbers
+- Theme - Themes the contextual cursor frame/background
+  - Current themes: RS2 (default), OldSchool (custom-made sprites that match the osrs UI)
+- Default cursor - Override the default mouse cursor, will match your theme
