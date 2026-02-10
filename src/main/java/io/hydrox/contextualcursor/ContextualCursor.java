@@ -59,7 +59,7 @@ public enum ContextualCursor
 	DIG(Sprite.of("dig", true), optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink"),
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
-	EAT("eat", "eat"),
+	EAT("eat", "eat", "eat-from"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
 		"grand exchange", "watchtower", "go-through", "pass-through", "pass"),
 	EQUIP("equip", "wield", "wear", "equip"),
