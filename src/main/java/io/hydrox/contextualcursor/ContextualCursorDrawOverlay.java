@@ -32,7 +32,6 @@ import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -58,9 +57,9 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private Point scaledOffset = POINTER_OFFSET;
 	private Point scaledOffset2 = POINTER_OFFSET2;
 	private BufferedImage blankCursor;
-	private Image scaledBlankCursor;
+	private BufferedImage scaledBlankCursor;
 	private Sprite currentSprite;
-	private Image currentScaledSprite;
+	private BufferedImage currentScaledSprite;
 
 	@Inject
 	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteManager spriteManager, ContextualCursorConfig config)

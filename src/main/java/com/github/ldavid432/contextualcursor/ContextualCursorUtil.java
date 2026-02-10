@@ -8,12 +8,12 @@ import net.runelite.client.util.ImageUtil;
 
 public class ContextualCursorUtil
 {
-	public static Image scaleImage(BufferedImage image, ContextualCursorPlugin plugin)
+	public static BufferedImage scaleImage(BufferedImage image, ContextualCursorPlugin plugin)
 	{
 		return scaleImage(image, plugin.getCursorScale(), plugin.isSmoothScalingEnabled());
 	}
 
-	private static Image scaleImage(BufferedImage image, double scale, boolean smoothScaling)
+	private static BufferedImage scaleImage(BufferedImage image, double scale, boolean smoothScaling)
 	{
 		if (scale == 1.0)
 		{
@@ -21,10 +21,12 @@ public class ContextualCursorUtil
 		}
 		else
 		{
-			return image.getScaledInstance(
-				(int) (image.getWidth() * scale),
-				(int) (image.getHeight() * scale),
-				smoothScaling ? Image.SCALE_SMOOTH : Image.SCALE_FAST
+			return ImageUtil.bufferedImageFromImage(
+				image.getScaledInstance(
+					(int) (image.getWidth() * scale),
+					(int) (image.getHeight() * scale),
+					smoothScaling ? Image.SCALE_SMOOTH : Image.SCALE_FAST
+				)
 			);
 		}
 	}
