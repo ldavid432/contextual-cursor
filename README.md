@@ -4,6 +4,16 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 
 ![Install Count](https://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/contextual-cursor) ![Install Count](https://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/contextual-cursor)
 
+### Configuration
+- Ignores - Disables the contextual cursor from appear on certain targets
+    - NPCs, Objects, Ground Items, Inventory Items and/or Spells
+- Scale - Scale up or down the size of the contextual cursor
+    - While scaling is supported, the quality of scaled cursors is not guaranteed. Whole numbers work best to preserve the quality
+    - There is also a smooth scaling option which may help for non-whole numbers
+- Theme - Styles the contextual cursor frame/background
+    - Current themes: RS2 (default), OldSchool (custom-made sprites that match the osrs UI)
+- Default cursor - Override the default mouse cursor (if custom cursor plugin is OFF), will match your theme
+
 ### Missing Features vs RSHD (and other known issues):
 * RL tooltips are partially underneath the cursor when they're displayed below the cursor
 * Many things that should have contextual cursors don't. Feel free to make an issue suggesting them.
@@ -12,13 +22,6 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
   * If you hover over multiple menu entries that create submenus that are close together (i.e. forestry backpack/basket) and don't actually trigger the opening of the 2nd one (but do hover over it) it may show the icon for the not open submenu
   * If you pass over a menu entry that opens a submenu and then proceed to the one next to it (closing the menu), then moving your cursor slightly out of the menu (without closing it) you may see the submenu icon pop up
 
+---
 
-### Configuration
-- Ignores - Disables the contextual cursor from appear on certain targets
-  - NPCs, Objects, Ground Items, Inventory Items and/or Spells
-- Scale - Scale up or down the size of the contextual cursor
-  - Scaling is supported but the quality of scaled cursors is not guaranteed (whole numbers work best)
-  - There is also a smooth scaling option which may help for non-whole numbers
-- Theme - Themes the contextual cursor frame/background
-  - Current themes: RS2 (default), OldSchool (custom-made sprites that match the osrs UI)
-- Default cursor - Override the default mouse cursor (if custom cursor plugin is OFF), will match your theme
+Find the latest changes here: https://github.com/ldavid432/contextual-cursor/releases
