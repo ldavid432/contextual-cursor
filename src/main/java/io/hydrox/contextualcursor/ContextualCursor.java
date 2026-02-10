@@ -86,6 +86,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("search"), not(targetNamed("wiki"))),
 		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
 	),
+	SKUll(SpriteID.HEADICONS_PK, "skull"),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
 	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to"))),
