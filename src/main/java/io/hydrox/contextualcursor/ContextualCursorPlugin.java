@@ -26,6 +26,7 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_THEME;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
@@ -264,7 +265,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 				contextualCursorDrawOverlay.rerenderImages();
 			}
-			else if (event.getKey().equals("customCursor"))
+			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
 				contextualCursorWorkerOverlay.resetCursor(Boolean.parseBoolean(event.getNewValue()));
 			}

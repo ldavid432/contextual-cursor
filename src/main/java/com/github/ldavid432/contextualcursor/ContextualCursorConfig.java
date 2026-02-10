@@ -17,11 +17,12 @@ public interface ContextualCursorConfig extends Config
 	String SCALE = "scale";
 	String SCALE_SMOOTHING = "scaleSmoothing";
 	String CURSOR_THEME = "cursorTheme";
+	String CUSTOM_CURSOR = "customCursor";
 
 	@ConfigItem(
 		name = "Override default cursor",
 		description = "Override the default cursor with one that matches your cursor theme (if custom cursor plugin is OFF)",
-		keyName = "customCursor",
+		keyName = CUSTOM_CURSOR,
 		position = 0
 	)
 	default boolean isCustomCursorEnabled()
@@ -32,7 +33,7 @@ public interface ContextualCursorConfig extends Config
   @ConfigItem(
     name = "",
 		description = "",
-		keyName = "customCursor"
+		keyName = CUSTOM_CURSOR
 	)
 	void setCustomCursorEnabled(boolean enabled);
 

@@ -57,8 +57,8 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point scaledOffset = POINTER_OFFSET;
 	private Point scaledOffset2 = POINTER_OFFSET2;
-	private BufferedImage blankCursor = null;
-	private Image scaledBlankCursor = null;
+	private BufferedImage blankCursor;
+	private Image scaledBlankCursor;
 	private Sprite currentSprite;
 	private Image currentScaledSprite;
 
@@ -71,7 +71,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		this.client = client;
 		this.plugin = plugin;
 		this.spriteManager = spriteManager;
-		this.setBlankCursor(config.getCursorTheme());
+		setBlankCursor(config.getCursorTheme());
 	}
 
 	public void setBlankCursor(CursorTheme theme)
