@@ -21,4 +21,4 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
   - There is also a smooth scaling option which may help for non-whole numbers
 - Theme - Themes the contextual cursor frame/background
   - Current themes: RS2 (default), OldSchool (custom-made sprites that match the osrs UI)
-- Default cursor - Override the default mouse cursor, will match your theme
+- Default cursor - Override the default mouse cursor (if custom cursor plugin is OFF), will match your theme
