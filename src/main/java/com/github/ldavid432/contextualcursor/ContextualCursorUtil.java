@@ -13,7 +13,7 @@ public class ContextualCursorUtil
 		return scaleImage(image, plugin.getCursorScale(), plugin.isSmoothScalingEnabled());
 	}
 
-	private static BufferedImage scaleImage(BufferedImage image, double scale, boolean smoothScaling)
+	public static BufferedImage scaleImage(BufferedImage image, double scale, boolean isSmoothScaling)
 	{
 		if (scale == 1.0)
 		{
@@ -25,7 +25,7 @@ public class ContextualCursorUtil
 				image.getScaledInstance(
 					(int) (image.getWidth() * scale),
 					(int) (image.getHeight() * scale),
-					smoothScaling ? Image.SCALE_SMOOTH : Image.SCALE_FAST
+					isSmoothScaling ? Image.SCALE_SMOOTH : Image.SCALE_FAST
 				)
 			);
 		}

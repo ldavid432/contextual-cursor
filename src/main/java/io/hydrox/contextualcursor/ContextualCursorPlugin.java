@@ -259,11 +259,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(SCALE))
 			{
 				updateScale();
+				clearImages();
 			}
 			else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
 				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-				contextualCursorDrawOverlay.rerenderImages();
+				clearImages();
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
@@ -274,7 +275,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				cursorTheme = config.getCursorTheme();
 				clearImages();
 				contextualCursorWorkerOverlay.updateTheme();
-				contextualCursorDrawOverlay.rerenderImages();
 			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))

@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
@@ -18,7 +19,8 @@ public class CacheSprite implements Sprite
 	BufferedImage image;
 
 	@Override
-	public BufferedImage getImage(final Client client, final SpriteManager spriteManager, CursorTheme theme)
+	public BufferedImage getImage(final Client client, final SpriteManager spriteManager, CursorTheme theme,
+								  double scale, boolean isSmoothScaling)
 	{
 		if (image == null)
 		{
@@ -30,6 +32,8 @@ public class CacheSprite implements Sprite
 			{
 				image = spriteManager.getSprite(id, 0);
 			}
+
+			image = scaleImage(image, scale, isSmoothScaling);
 		}
 
 		return image;

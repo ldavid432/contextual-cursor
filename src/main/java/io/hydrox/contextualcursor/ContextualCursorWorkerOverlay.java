@@ -155,7 +155,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = ContextualCursor.GENERIC_CURSOR.getImage(plugin.getCursorTheme());
+		BufferedImage icon = GENERIC_CURSOR.getImage(plugin);
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();
@@ -396,6 +396,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	public void updateTheme()
 	{
-		genericCursor = createGenericCursor();
+		genericCursor = null;
 	}
 }

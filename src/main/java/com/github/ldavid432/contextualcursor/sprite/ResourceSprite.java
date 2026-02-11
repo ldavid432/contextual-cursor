@@ -1,6 +1,8 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
+import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,19 +33,26 @@ public class ResourceSprite implements Sprite
 
 	@Nullable
 	@Override
-	public BufferedImage getImage(Client client, SpriteManager spriteManager, CursorTheme theme)
+	public BufferedImage getImage(Client client, SpriteManager spriteManager, CursorTheme theme, double scale, boolean isSmoothScaling)
 	{
-		return getImage(theme);
+		return getImage(theme, scale, isSmoothScaling);
 	}
 
 	@Nullable
-	public BufferedImage getImage(CursorTheme theme)
+	public BufferedImage getImage(CursorTheme theme, double scale, boolean isSmoothScaling)
 	{
 		if (image == null)
 		{
 			image = theme.getImage(fileName);
+			image = scaleImage(image, scale, isSmoothScaling);
 		}
 		return image;
+	}
+
+	@Nullable
+	public BufferedImage getImage(ContextualCursorPlugin plugin)
+	{
+		return getImage(plugin.getCursorTheme(), plugin.getCursorScale(), plugin.isSmoothScalingEnabled());
 	}
 
 	@Override
