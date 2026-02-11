@@ -69,7 +69,7 @@ public enum ContextualCursor
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
 	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task"),
 	LADDER("ladder", "climb"),
-	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor"),
+	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor", "go-down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
 	OPEN("open", "open"),
 	PICK_LOCK(Sprite.of("picklock", true), optionIsAnyOf("pick-lock", "picklock")),
