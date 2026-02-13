@@ -128,10 +128,11 @@ public enum ContextualCursor
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
 	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench")))), // crafting table / clockmaker's benches
-	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick", "pick-fruit", "pay",
-		"cure", "prune"), hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
+	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick-fruit", "pay", "cure", "prune"),
+		hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
 		hasAllOf(hasOption("collect"), targetEndsWith("coral")), // Collecting coral
-		hasAllOf(optionStartsWith("pay"), isNpc()) // Paying farmers
+		hasAllOf(optionStartsWith("pay"), isNpc()), // Paying farmers
+		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()) // Avoid zygomites, pick-x for fruit trees
 	),
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
