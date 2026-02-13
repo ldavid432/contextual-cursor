@@ -110,6 +110,12 @@ public enum ContextualCursor
 	WIND(SpriteID.IconSailingFacilities24x24._7, optionIsAnyOf("release-mote"),
 		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor"))),
 
+	// PoH altar spellbooks
+	ANCIENT_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ANCIENT_MAGICKS, "ancient"),
+	ARCEUUS_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ARCEUUS, "arceuus"),
+	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, "standard"),
+	LUNAR_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_LUNAR, "lunar"),
+
 	// Skills
 	AGILITY(SpriteID.Staticons.AGILITY, optionIsAnyOf("balance", "balance-across", "climb-across", "climb-on", "climb-over",
 		"cross", "grab", "grapple", "hurdle", "jump", "jump-up", "jump-to", "jump-off", "jump-in", "jump-on", "kick",
@@ -135,8 +141,8 @@ public enum ContextualCursor
 	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "dismantle", "reset", "set-trap"),
 		hasAllOf(hasOption("check"), isGroundItem()), // Various hunter traps
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
-	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "ancient", "lunar",
-		"arceuus", "standard", "study"), hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
+	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "study"),
+		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
