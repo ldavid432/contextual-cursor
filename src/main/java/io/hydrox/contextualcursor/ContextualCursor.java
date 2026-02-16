@@ -61,7 +61,7 @@ public enum ContextualCursor
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
 	EAT("eat", "eat", "eat-from"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
-		"grand exchange", "watchtower", "go-through", "pass-through", "pass", "climb-through"),
+		"grand exchange", "watchtower", "go-through", "pass-through", "pass", "climb-through", "quick-enter"),
 	EQUIP("equip", "wield", "wear", "equip"),
 	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, optionIsAnyOf("exchange", "trade", "trade with", "buy-boat"),
 		hasAllOf(hasOption("collect"), not(targetEndsWith("coral")))),
