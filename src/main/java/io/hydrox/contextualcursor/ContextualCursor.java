@@ -113,7 +113,7 @@ public enum ContextualCursor
 	// PoH altar spellbooks
 	ANCIENT_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ANCIENT_MAGICKS, "ancient"),
 	ARCEUUS_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ARCEUUS, "arceuus"),
-	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, hasOption("standard"), targetEndsWith("altar")), // Avoid DKs lair
+	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, hasAllOf(hasOption("standard"), targetEndsWith("altar"))), // Avoid DKs lair
 	LUNAR_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_LUNAR, "lunar"),
 
 	// Skills
