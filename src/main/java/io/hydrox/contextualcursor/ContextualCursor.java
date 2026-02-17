@@ -113,7 +113,7 @@ public enum ContextualCursor
 	// PoH altar spellbooks
 	ANCIENT_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ANCIENT_MAGICKS, "ancient"),
 	ARCEUUS_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ARCEUUS, "arceuus"),
-	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, "standard"),
+	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, hasOption("standard"), targetEndsWith("altar")), // Avoid DKs lair
 	LUNAR_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_LUNAR, "lunar"),
 
 	// Skills
@@ -132,7 +132,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
 		hasAllOf(hasOption("collect"), targetEndsWith("coral")), // Collecting coral
 		hasAllOf(optionStartsWith("pay"), isNpc()), // Paying farmers
-		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()) // Avoid zygomites, pick-x for fruit trees
+		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()) // Avoid zygomites, use pick-x for fruit trees
 	),
 	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
