@@ -134,7 +134,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				}
 				clientUI.setCursor(genericCursor);
 			}
-			else
+			else if (!plugin.isCustomCursorPluginEnabled())
 			{
 				clientUI.resetCursor();
 			}
@@ -147,7 +147,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 			clientUI.setCursor(genericCursor);
 		}
-		else if (!isCustomCursorEnabled)
+		else if (!plugin.isCustomCursorPluginEnabled())
 		{
 			clientUI.resetCursor();
 		}
