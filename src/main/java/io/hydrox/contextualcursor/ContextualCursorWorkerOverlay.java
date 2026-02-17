@@ -134,7 +134,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				}
 				clientUI.setCursor(genericCursor);
 			}
-			else if (!plugin.isCustomCursorPluginEnabled())
+			else
 			{
 				clientUI.resetCursor();
 			}
