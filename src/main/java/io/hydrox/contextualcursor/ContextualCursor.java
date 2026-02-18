@@ -88,7 +88,7 @@ public enum ContextualCursor
 	),
 	SKUll(SpriteID.HEADICONS_PK, "skull"),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
-	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter"),
+	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter", "transport"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to"))),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet"),
