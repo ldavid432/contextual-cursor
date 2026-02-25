@@ -138,7 +138,8 @@ public enum ContextualCursor
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
-	HERBLORE(SpriteID.Staticons.HERBLORE, hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
+	HERBLORE(SpriteID.Staticons.HERBLORE, hasOption("potions"),
+		hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
 	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "dismantle", "reset", "set-trap", "fur clothing"),
 		hasAllOf(hasOption("check"), isGroundItem()), // Various hunter traps
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
