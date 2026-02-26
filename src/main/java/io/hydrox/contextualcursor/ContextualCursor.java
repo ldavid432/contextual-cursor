@@ -71,7 +71,7 @@ public enum ContextualCursor
 	LADDER("ladder", "climb"),
 	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor", "go-down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
-	OPEN("open", "open"),
+	OPEN("open", "open", "release"),
 	PICK_LOCK(Sprite.of("picklock", true), optionIsAnyOf("pick-lock", "picklock")),
 	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "collect-from", "pick-up"),
 		hasAllOf(hasOption("harvest"), isNpc()),  // Various NPC corpses
