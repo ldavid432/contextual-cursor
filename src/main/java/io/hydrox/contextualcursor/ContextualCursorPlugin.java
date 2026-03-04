@@ -222,13 +222,17 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent keyEvent)
 	{
+		// Only trigger on initial press
+		boolean resetCursor = !altPressed && keyEvent.isAltDown();
 		altPressed = keyEvent.isAltDown();
+		if (resetCursor) contextualCursorWorkerOverlay.resetCursor();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent keyEvent)
 	{
 		altPressed = keyEvent.isAltDown();
+		contextualCursorWorkerOverlay.resetCursor();
 	}
 
 	@Override

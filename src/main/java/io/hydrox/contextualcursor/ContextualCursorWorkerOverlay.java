@@ -174,7 +174,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	{
 		if (plugin.isAltPressed())
 		{
-			resetCursor();
 			return null;
 		}
 
@@ -202,7 +201,10 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		if (menuEntry == null || isEntryIgnored(menuEntry, isInSubmenu))
 		{
 			debugTooltip(true, menuEntry);
-			resetCursor();
+			if (plugin.getSpriteToDraw() != null)
+			{
+				resetCursor();
+			}
 			return null;
 		}
 
