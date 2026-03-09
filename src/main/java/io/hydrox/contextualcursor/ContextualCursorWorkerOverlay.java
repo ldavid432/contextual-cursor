@@ -41,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -53,10 +54,13 @@ import net.runelite.client.util.ColorUtil;
 @Slf4j
 public class ContextualCursorWorkerOverlay extends Overlay
 {
+	private static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
+	private static final String GENERIC_CURSOR_NAME = "contextual-cursor-generic";
+	private static final String DEFAULT_CURSOR_NAME = Cursor.getDefaultCursor().getName();
 	private static final Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(
 		new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB),
 		new java.awt.Point(0, 0),
-		"blank"
+		BLANK_CURSOR_NAME
 	);
 	private static final int MENU_OPTION_HEIGHT = 15;
 	private static final int MENU_EXTRA_TOP = 4;
@@ -73,6 +77,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
 	private Tooltip spacerTooltip;
+	private Tooltip genericSpacerTooltip;
 	public Cursor genericCursor;
 
 	@Inject
@@ -81,6 +86,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
+		// Also allow on world map and welcome screen
+		drawAfterInterface(InterfaceID.TOPLEVEL_DISPLAY);
 		setPriority(1f);
 		this.client = client;
 		this.clientUI = clientUI;
@@ -96,7 +103,9 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			return;
 		}
 		final Cursor currentCursor = clientUI.getCurrentCursor();
-		if (!currentCursor.getName().equals("blank"))
+		if (!currentCursor.getName().equals(BLANK_CURSOR_NAME) &&
+			!currentCursor.getName().equals(GENERIC_CURSOR_NAME) &&
+			!currentCursor.getName().equals(DEFAULT_CURSOR_NAME))
 		{
 			originalCursor = clientUI.getCurrentCursor();
 		}
@@ -113,11 +122,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	void resetCursor()
 	{
-		resetCursor(config.isCustomCursorEnabled());
-	}
-
-	void resetCursor(boolean isCustomCursorEnabled)
-	{
 		if (cursorOverriden)
 		{
 			cursorOverriden = false;
@@ -125,31 +129,47 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			if (originalCursor != null)
 			{
 				clientUI.setCursor(originalCursor);
+				originalCursor = null;
 			}
-			else if (!plugin.isCustomCursorPluginEnabled() && isCustomCursorEnabled)
+			else if (!plugin.isCustomCursorPluginEnabled() && plugin.isCustomCursorEnabled())
 			{
-				if (genericCursor == null)
-				{
-					genericCursor = createGenericCursor();
-				}
-				clientUI.setCursor(genericCursor);
+				setGenericCursor();
 			}
 			else
 			{
 				clientUI.resetCursor();
 			}
 		}
-		else if (!plugin.isCustomCursorPluginEnabled() && isCustomCursorEnabled)
+		else if (!plugin.isCustomCursorPluginEnabled() && plugin.isCustomCursorEnabled())
+		{
+			setGenericCursor();
+		}
+		else if (!plugin.isCustomCursorPluginEnabled())
+		{
+			clientUI.resetCursor();
+		}
+	}
+
+	private void setGenericCursor()
+	{
+		if (plugin.isGenericCursorOverlayEnabled())
+		{
+			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
+			{
+				clientUI.setCursor(BLANK_MOUSE);
+			}
+			else
+			{
+				clientUI.resetCursor();
+			}
+		}
+		else
 		{
 			if (genericCursor == null)
 			{
 				genericCursor = createGenericCursor();
 			}
 			clientUI.setCursor(genericCursor);
-		}
-		else if (!plugin.isCustomCursorPluginEnabled())
-		{
-			clientUI.resetCursor();
 		}
 	}
 
@@ -165,14 +185,14 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		return Toolkit.getDefaultToolkit().createCustomCursor(
 			result,
 			new java.awt.Point(0, 0),
-			"generic"
+			GENERIC_CURSOR_NAME
 		);
 	}
 
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (plugin.isAltPressed())
+		if (plugin.isAltPressed() || !plugin.isCursorInBounds())
 		{
 			return null;
 		}
@@ -204,6 +224,12 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			if (plugin.getSpriteToDraw() != null)
 			{
 				resetCursor();
+			}
+			else if (plugin.isGenericCursorOverlayEnabled() && plugin.isCursorInBounds() && !plugin.isLoggedOut())
+			{
+				if (genericSpacerTooltip != null) {
+					tooltipManager.addFront(genericSpacerTooltip);
+				}
 			}
 			return null;
 		}
@@ -387,17 +413,40 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		if (spacerHeight > 0)
 		{
 			spacerTooltip = new Tooltip(
-				new ImageComponent(new BufferedImage(1, (int) ((40 * plugin.getCursorScale()) - 30), BufferedImage.TYPE_INT_ARGB))
+				new ImageComponent(new BufferedImage(1, spacerHeight, BufferedImage.TYPE_INT_ARGB))
 			);
 		}
 		else
 		{
 			spacerTooltip = null;
 		}
+
+		spacerHeight = (int) ((25 * plugin.getCursorScale()) - 30);
+		if (spacerHeight > 0)
+		{
+			genericSpacerTooltip = new Tooltip(
+				new ImageComponent(new BufferedImage(1, spacerHeight, BufferedImage.TYPE_INT_ARGB))
+			);
+		}
+		else
+		{
+			genericSpacerTooltip = null;
+		}
+		genericCursor = null;
 	}
 
 	public void updateTheme()
 	{
 		genericCursor = null;
+	}
+
+	public void genericOverlayToggled()
+	{
+		if (!config.isCustomCursorEnabled() || plugin.isCustomCursorPluginEnabled())
+		{
+			return;
+		}
+
+		resetCursor();
 	}
 }

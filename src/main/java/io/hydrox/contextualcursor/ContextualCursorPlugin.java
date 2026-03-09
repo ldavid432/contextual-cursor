@@ -28,8 +28,10 @@ import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_THEME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GENERIC_CURSOR_OVERLAY;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -48,6 +50,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.Point;
+import net.runelite.api.events.ClientTick;
+import net.runelite.api.events.FocusChanged;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatMessageManager;
@@ -133,6 +138,21 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean isCustomCursorPluginEnabled;
 
 	@Getter
+	private boolean isCustomCursorEnabled;
+
+	@Getter
+	private boolean isGenericCursorOverlayEnabled;
+
+	@Getter
+	private boolean isLoggedOut = true;
+
+	@Getter
+	@Setter
+	private boolean isCursorInBounds;
+
+	// TODO: Surely we can reduce the number of booleans here??
+
+	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
 
 	private final MouseListener mouseListener = new MouseAdapter()
@@ -159,8 +179,18 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(mouseListener);
 
+		if (client.getGameState() == GameState.LOGGED_IN)
+		{
+			isLoggedOut = false;
+		}
+
+		Point mousePos = client.getMouseCanvasPosition();
+		isCursorInBounds = mouseInsideBounds(mousePos, client);
+
+		isCustomCursorEnabled = config.isCustomCursorEnabled();
 		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 		cursorTheme = config.getCursorTheme();
+		isGenericCursorOverlayEnabled = config.isGenericCursorOverlayEnabled();
 		updateIgnores();
 		updateScale();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
@@ -169,7 +199,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		// Since last seen version wasn't in 1.0 checking for only it will trigger for everyone who installs the plugin.
 		//  By only triggering this during startup while not logged in we can "better" attempt to determine if this is a previous install or not.
 		//  Still not totally accurate but better than nothing.
-		if (config.getLastSeenVersion() < ContextualCursorConfig.CURRENT_VERSION)
+		if (config.getLastSeenVersion() < 1)
 		{
 			if (client.getGameState() != GameState.LOGGED_IN)
 			{
@@ -188,7 +218,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (client.getGameState() == GameState.LOGGED_IN)
 			{
 				// New install (theoretically)
-				if (!isCustomCursorPluginEnabled)
+				if (!isCustomCursorPluginEnabled && !isCustomCursorEnabled)
 				{
 					// Ideally this would be true by default, but we don't want to suddenly enable it for everyone who's been using this plugin for years.
 					// For now only enable by default for new users (if they don't already have a custom cursor)
@@ -196,6 +226,19 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				}
 			}
 			config.setLastSeenVersion(ContextualCursorConfig.CURRENT_VERSION);
+		}
+		else if (config.getLastSeenVersion() < 2 && client.getGameState() != GameState.LOGGED_IN)
+		{
+			chatMessageManager.queue(
+				QueuedMessage.builder()
+					.type(ChatMessageType.CONSOLE)
+					.runeLiteFormattedMessage(
+						ColorUtil.wrapWithColorTag("Contextual Cursor has been updated!<br>", Color.RED) +
+							ColorUtil.wrapWithColorTag("* There is now an option to make the *default* cursor an overlay!<br>", Color.RED) +
+							ColorUtil.wrapWithColorTag("* This allows for better default cursor scaling support and fixes the washed-out color.", Color.RED)
+					)
+					.build()
+			);
 		}
 	}
 
@@ -215,6 +258,20 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		if (event.getGameState() != GameState.LOGGED_IN && event.getGameState() != GameState.LOADING)
 		{
+			contextualCursorWorkerOverlay.resetCursor();
+		}
+
+		if (event.getGameState() == GameState.LOGGED_IN)
+		{
+			isLoggedOut = false;
+			if (getSpriteToDraw() == null)
+			{
+				contextualCursorWorkerOverlay.resetCursor();
+			}
+		}
+		else if (event.getGameState() == GameState.LOGIN_SCREEN)
+		{
+			isLoggedOut = true;
 			contextualCursorWorkerOverlay.resetCursor();
 		}
 	}
@@ -272,13 +329,19 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
-				contextualCursorWorkerOverlay.resetCursor(Boolean.parseBoolean(event.getNewValue()));
+				isCustomCursorEnabled = config.isCustomCursorEnabled();
+				contextualCursorWorkerOverlay.resetCursor();
 			}
 			else if (event.getKey().equals(CURSOR_THEME))
 			{
 				cursorTheme = config.getCursorTheme();
 				clearImages();
 				contextualCursorWorkerOverlay.updateTheme();
+			}
+			else if (event.getKey().equals(GENERIC_CURSOR_OVERLAY))
+			{
+				isGenericCursorOverlayEnabled = config.isGenericCursorOverlayEnabled();
+				contextualCursorWorkerOverlay.genericOverlayToggled();
 			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))
@@ -308,5 +371,27 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		ContextualCursor.clearImages();
 		SpellSprite.clearImages();
+	}
+
+	@Subscribe
+	public void onFocusChanged(FocusChanged f)
+	{
+		// TODO: Needed?
+		contextualCursorWorkerOverlay.resetCursor();
+	}
+
+	@Subscribe
+	public void onClientTick(ClientTick event)
+	{
+		Point mousePos = client.getMouseCanvasPosition();
+		// if previously outside and now inside or vice versa
+		boolean inOrOutBoundsChanged = isCursorInBounds == !mouseInsideBounds(mousePos, client);
+
+		isCursorInBounds = mouseInsideBounds(mousePos, client);
+
+		if (inOrOutBoundsChanged)
+		{
+			contextualCursorWorkerOverlay.resetCursor();
+		}
 	}
 }

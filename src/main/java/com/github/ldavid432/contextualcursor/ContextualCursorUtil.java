@@ -3,6 +3,7 @@ package com.github.ldavid432.contextualcursor;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.client.util.ImageUtil;
 
@@ -46,5 +47,11 @@ public class ContextualCursorUtil
 	public static BufferedImage loadImage(String fileName)
 	{
 		return ImageUtil.loadImageResource(ContextualCursorPlugin.class, String.format("cursors/%s.png", fileName));
+	}
+
+	public static boolean mouseInsideBounds(Point mousePos, Client client)
+	{
+		return mousePos.getX() > 0 && mousePos.getX() <= client.getCanvasWidth() &&
+			mousePos.getY() > 0 && mousePos.getY() <= client.getCanvasHeight();
 	}
 }

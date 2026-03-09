@@ -23,12 +23,12 @@ public class ResourceSprite implements Sprite
 	private BufferedImage image;
 
 	@Getter
-	private final boolean isFullCursor;
+	private final CursorType type;
 
 	public ResourceSprite(@Nonnull String fileName)
 	{
 		this.fileName = fileName;
-		this.isFullCursor = false;
+		this.type = CursorType.CONTEXTUAL;
 	}
 
 	@Nullable

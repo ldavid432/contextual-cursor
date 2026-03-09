@@ -19,7 +19,7 @@ public interface Sprite
 
 	void clearImage();
 
-	boolean isFullCursor();
+	CursorType getType();
 
 	static Sprite of(int id)
 	{
@@ -33,6 +33,13 @@ public interface Sprite
 
 	static Sprite of(String path, boolean isFullCursor)
 	{
-		return new ResourceSprite(path, isFullCursor);
+		CursorType type = isFullCursor ? CursorType.CONTEXTUAL_FULL : CursorType.CONTEXTUAL;
+		return new ResourceSprite(path, type);
+	}
+
+	static Sprite of(String path, CursorType cursorType)
+	{
+		return new ResourceSprite(path, cursorType);
 	}
 }
+

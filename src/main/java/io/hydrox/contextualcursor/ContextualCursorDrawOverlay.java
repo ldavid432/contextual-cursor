@@ -27,6 +27,7 @@ package io.hydrox.contextualcursor;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
+import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR_STANDALONE;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -72,7 +73,14 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 		if (sprite == null)
 		{
-			return null;
+			if (plugin.isCustomCursorEnabled() && plugin.isGenericCursorOverlayEnabled() && !plugin.isCustomCursorPluginEnabled() && !plugin.isLoggedOut() && plugin.isCursorInBounds())
+			{
+				sprite = GENERIC_CURSOR_STANDALONE;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		BufferedImage image = sprite.getImage(client, spriteManager, plugin);
@@ -82,16 +90,21 @@ public class ContextualCursorDrawOverlay extends Overlay
 		}
 
 		final Point mousePos = client.getMouseCanvasPosition();
-		if (sprite.isFullCursor())
+
+		switch (sprite.getType())
 		{
-			graphics.drawImage(image, mousePos.getX() + fullCursorOffset.getX(), mousePos.getY() + fullCursorOffset.getY(), null);
-		}
-		else
-		{
-			graphics.drawImage(BLANK_CURSOR.getImage(plugin), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
-			final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - image.getWidth(null) / 2;
-			final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - image.getHeight(null) / 2;
-			graphics.drawImage(image, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+			case CONTEXTUAL_FULL:
+				graphics.drawImage(image, mousePos.getX() + fullCursorOffset.getX(), mousePos.getY() + fullCursorOffset.getY(), null);
+				break;
+			case CONTEXTUAL:
+				graphics.drawImage(BLANK_CURSOR.getImage(plugin), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
+				final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - image.getWidth(null) / 2;
+				final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - image.getHeight(null) / 2;
+				graphics.drawImage(image, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+				break;
+			case DEFAULT:
+				graphics.drawImage(image, mousePos.getX(), mousePos.getY(), null);
+				break;
 		}
 
 		return null;

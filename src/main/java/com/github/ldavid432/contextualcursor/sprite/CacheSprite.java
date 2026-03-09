@@ -46,8 +46,8 @@ public class CacheSprite implements Sprite
 	}
 
 	@Override
-	public boolean isFullCursor()
+	public CursorType getType()
 	{
-		return false;
+		return CursorType.CONTEXTUAL;
 	}
 }

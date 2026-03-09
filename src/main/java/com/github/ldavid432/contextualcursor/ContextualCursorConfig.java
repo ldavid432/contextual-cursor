@@ -18,24 +18,7 @@ public interface ContextualCursorConfig extends Config
 	String SCALE_SMOOTHING = "scaleSmoothing";
 	String CURSOR_THEME = "cursorTheme";
 	String CUSTOM_CURSOR = "customCursor";
-
-	@ConfigItem(
-		name = "Override default cursor",
-		description = "Override the default cursor with one that matches your cursor theme (if custom cursor plugin is OFF)",
-		keyName = CUSTOM_CURSOR,
-		position = 0
-	)
-	default boolean isCustomCursorEnabled()
-	{
-		return false;
-	}
-
-  @ConfigItem(
-    name = "",
-		description = "",
-		keyName = CUSTOM_CURSOR
-	)
-	void setCustomCursorEnabled(boolean enabled);
+	String GENERIC_CURSOR_OVERLAY = "genericCursorOverlay";
 
 	@ConfigItem(
 		keyName = CURSOR_THEME,
@@ -51,9 +34,51 @@ public interface ContextualCursorConfig extends Config
 	}
 
 	@ConfigSection(
+		name = "Default cursor",
+		description = "Adjust the default (non-contextual) cursor",
+		position = 15
+	)
+	String defaultCursorSection = "defaultCursorSection";
+
+	@ConfigItem(
+		name = "Override default cursor",
+		description = "Requires: Custom Cursor plugin OFF<br>" +
+			"Override the default cursor with one that matches your cursor theme",
+		keyName = CUSTOM_CURSOR,
+		position = 0,
+		section = defaultCursorSection
+	)
+	default boolean isCustomCursorEnabled()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		name = "",
+		description = "",
+		keyName = CUSTOM_CURSOR
+	)
+	void setCustomCursorEnabled(boolean enabled);
+
+	@ConfigItem(
+		name = "Use overlay for default cursor",
+		description = "Requires: \"Override default cursor\" ON<br>" +
+			"Uses an overlay for the default cursor instead of a real cursor<br>" +
+			"This fixes Java's whitening of the default cursor as well as allows the default cursor to scale larger<br>" +
+			"This does however make the cursor slightly slower than normal mouse movement. Should not be noticeable though.",
+		keyName = GENERIC_CURSOR_OVERLAY,
+		position = 1,
+		section = defaultCursorSection
+	)
+	default boolean isGenericCursorOverlayEnabled()
+	{
+		return false;
+	}
+
+	@ConfigSection(
 		name = "Scale",
 		description = "Adjust the cursor scaling",
-		position = 2
+		position = 25
 	)
 	String scaleSection = "scaleSection";
 
@@ -86,7 +111,7 @@ public interface ContextualCursorConfig extends Config
 	@ConfigSection(
 		name = "Ignores",
 		description = "Don't show the contextual cursor for certain targets",
-		position = 3
+		position = 50
 	)
 	String ignoreSection = "ignoreSection";
 
@@ -199,7 +224,7 @@ public interface ContextualCursorConfig extends Config
 		return false;
 	}
 
-	int CURRENT_VERSION = 1;
+	int CURRENT_VERSION = 2;
 
 	@ConfigItem(
 		name = "",

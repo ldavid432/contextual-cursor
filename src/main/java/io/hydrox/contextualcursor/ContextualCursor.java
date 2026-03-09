@@ -39,6 +39,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
+import com.github.ldavid432.contextualcursor.sprite.CursorType;
 import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.regex.Matcher;
@@ -238,6 +239,7 @@ public enum ContextualCursor
 
 	static final ResourceSprite BLANK_CURSOR = new ResourceSprite("blank");
 	static final ResourceSprite GENERIC_CURSOR = new ResourceSprite("generic");
+	static final ResourceSprite GENERIC_CURSOR_STANDALONE = new ResourceSprite("generic", CursorType.DEFAULT);
 
 	static void clearImages()
 	{
@@ -251,5 +253,6 @@ public enum ContextualCursor
 
 		BLANK_CURSOR.clearImage();
 		GENERIC_CURSOR.clearImage();
+		GENERIC_CURSOR_STANDALONE.clearImage();
 	}
 }
