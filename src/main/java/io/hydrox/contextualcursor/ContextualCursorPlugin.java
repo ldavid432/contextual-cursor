@@ -225,7 +225,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 					config.setCustomCursorEnabled(true);
 				}
 			}
-			config.setLastSeenVersion(ContextualCursorConfig.CURRENT_VERSION);
 		}
 		else if (config.getLastSeenVersion() < 2 && client.getGameState() != GameState.LOGGED_IN)
 		{
@@ -234,12 +233,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 					.type(ChatMessageType.CONSOLE)
 					.runeLiteFormattedMessage(
 						ColorUtil.wrapWithColorTag("Contextual Cursor has been updated!<br>", Color.RED) +
-							ColorUtil.wrapWithColorTag("* There is now an option to make the *default* cursor an overlay!<br>", Color.RED) +
+							ColorUtil.wrapWithColorTag("* Option to make the *default* cursor an overlay!<br>", Color.RED) +
 							ColorUtil.wrapWithColorTag("* This allows for better default cursor scaling support and fixes the washed-out color.", Color.RED)
 					)
 					.build()
 			);
 		}
+		config.setLastSeenVersion(ContextualCursorConfig.CURRENT_VERSION);
 	}
 
 	@Override
