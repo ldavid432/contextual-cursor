@@ -28,15 +28,15 @@ import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_THEME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GENERIC_CURSOR_OVERLAY;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEFAULT_CURSOR_OVERLAY;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -47,7 +47,6 @@ import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Point;
@@ -55,7 +54,6 @@ import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatMessageManager;
-import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -70,7 +68,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.util.ColorUtil;
 
 @PluginDescriptor(
 	name = "Contextual Cursor",
@@ -140,7 +137,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean isCustomCursorEnabled;
 
 	@Getter
-	private boolean isGenericCursorOverlayEnabled;
+	private boolean isDefaultCursorOverlayEnabled;
 
 	@Getter
 	private boolean isLoggedOut = true;
@@ -148,6 +145,16 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Getter
 	@Setter
 	private boolean isCursorInBounds;
+
+	public boolean canOverrideDefaultCursor()
+	{
+		return !isCustomCursorPluginEnabled && isCustomCursorEnabled;
+	}
+
+	public boolean canDefaultCursorUseOverlay()
+	{
+		return isDefaultCursorOverlayEnabled && !isLoggedOut && isCursorInBounds;
+	}
 
 	// TODO: Surely we can reduce the number of booleans here??
 
@@ -189,7 +196,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isCustomCursorEnabled = config.isCustomCursorEnabled();
 		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 		cursorTheme = config.getCursorTheme();
-		isGenericCursorOverlayEnabled = config.isGenericCursorOverlayEnabled();
+		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 		updateIgnores();
 		updateScale();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
@@ -255,23 +262,24 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		if (event.getGameState() != GameState.LOGGED_IN && event.getGameState() != GameState.LOADING)
+		switch (event.getGameState())
 		{
-			contextualCursorWorkerOverlay.resetCursor();
-		}
-
-		if (event.getGameState() == GameState.LOGGED_IN)
-		{
-			isLoggedOut = false;
-			if (getSpriteToDraw() == null)
-			{
+			case LOGGED_IN:
+				isLoggedOut = false;
+				if (getSpriteToDraw() == null)
+				{
+					contextualCursorWorkerOverlay.resetCursor();
+				}
+				break;
+			case LOGIN_SCREEN:
+				isLoggedOut = true;
 				contextualCursorWorkerOverlay.resetCursor();
-			}
-		}
-		else if (event.getGameState() == GameState.LOGIN_SCREEN)
-		{
-			isLoggedOut = true;
-			contextualCursorWorkerOverlay.resetCursor();
+				break;
+			case LOADING:
+				break;
+			default:
+				contextualCursorWorkerOverlay.resetCursor();
+				break;
 		}
 	}
 
@@ -337,9 +345,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				clearImages();
 				contextualCursorWorkerOverlay.updateTheme();
 			}
-			else if (event.getKey().equals(GENERIC_CURSOR_OVERLAY))
+			else if (event.getKey().equals(DEFAULT_CURSOR_OVERLAY))
 			{
-				isGenericCursorOverlayEnabled = config.isGenericCursorOverlayEnabled();
+				isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 				contextualCursorWorkerOverlay.genericOverlayToggled();
 			}
 		}

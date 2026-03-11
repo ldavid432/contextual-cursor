@@ -131,7 +131,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				clientUI.setCursor(originalCursor);
 				originalCursor = null;
 			}
-			else if (!plugin.isCustomCursorPluginEnabled() && plugin.isCustomCursorEnabled())
+			else if (plugin.canOverrideDefaultCursor())
 			{
 				setGenericCursor();
 			}
@@ -140,7 +140,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				clientUI.resetCursor();
 			}
 		}
-		else if (!plugin.isCustomCursorPluginEnabled() && plugin.isCustomCursorEnabled())
+		else if (plugin.canOverrideDefaultCursor())
 		{
 			setGenericCursor();
 		}
@@ -152,7 +152,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private void setGenericCursor()
 	{
-		if (plugin.isGenericCursorOverlayEnabled())
+		if (plugin.isDefaultCursorOverlayEnabled())
 		{
 			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
 			{
@@ -225,7 +225,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			{
 				resetCursor();
 			}
-			else if (plugin.isGenericCursorOverlayEnabled() && plugin.isCursorInBounds() && !plugin.isLoggedOut())
+			else if (plugin.canDefaultCursorUseOverlay())
 			{
 				if (genericSpacerTooltip != null) {
 					tooltipManager.addFront(genericSpacerTooltip);
@@ -442,7 +442,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	public void genericOverlayToggled()
 	{
-		if (!config.isCustomCursorEnabled() || plugin.isCustomCursorPluginEnabled())
+		if (!plugin.canOverrideDefaultCursor())
 		{
 			return;
 		}

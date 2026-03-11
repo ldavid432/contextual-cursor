@@ -73,7 +73,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 		if (sprite == null)
 		{
-			if (plugin.isCustomCursorEnabled() && plugin.isGenericCursorOverlayEnabled() && !plugin.isCustomCursorPluginEnabled() && !plugin.isLoggedOut() && plugin.isCursorInBounds())
+			if (plugin.canOverrideDefaultCursor() && plugin.canDefaultCursorUseOverlay())
 			{
 				sprite = GENERIC_CURSOR_STANDALONE;
 			}

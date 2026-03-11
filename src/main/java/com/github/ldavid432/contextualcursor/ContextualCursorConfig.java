@@ -18,7 +18,7 @@ public interface ContextualCursorConfig extends Config
 	String SCALE_SMOOTHING = "scaleSmoothing";
 	String CURSOR_THEME = "cursorTheme";
 	String CUSTOM_CURSOR = "customCursor";
-	String GENERIC_CURSOR_OVERLAY = "genericCursorOverlay";
+	String DEFAULT_CURSOR_OVERLAY = "genericCursorOverlay";
 
 	@ConfigItem(
 		keyName = CURSOR_THEME,
@@ -66,13 +66,13 @@ public interface ContextualCursorConfig extends Config
 			"Uses an overlay for the default cursor instead of a real cursor<br>" +
 			"This fixes Java's whitening of the default cursor as well as allows the default cursor to scale larger<br>" +
 			"This does however make the cursor slightly slower than normal mouse movement. Should not be noticeable though.",
-		keyName = GENERIC_CURSOR_OVERLAY,
+		keyName = DEFAULT_CURSOR_OVERLAY,
 		position = 1,
 		section = defaultCursorSection
 	)
-	default boolean isGenericCursorOverlayEnabled()
+	default boolean isDefaultCursorOverlayEnabled()
 	{
-		return false;
+		return true;
 	}
 
 	@ConfigSection(

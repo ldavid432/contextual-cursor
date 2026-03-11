@@ -11,16 +11,16 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
     - While scaling is supported, the quality of scaled cursors is not guaranteed. Whole numbers work best to preserve the quality
     - There is also a smooth scaling option which may help for non-whole numbers
 - Theme - Styles the contextual cursor frame/background
-    - RS2 (default)
+    - RuneScape 2 (default)
     - OldSchool (custom sprites provided by [Mark7625](https://github.com/Mark7625) that match the osrs UI)
 - Default cursor
-  - Override the default mouse cursor (if custom cursor plugin is OFF), will match your theme
-  - Overlay for default cursor - this replaces the default cursor with a RuneLite overlay
+  - Override the default mouse cursor (if custom cursor plugin is OFF) to match your theme
+  - Use overlay for Default cursor - replaces the default cursor with a RuneLite overlay
     - The main benefits of this are: Better scaling (size isn't limited by the OS) and improved color support 
-    (Java only allows for 2ish colors so the cursor becomes **significantly** lighter than intended)
-    - The main drawback is that they overlay is slightly slower than the actual cursor speed, so it will lag behind a bit. 
-    Typically, this is not noticeable though.
-    - Also, this cursor will not be visible on the RL side panel or when you are logged out.
+    (Java **significantly** whitewashes the default cursor colors)
+    - The only real drawback is that the overlay is slightly slower than the actual cursor speed, so it will lag behind slightly. 
+    **Typically, this is not noticeable.**
+    - Also note: The overlay cursor will not be visible on the RL side panel or when you are logged out (will default to system cursor).
 
 ### Missing Features vs RSHD (and other known issues):
 * RL tooltips are partially underneath the cursor when they're displayed below the cursor
@@ -29,7 +29,5 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 * Submenus have a few small unavoidable bugs that you will likely never notice
   * If you hover over multiple menu entries that create submenus that are close together (i.e. forestry backpack/basket) and don't actually trigger the opening of the 2nd one (but do hover over it) it may show the icon for the not open submenu
   * If you pass over a menu entry that opens a submenu and then proceed to the one next to it (closing the menu), then moving your cursor slightly out of the menu (without closing it) you may see the submenu icon pop up
-
----
 
 Find the latest changes here: https://github.com/ldavid432/contextual-cursor/releases
