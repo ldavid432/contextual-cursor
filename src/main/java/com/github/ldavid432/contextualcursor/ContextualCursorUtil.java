@@ -108,7 +108,9 @@ public class ContextualCursorUtil
 
 		if (builder.length() != 0) {
 			builder.insert(0, changelogLine("Contextual Cursor has been updated!", true, false));
-			builder.replace(builder.length() - 4, builder.length(), "");
+			int lastNewlineIndex = builder.lastIndexOf("<br>");
+			builder.replace(lastNewlineIndex, lastNewlineIndex + 4, "");
+
 
 			chatMessageManager.queue(
 				QueuedMessage.builder()
