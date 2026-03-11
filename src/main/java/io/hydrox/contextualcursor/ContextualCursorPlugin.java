@@ -202,50 +202,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
 
-		// Since last seen version wasn't in 1.0 checking for only it will trigger for everyone who installs the plugin.
-		//  By only triggering this during startup while not logged in we can "better" attempt to determine if this is a previous install or not.
-		//  Still not totally accurate but better than nothing.
-		if (config.getLastSeenVersion() < 1)
-		{
-			if (client.getGameState() != GameState.LOGGED_IN)
-			{
-				// Existing install (theoretically)
-				chatMessageManager.queue(
-					QueuedMessage.builder()
-						.type(ChatMessageType.CONSOLE)
-						.runeLiteFormattedMessage(
-							ColorUtil.wrapWithColorTag("Contextual Cursor has been updated!<br>", Color.RED) +
-								ColorUtil.wrapWithColorTag("* The plugin has a new maintainer (for a few months now) if you have any feedback please leave it on the *new* github<br>", Color.RED) +
-								ColorUtil.wrapWithColorTag("* Cursor themes are now supported! Currently includes osrs and rs2 (default)", Color.RED)
-						)
-						.build()
-				);
-			}
-			else if (client.getGameState() == GameState.LOGGED_IN)
-			{
-				// New install (theoretically)
-				if (!isCustomCursorPluginEnabled && !isCustomCursorEnabled)
-				{
-					// Ideally this would be true by default, but we don't want to suddenly enable it for everyone who's been using this plugin for years.
-					// For now only enable by default for new users (if they don't already have a custom cursor)
-					config.setCustomCursorEnabled(true);
-				}
-			}
-		}
-		else if (config.getLastSeenVersion() < 2 && client.getGameState() != GameState.LOGGED_IN)
-		{
-			chatMessageManager.queue(
-				QueuedMessage.builder()
-					.type(ChatMessageType.CONSOLE)
-					.runeLiteFormattedMessage(
-						ColorUtil.wrapWithColorTag("Contextual Cursor has been updated!<br>", Color.RED) +
-							ColorUtil.wrapWithColorTag("* Option to make the *default* cursor an overlay!<br>", Color.RED) +
-							ColorUtil.wrapWithColorTag("* This allows for better default cursor scaling support and fixes the washed-out color.", Color.RED)
-					)
-					.build()
-			);
-		}
-		config.setLastSeenVersion(ContextualCursorConfig.CURRENT_VERSION);
+		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
 	}
 
 	@Override
