@@ -62,7 +62,7 @@ public enum ContextualCursor
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
 	EAT("eat", "eat", "eat-from"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
-		"grand exchange", "watchtower", "go-through", "pass-through", "pass", "climb-through", "quick-enter", "exit-through"),
+		"grand exchange", "watchtower", "go-through", "pass-through", "pass", "climb-through", "quick-enter", "exit-through", "escape", "quick-escape"),
 	EQUIP("equip", "wield", "wear", "equip"),
 	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, optionIsAnyOf("exchange", "trade", "trade with", "buy-boat"),
 		hasAllOf(hasOption("collect"), not(targetEndsWith("coral")))),
@@ -121,7 +121,7 @@ public enum ContextualCursor
 	AGILITY(SpriteID.Staticons.AGILITY, optionIsAnyOf("balance", "balance-across", "climb-across", "climb-on", "climb-over",
 		"cross", "grab", "grapple", "hurdle", "jump", "jump-up", "jump-to", "jump-off", "jump-in", "jump-on", "kick",
 		"leap", "shoot", "squeeze-past", "squeeze-through", "swing", "swing across", "swing-across", "swing-on", "tap",
-		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over", "escape"),
+		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over"),
 		hasAllOf(hasOption("navigate"), not(targetNamed("helm")))), // underwater agility obstacles
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade", "build-trap"),
