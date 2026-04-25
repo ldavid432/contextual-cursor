@@ -65,7 +65,7 @@ public enum ContextualCursor
 		"grand exchange", "watchtower", "go-through", "pass-through", "pass", "climb-through", "quick-enter", "exit-through",
 		"escape", "quick-escape", "walk-through", "leave"),
 	EQUIP("equip", "wield", "wear", "equip"),
-	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, optionIsAnyOf("exchange", "trade", "trade with", "buy-boat", "buy", "trade-in"),
+	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, optionIsAnyOf("exchange", "trade", "trade with", "buy-boat", "buy", "trade-in", "shop"),
 		hasAllOf(hasOption("collect"), not(targetEndsWith("coral")))),
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
