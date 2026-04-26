@@ -68,6 +68,7 @@ public enum ContextualCursor
 	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, optionIsAnyOf("exchange", "trade", "trade with", "buy-boat", "buy", "trade-in", "shop"),
 		hasAllOf(hasOption("collect"), not(targetEndsWith("coral")))),
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
+	HEAL("heal", "heal", "help"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
 	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task"),
 	LADDER("ladder", "climb"),
