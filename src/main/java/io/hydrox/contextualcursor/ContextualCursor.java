@@ -93,7 +93,7 @@ public enum ContextualCursor
 	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter", "transport"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to"))),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
-	USE("use", "use", "pet"),
+	USE("use", "use", "pet", "touch"),
 	WIKI("wiki", hasOption("lookup-entity"), targetNamed("wiki"), targetStartsWith("wiki ->")),
 
 	// Sailing
