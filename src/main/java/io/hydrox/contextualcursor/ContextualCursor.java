@@ -138,7 +138,8 @@ public enum ContextualCursor
 		hasAllOf(optionStartsWith("pay"), isNpc()), // Paying farmers
 		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()) // Avoid zygomites, use pick-x for fruit trees
 	),
-	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "feed"),
+	FIREMAKING(SpriteID.Staticons.FIREMAKING, optionIsAnyOf("light", "tend-to"),
+		hasAllOf(hasOption("feed"), targetNamed("brazier"))), // avoid feeding duke
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
