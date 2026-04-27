@@ -137,10 +137,12 @@ public enum ContextualCursor
 		hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
 		hasAllOf(hasOption("collect"), targetEndsWith("coral")), // Collecting coral
 		hasAllOf(optionStartsWith("pay"), isNpc()), // Paying farmers
-		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()) // Avoid zygomites, use pick-x for fruit trees
+		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()), // Avoid zygomites, use pick-x for fruit trees
+		hasAllOf(hasOption("tend-to"), targetStartsWith("flowering bush"))
 	),
-	FIREMAKING(SpriteID.Staticons.FIREMAKING, optionIsAnyOf("light", "tend-to"),
-		hasAllOf(hasOption("feed"), targetNamed("brazier"))), // avoid feeding duke
+	FIREMAKING(SpriteID.Staticons.FIREMAKING, optionIsAnyOf("light"),
+		hasAllOf(hasOption("feed"), targetNamed("brazier")), // avoid feeding duke
+		hasAllOf(hasOption("tend-to"), targetEndsWith("campfire"))), // avoid flowering bushes
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
 		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
