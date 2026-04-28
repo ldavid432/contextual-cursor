@@ -24,8 +24,9 @@
  */
 package io.hydrox.contextualcursor;
 
-import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
+import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -47,15 +48,7 @@ public enum SpellSprite
 	CURSE(SpriteID.Magicon.CURSE),
 	BIND(SpriteID.Magicon2.BIND),
 	LOW_LEVEL_ALCHEMY(SpriteID.Magicon.LOW_LEVEL_ALCHEMY),
-	ALCHEMIC_CONVERGENCE(SpriteID.League6RelicsTli._11) {
-		@Override
-		public Sprite getSprite()
-		{
-			CacheSprite sprite1 = (CacheSprite) super.getSprite();
-			sprite1.setInverted(true);
-			return sprite1;
-		}
-	},
+	ALCHEMIC_CONVERGENCE(cacheSprite().id(SpriteID.League6RelicsTli._11).isInverted(true)),
 	WATER_BOLT(SpriteID.Magicon.WATER_BOLT),
 	LVL_2_ENCHANT("lvl-2 enchant", SpriteID.Magicon.LVL_2_ENCHANT),
 	EARTH_BOLT(SpriteID.Magicon.EARTH_BOLT),
@@ -148,14 +141,19 @@ public enum SpellSprite
 	@Getter
 	private final Sprite sprite;
 
+	SpellSprite(BaseSpriteBuilder<?, ?> spriteBuilder)
+	{
+		this(null, spriteBuilder.build());
+	}
+
 	SpellSprite(int spriteID)
 	{
-		this(null, Sprite.of(spriteID));
+		this(cacheSprite().id(spriteID));
 	}
 
 	SpellSprite(String name, int spriteID)
 	{
-		this(name, Sprite.of(spriteID));
+		this(name, cacheSprite().id(spriteID).build());
 	}
 
 	private String getName()

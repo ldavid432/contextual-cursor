@@ -7,14 +7,14 @@ import javax.annotation.Nullable;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
-// TODO: Rework this into a builder?
 public interface Sprite
 {
 	@Nullable
 	BufferedImage getImage(Client client, SpriteManager spriteManager, CursorTheme theme, double scale, boolean isSmoothScaling);
 
 	@Nullable
-	default BufferedImage getImage(Client client, SpriteManager spriteManager, ContextualCursorPlugin plugin) {
+	default BufferedImage getImage(Client client, SpriteManager spriteManager, ContextualCursorPlugin plugin)
+	{
 		return getImage(client, spriteManager, plugin.getCursorTheme(), plugin.getCursorScale(), plugin.isSmoothScalingEnabled());
 	}
 
@@ -22,25 +22,11 @@ public interface Sprite
 
 	CursorType getType();
 
-	static Sprite of(int id)
-	{
-		return new CacheSprite(id);
+	static ResourceSprite.ResourceSpriteBuilder<?, ?> resourceSprite() {
+		return ResourceSprite.builder();
 	}
 
-	static Sprite of(String path)
-	{
-		return new ResourceSprite(path);
-	}
-
-	static Sprite of(String path, boolean isFullCursor)
-	{
-		CursorType type = isFullCursor ? CursorType.CONTEXTUAL_FULL : CursorType.CONTEXTUAL;
-		return new ResourceSprite(path, type);
-	}
-
-	static Sprite of(String path, CursorType cursorType)
-	{
-		return new ResourceSprite(path, cursorType);
+	static CacheSprite.CacheSpriteBuilder<?, ?> cacheSprite() {
+		return CacheSprite.builder();
 	}
 }
-

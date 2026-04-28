@@ -7,36 +7,24 @@ import java.awt.image.BufferedImage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
-@EqualsAndHashCode(of = "fileName")
-@RequiredArgsConstructor
-public class ResourceSprite implements Sprite
+@SuperBuilder
+@EqualsAndHashCode(of = "fileName", callSuper = false)
+public class ResourceSprite extends BaseSprite
 {
 	@Nonnull
 	private final String fileName;
 
-	@Nullable
-	private BufferedImage image;
-
-	@Getter
-	private final CursorType type;
-
-	public ResourceSprite(@Nonnull String fileName)
-	{
-		this.fileName = fileName;
-		this.type = CursorType.CONTEXTUAL;
-	}
-
-	@Nullable
 	@Override
-	public BufferedImage getImage(Client client, SpriteManager spriteManager, CursorTheme theme, double scale, boolean isSmoothScaling)
+	protected BufferedImage getBaseImage(Client client, SpriteManager spriteManager, CursorTheme theme)
 	{
-		return getImage(theme, scale, isSmoothScaling);
+		return theme.getImage(fileName);
 	}
+
+	// These are used for the default cursors
 
 	@Nullable
 	public BufferedImage getImage(CursorTheme theme, double scale, boolean isSmoothScaling)
@@ -53,12 +41,6 @@ public class ResourceSprite implements Sprite
 	public BufferedImage getImage(ContextualCursorPlugin plugin)
 	{
 		return getImage(plugin.getCursorTheme(), plugin.getCursorScale(), plugin.isSmoothScalingEnabled());
-	}
-
-	@Override
-	public void clearImage()
-	{
-		image = null;
 	}
 
 }

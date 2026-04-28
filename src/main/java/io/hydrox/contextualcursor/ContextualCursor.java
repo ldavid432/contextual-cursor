@@ -39,11 +39,16 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
+import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
 import com.github.ldavid432.contextualcursor.sprite.CursorType;
+import static com.github.ldavid432.contextualcursor.sprite.CursorType.CONTEXTUAL_FULL;
 import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
+import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
@@ -57,7 +62,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("use"), targetNamed("bank chest"))),
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
-	DIG(Sprite.of("dig", true), optionIsAnyOf("dig", "clear", "dig-up")),
+	DIG(resourceSprite().fileName("dig").type(CONTEXTUAL_FULL), optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink", "drink-from"),
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
 	EAT("eat", "eat", "eat-from"),
@@ -75,7 +80,7 @@ public enum ContextualCursor
 	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor", "go-down", "descend", "walk-down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
 	OPEN("open", "open", "release"),
-	PICK_LOCK(Sprite.of("picklock", true), optionIsAnyOf("pick-lock", "picklock")),
+	PICK_LOCK(resourceSprite().fileName("picklock").type(CONTEXTUAL_FULL), optionIsAnyOf("pick-lock", "picklock")),
 	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "collect-from", "pick-up"),
 		hasAllOf(hasOption("harvest"), isNpc()),  // Various NPC corpses
 		hasAllOf(optionIsAnyOf("search", "big-search"), targetStartsWith("reward")),  // various minigame reward objects
@@ -91,8 +96,8 @@ public enum ContextualCursor
 	),
 	SKUll(SpriteID.HEADICONS_PK, "skull"),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
-	TRAVEL(Sprite.of("travel", true), hasAnyOf(optionIsAnyOf("travel", "zanaris", "charter", "transport"),
-		optionStartsWith("last-destination"), optionStartsWith("charter-to"))),
+	TRAVEL(resourceSprite().fileName("travel").type(CONTEXTUAL_FULL), optionIsAnyOf("travel", "zanaris", "charter", "transport"),
+		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet", "touch"),
 	WIKI("wiki", hasOption("lookup-entity"), targetNamed("wiki"), targetStartsWith("wiki ->")),
@@ -116,6 +121,7 @@ public enum ContextualCursor
 	// PoH altar spellbooks
 	ANCIENT_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ANCIENT_MAGICKS, "ancient"),
 	ARCEUUS_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ARCEUUS, "arceuus"),
+	// TODO: Magic cape spellbook swap
 	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, hasAllOf(hasOption("standard"), hasAnyOf(targetEndsWith("altar"), targetStartsWith("altar")))), // Avoid DKs lair
 	LUNAR_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_LUNAR, "lunar"),
 
@@ -167,7 +173,7 @@ public enum ContextualCursor
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank",
 		"manage-crew", "quick-board"),
 
-	SPELL(null, isSpell())
+	SPELL((BaseSpriteBuilder<?, ?>) null, isSpell())
 		{
 			@Override
 			protected Sprite getSprite(MenuEntry menuEntry)
@@ -198,31 +204,31 @@ public enum ContextualCursor
 	// Basic cursor with only global actions
 	ContextualCursor(String cursorPath, String... actions)
 	{
-		this(Sprite.of(cursorPath), optionIsAnyOf(actions));
+		this(resourceSprite().fileName(cursorPath), optionIsAnyOf(actions));
 	}
 
 	// Basic cursor with only global actions
 	ContextualCursor(int spriteID, String... actions)
 	{
-		this(Sprite.of(spriteID), optionIsAnyOf(actions));
+		this(cacheSprite().id(spriteID), optionIsAnyOf(actions));
 	}
 
 	// Cursor with specific matchers
 	ContextualCursor(String cursorPath, MenuEntryMatcher... matchers)
 	{
-		this(Sprite.of(cursorPath), hasAnyOf(matchers));
+		this(resourceSprite().fileName(cursorPath), hasAnyOf(matchers));
 	}
 
 	// Cursor with specific matchers
 	ContextualCursor(int spriteID, MenuEntryMatcher... matchers)
 	{
-		this(Sprite.of(spriteID), hasAnyOf(matchers));
+		this(cacheSprite().id(spriteID), hasAnyOf(matchers));
 	}
 
-	ContextualCursor(Sprite sprite, MenuEntryMatcher matcher)
+	ContextualCursor(@Nullable BaseSpriteBuilder<?, ?> spriteBuilder, MenuEntryMatcher... matchers)
 	{
-		this.sprite = sprite;
-		this.matcher = matcher;
+		this.sprite = spriteBuilder != null ? spriteBuilder.build() : null;
+		this.matcher = hasAnyOf(matchers);
 	}
 
 	protected Sprite getSprite(MenuEntry menuEntry)
@@ -245,9 +251,9 @@ public enum ContextualCursor
 		return null;
 	}
 
-	static final ResourceSprite BLANK_CURSOR = new ResourceSprite("blank");
-	static final ResourceSprite GENERIC_CURSOR = new ResourceSprite("generic");
-	static final ResourceSprite GENERIC_CURSOR_STANDALONE = new ResourceSprite("generic", CursorType.DEFAULT);
+	static final ResourceSprite BLANK_CURSOR = resourceSprite().fileName("blank").build();
+	static final ResourceSprite GENERIC_CURSOR = resourceSprite().fileName("generic").build();
+	static final ResourceSprite GENERIC_CURSOR_STANDALONE = resourceSprite().fileName("generic").type(CursorType.DEFAULT).build();
 
 	static void clearImages()
 	{
