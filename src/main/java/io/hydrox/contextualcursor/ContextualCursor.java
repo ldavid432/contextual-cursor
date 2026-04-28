@@ -36,6 +36,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionStartsWith;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetContains;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
@@ -98,6 +99,9 @@ public enum ContextualCursor
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
 	TRAVEL(resourceSprite().fileName("travel").type(CONTEXTUAL_FULL), optionIsAnyOf("travel", "zanaris", "charter", "transport"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
+	UNLOCK("unlock", hasOption("unlock"),
+		// "Use foo key --> something" | "Use foo key bar --> something"
+		hasAllOf(hasOption("use"), isWidgetTarget(), hasAnyOf(targetContains("key ->"), hasAllOf(targetContains(" key "), targetContains(" ->"))))),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet", "touch"),
 	WIKI("wiki", hasOption("lookup-entity"), targetNamed("wiki"), targetStartsWith("wiki ->")),

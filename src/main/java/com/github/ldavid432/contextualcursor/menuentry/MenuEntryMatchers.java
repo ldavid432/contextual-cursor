@@ -100,6 +100,11 @@ public class MenuEntryMatchers
 		return onTarget(targetSuffix, String::endsWith);
 	}
 
+	public static MenuEntryMatcher targetContains(String targetContents)
+	{
+		return onTarget(targetContents, String::contains);
+	}
+
 	// Action types
 
 	private static MenuEntryMatcher isTypeAnyOf(MenuAction... actions)
