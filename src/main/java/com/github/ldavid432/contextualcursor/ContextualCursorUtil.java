@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor;
 
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import net.runelite.api.ChatMessageType;
@@ -48,6 +49,18 @@ public class ContextualCursorUtil
 		{
 			return new Point((int) (point.getX() * scale), (int) (point.getY() * scale));
 		}
+	}
+
+	public static BufferedImage flipImage(BufferedImage img) {
+		int w = img.getWidth();
+		int h = img.getHeight();
+		BufferedImage flipped = new BufferedImage(w, h, img.getType());
+		Graphics2D g = flipped.createGraphics();
+
+		g.drawImage(img, 0, h, w, -h, null);
+
+		g.dispose();
+		return flipped;
 	}
 
 	public static BufferedImage loadImage(String fileName)

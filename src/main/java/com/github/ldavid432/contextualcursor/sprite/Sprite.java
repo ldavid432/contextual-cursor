@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
+// TODO: Rework this into a builder?
 public interface Sprite
 {
 	@Nullable

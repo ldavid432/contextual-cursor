@@ -24,6 +24,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,15 @@ public enum SpellSprite
 	CURSE(SpriteID.Magicon.CURSE),
 	BIND(SpriteID.Magicon2.BIND),
 	LOW_LEVEL_ALCHEMY(SpriteID.Magicon.LOW_LEVEL_ALCHEMY),
+	ALCHEMIC_CONVERGENCE(SpriteID.League6RelicsTli._11) {
+		@Override
+		public Sprite getSprite()
+		{
+			CacheSprite sprite1 = (CacheSprite) super.getSprite();
+			sprite1.setInverted(true);
+			return sprite1;
+		}
+	},
 	WATER_BOLT(SpriteID.Magicon.WATER_BOLT),
 	LVL_2_ENCHANT("lvl-2 enchant", SpriteID.Magicon.LVL_2_ENCHANT),
 	EARTH_BOLT(SpriteID.Magicon.EARTH_BOLT),
@@ -61,6 +71,7 @@ public enum SpellSprite
 	MAGIC_DART(SpriteID.Magicon2.MAGIC_DART),
 	EARTH_BLAST(SpriteID.Magicon.EARTH_BLAST),
 	HIGH_LEVEL_ALCHEMY(SpriteID.Magicon.HIGH_LEVEL_ALCHEMY),
+	ALCHEMIC_DIVERGENCE(SpriteID.League6RelicsTli._11),
 	CHARGE_WATER_ORB(SpriteID.Magicon.CHARGE_WATER_ORB),
 	LVL_4_ENCHANT("lvl-4 enchant", SpriteID.Magicon.LVL_4_ENCHANT),
 	FIRE_BLAST(SpriteID.Magicon.FIRE_BLAST),
