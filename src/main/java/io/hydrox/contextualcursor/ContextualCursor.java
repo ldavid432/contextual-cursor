@@ -62,7 +62,7 @@ public enum ContextualCursor
 	BANK("bank", optionIsAnyOf("bank", "coffer"),
 		hasAllOf(hasOption("use"), targetNamed("bank chest"))),
 	CLOSE("close", "close", "disembark"),
-	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration"), // Wrench sprite
+	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration", "config"), // Wrench sprite
 	DIG(resourceSprite().fileName("dig").type(CONTEXTUAL_FULL), optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink", "drink-from"),
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
