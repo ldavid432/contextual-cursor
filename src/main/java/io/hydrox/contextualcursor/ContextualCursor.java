@@ -141,7 +141,7 @@ public enum ContextualCursor
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade", "build-trap"),
 		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
-	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave"),
+	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave", "sing-crystal"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench"))), // crafting table / clockmaker's benches
 		hasAllOf(hasOption("fire"), targetNamed("pottery oven"))),
 	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick-fruit", "pay", "cure", "prune"),
