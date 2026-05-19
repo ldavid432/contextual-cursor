@@ -65,7 +65,8 @@ public enum ContextualCursor
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration", "config"), // Wrench sprite
 	DIG(resourceSprite().fileName("dig").type(CONTEXTUAL_FULL), optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink", "drink-from"),
-	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "deposit-cargo", "empty basket", "bank-cargo"),
+	DROP("drop", optionIsAnyOf("drop", "empty", "deposit", "quick-deposit", "empty basket", "bank-cargo"),
+		targetStartsWith("deposit-")),
 	EAT("eat", "eat", "eat-from"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
 		"grand exchange", "watchtower", "go-through", "pass-through", "pass", "climb-through", "quick-enter", "exit-through",
