@@ -102,7 +102,7 @@ public enum ContextualCursor
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
 	UNLOCK("unlock", hasOption("unlock"),
 		// "Use foo key --> something" | "Use foo key bar --> something"
-		hasAllOf(hasOption("use"), isWidgetTarget(), hasAnyOf(targetContains("key ->"), hasAllOf(targetContains(" key "), targetContains(" ->"))))),
+		hasAllOf(hasOption("use"), isWidgetTarget(), hasAnyOf(targetContains("key ->"), hasAllOf(targetContains(" key "), not(targetContains("half")), targetContains(" ->"))))),
 	UNTIE("untie", hasOption("tether"), isWidgetTarget("use", "rope")),
 	USE("use", "use", "pet", "touch"),
 	WIKI("wiki", hasOption("lookup-entity"), targetNamed("wiki"), targetStartsWith("wiki ->")),
