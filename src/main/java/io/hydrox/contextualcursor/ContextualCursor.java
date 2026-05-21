@@ -155,7 +155,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("feed"), targetNamed("brazier")), // avoid feeding duke
 		hasAllOf(hasOption("tend-to"), targetEndsWith("campfire"))), // avoid flowering bushes
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
-		"use-rod", "fish", "take-net"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
+		"use-rod", "fish", "take-net", "fish-in"), hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, hasOption("potions"),
 		hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
