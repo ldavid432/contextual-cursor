@@ -39,7 +39,7 @@ public abstract class BaseSprite implements Sprite
 
 	@Override
 	public final BufferedImage getImage(final Client client, final SpriteManager spriteManager, CursorTheme theme,
-								  double scale, boolean isSmoothScaling)
+										double scale, boolean isSmoothScaling)
 	{
 		if (image == null)
 		{
@@ -57,9 +57,11 @@ public abstract class BaseSprite implements Sprite
 	}
 
 	@SuppressWarnings("unused")
-	public static abstract class BaseSpriteBuilder<C extends BaseSprite, B extends BaseSprite.BaseSpriteBuilder<C, B>> {
+	public static abstract class BaseSpriteBuilder<C extends BaseSprite, B extends BaseSprite.BaseSpriteBuilder<C, B>>
+	{
 		// Drop image builder function
-		private B image(BufferedImage image){
+		private B image(BufferedImage image)
+		{
 			return self();
 		}
 	}

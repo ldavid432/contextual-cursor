@@ -22,11 +22,13 @@ public interface Sprite
 
 	CursorType getType();
 
-	static ResourceSprite.ResourceSpriteBuilder<?, ?> resourceSprite() {
+	static ResourceSprite.ResourceSpriteBuilder<?, ?> resourceSprite()
+	{
 		return ResourceSprite.builder();
 	}
 
-	static CacheSprite.CacheSpriteBuilder<?, ?> cacheSprite() {
+	static CacheSprite.CacheSpriteBuilder<?, ?> cacheSprite()
+	{
 		return CacheSprite.builder();
 	}
 }
