@@ -12,7 +12,7 @@ import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
 @SuperBuilder
-@EqualsAndHashCode(of = "fileName", callSuper = false)
+@EqualsAndHashCode(of = "fileName", callSuper = true)
 public class ResourceSprite extends BaseSprite
 {
 	@Nonnull

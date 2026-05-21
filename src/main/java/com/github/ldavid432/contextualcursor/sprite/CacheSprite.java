@@ -8,7 +8,7 @@ import net.runelite.api.Client;
 import net.runelite.client.game.SpriteManager;
 
 @SuperBuilder
-@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(of = "id", callSuper = true)
 public class CacheSprite extends BaseSprite
 {
 

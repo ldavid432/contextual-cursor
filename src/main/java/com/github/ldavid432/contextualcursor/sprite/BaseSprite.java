@@ -6,6 +6,7 @@ import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -16,6 +17,7 @@ import net.runelite.client.game.SpriteManager;
  * Base class that handles caching the image as well as image rotation and scaling. Also houses the common fields
  */
 @SuperBuilder
+@EqualsAndHashCode(of = {"isInverted", "type"})
 public abstract class BaseSprite implements Sprite
 {
 	@Nullable
