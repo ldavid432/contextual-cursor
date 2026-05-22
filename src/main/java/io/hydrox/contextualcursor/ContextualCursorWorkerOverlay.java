@@ -227,7 +227,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 			else if (plugin.canDefaultCursorUseOverlay())
 			{
-				if (genericSpacerTooltip != null) {
+				if (genericSpacerTooltip != null)
+				{
 					tooltipManager.addFront(genericSpacerTooltip);
 				}
 			}

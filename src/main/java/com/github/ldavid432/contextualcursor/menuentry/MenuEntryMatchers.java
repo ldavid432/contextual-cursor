@@ -154,7 +154,8 @@ public class MenuEntryMatchers
 		return isTypeAnyOf(WIDGET_TYPES);
 	}
 
-	public static MenuEntryMatcher isWidgetTarget(String option, String fromTarget) {
+	public static MenuEntryMatcher isWidgetTarget(String option, String fromTarget)
+	{
 		return hasAllOf(hasOption(option), isWidgetTarget(), targetStartsWith(fromTarget + " ->"));
 	}
 

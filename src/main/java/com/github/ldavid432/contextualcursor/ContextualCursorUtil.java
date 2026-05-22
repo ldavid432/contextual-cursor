@@ -51,7 +51,8 @@ public class ContextualCursorUtil
 		}
 	}
 
-	public static BufferedImage flipImage(BufferedImage img) {
+	public static BufferedImage flipImage(BufferedImage img)
+	{
 		int w = img.getWidth();
 		int h = img.getHeight();
 		BufferedImage flipped = new BufferedImage(w, h, img.getType());
@@ -119,7 +120,8 @@ public class ContextualCursorUtil
 				.append(changelogLine("This allows for better default cursor scaling and fixes the washed-out colors."));
 		}
 
-		if (builder.length() != 0) {
+		if (builder.length() != 0)
+		{
 			builder.insert(0, changelogLine("Contextual Cursor has been updated!", true, false));
 			int lastNewlineIndex = builder.lastIndexOf("<br>");
 			builder.replace(lastNewlineIndex, lastNewlineIndex + 4, "");

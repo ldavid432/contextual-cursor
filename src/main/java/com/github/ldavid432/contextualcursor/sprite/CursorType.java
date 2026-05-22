@@ -1,10 +1,17 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
-public enum CursorType {
-	/** contextual icon, to be added to a background */
+public enum CursorType
+{
+	/**
+	 * contextual icon, to be added to a background
+	 */
 	CONTEXTUAL,
-	/** contextual icon + background */
+	/**
+	 * contextual icon + background
+	 */
 	CONTEXTUAL_FULL,
-	/** default mouse cursor (non-contextual) */
+	/**
+	 * default mouse cursor (non-contextual)
+	 */
 	DEFAULT;
 }
