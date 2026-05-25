@@ -72,7 +72,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
 	name = "Contextual Cursor",
 	description = "RSHD-style image cursors",
-	tags = {"cursor", "rs3", "rs2", "rshd", "context", "theme"}
+	tags = {"cursor", "rs3", "rs2", "rshd", "context", "theme", "hover"}
 )
 @Slf4j
 @PluginDependency(CustomCursorPlugin.class)
