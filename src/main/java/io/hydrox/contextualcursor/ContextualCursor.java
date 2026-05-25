@@ -151,7 +151,7 @@ public enum ContextualCursor
 		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()), // Avoid zygomites, use pick-x for fruit trees
 		hasAllOf(hasOption("tend-to"), targetStartsWith("flowering bush"))
 	),
-	FIREMAKING(SpriteID.Staticons.FIREMAKING, optionIsAnyOf("light"),
+	FIREMAKING(SpriteID.Staticons.FIREMAKING, optionIsAnyOf("light", "rub-together"),
 		hasAllOf(hasOption("feed"), targetNamed("brazier")), // avoid feeding duke
 		hasAllOf(hasOption("tend-to"), targetEndsWith("campfire"))), // avoid flowering bushes
 	FISHING(SpriteID.Staticons.FISHING, optionIsAnyOf("net", "lure", "small net", "harpoon", "cage", "big net",
