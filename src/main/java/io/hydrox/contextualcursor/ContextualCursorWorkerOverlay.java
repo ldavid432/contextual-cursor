@@ -55,7 +55,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 {
 	private static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
 	private static final String GENERIC_CURSOR_NAME = "contextual-cursor-generic";
-	private static final String DEFAULT_CURSOR_NAME = Cursor.getDefaultCursor().getName();
 	private static final Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(
 		new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB),
 		new java.awt.Point(0, 0),
@@ -74,6 +73,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private boolean isInSubmenu;
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
+	private Cursor lastDefaultCursor;
 	private Tooltip spacerTooltip;
 	private Tooltip genericSpacerTooltip;
 	public Cursor genericCursor;
@@ -100,12 +100,34 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			return;
 		}
 		final Cursor currentCursor = clientUI.getCurrentCursor();
-		if (!currentCursor.getName().equals(BLANK_CURSOR_NAME) &&
-			!currentCursor.getName().equals(GENERIC_CURSOR_NAME) &&
-			!currentCursor.getName().equals(DEFAULT_CURSOR_NAME))
+		if (isNotIgnoredCursor(currentCursor))
 		{
-			originalCursor = clientUI.getCurrentCursor();
+			// Don't accidentally save things like the loading cursor
+			if (isSavableCursorType(currentCursor))
+			{
+				log.debug("Storing original cursor: {}", currentCursor.getName());
+				originalCursor = currentCursor;
+			}
+			else
+			{
+				log.debug("Storing last default cursor: {}", currentCursor.getName());
+				originalCursor = lastDefaultCursor;
+			}
 		}
+		else
+		{
+			log.debug("NOT storing original cursor: {}", currentCursor.getName());
+		}
+	}
+
+	private boolean isNotIgnoredCursor(Cursor cursor)
+	{
+		return !cursor.getName().equals(BLANK_CURSOR_NAME) || !cursor.getName().equals(GENERIC_CURSOR_NAME);
+	}
+
+	private boolean isSavableCursorType(Cursor cursor)
+	{
+		return cursor.getType() == Cursor.DEFAULT_CURSOR || cursor.getType() == Cursor.CUSTOM_CURSOR;
 	}
 
 	void shutdown()
@@ -125,6 +147,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			plugin.setSpriteToDraw(null);
 			if (originalCursor != null)
 			{
+				log.debug("Restoring cursor: {}", originalCursor.getName());
 				clientUI.setCursor(originalCursor);
 				originalCursor = null;
 			}
@@ -134,6 +157,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 			else
 			{
+				log.debug("Resetting cursor");
 				clientUI.resetCursor();
 			}
 		}
@@ -143,12 +167,14 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 		else if (!plugin.isCustomCursorPluginEnabled())
 		{
+			log.debug("Resetting cursor");
 			clientUI.resetCursor();
 		}
 	}
 
 	private void setGenericCursor()
 	{
+		log.debug("Restoring Generic cursor");
 		if (plugin.isDefaultCursorOverlayEnabled())
 		{
 			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
@@ -184,6 +210,17 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			new java.awt.Point(0, 0),
 			GENERIC_CURSOR_NAME
 		);
+	}
+
+	public void checkLastCursor()
+	{
+		Cursor currentCursor = clientUI.getCurrentCursor();
+
+		if (isNotIgnoredCursor(currentCursor) && isSavableCursorType(currentCursor) && lastDefaultCursor != currentCursor)
+		{
+			log.debug("Setting last default cursor: {}", currentCursor.getName());
+			lastDefaultCursor = currentCursor;
+		}
 	}
 
 	@Override

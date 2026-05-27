@@ -353,6 +353,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Subscribe
 	public void onClientTick(ClientTick event)
 	{
+		contextualCursorWorkerOverlay.checkLastCursor();
 		Point mousePos = client.getMouseCanvasPosition();
 		// if previously outside and now inside or vice versa
 		boolean inOrOutBoundsChanged = isCursorInBounds == !mouseInsideBounds(mousePos, client);
