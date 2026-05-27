@@ -437,7 +437,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				Stream.of(ignored, name, item, npc, player)
 					.filter(Objects::nonNull)
 					.reduce((s1, s2) -> s1 + "<br>" + s2)
-					.get()
+					.orElse(name)
 			)
 		);
 	}
