@@ -24,7 +24,6 @@
  */
 package io.hydrox.contextualcursor;
 
-import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
@@ -69,7 +68,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private final ClientUI clientUI;
 	private final ContextualCursorPlugin plugin;
 	private final TooltipManager tooltipManager;
-	private final ContextualCursorConfig config;
 
 	// Last top level menu entry that has a submenu
 	private MenuEntry lastSubmenuEntry;
@@ -82,7 +80,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	@Inject
 	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,
-								  TooltipManager tooltipManager, ContextualCursorConfig config)
+								  TooltipManager tooltipManager)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -93,7 +91,6 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		this.clientUI = clientUI;
 		this.plugin = plugin;
 		this.tooltipManager = tooltipManager;
-		this.config = config;
 	}
 
 	private void storeOriginalCursor()
