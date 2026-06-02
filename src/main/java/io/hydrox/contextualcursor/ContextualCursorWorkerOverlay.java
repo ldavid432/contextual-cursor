@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2020-2022 Enriath <ikada@protonmail.ch>
+ * Copyright (c) 2026 Lake David <ldavid432@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,6 +50,8 @@ import net.runelite.client.ui.overlay.components.ImageComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
 import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 import net.runelite.client.util.ColorUtil;
+
+// TODO: Break up this class, it is getting bloated
 
 @Slf4j
 public class ContextualCursorWorkerOverlay extends Overlay
@@ -108,15 +111,19 @@ public class ContextualCursorWorkerOverlay extends Overlay
 				log.debug("Storing original cursor: {}", currentCursor.getName());
 				originalCursor = currentCursor;
 			}
-			else
+			else if (lastDefaultCursor != null)
 			{
 				log.debug("Storing last default cursor: {}", currentCursor.getName());
 				originalCursor = lastDefaultCursor;
 			}
+			else
+			{
+				log.debug("NOT storing original cursor (no cursor to store): {}", currentCursor.getName());
+			}
 		}
 		else
 		{
-			log.debug("NOT storing original cursor: {}", currentCursor.getName());
+			log.debug("NOT storing original cursor (wrong type): {}", currentCursor.getName());
 		}
 	}
 
@@ -145,44 +152,57 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		{
 			cursorOverriden = false;
 			plugin.setSpriteToDraw(null);
-			if (originalCursor != null)
+			boolean wasCursorRestored = restoreOriginalCursor();
+			if (wasCursorRestored)
 			{
-				log.debug("Restoring cursor: {}", originalCursor.getName());
-				clientUI.setCursor(originalCursor);
-				originalCursor = null;
-			}
-			else if (plugin.canOverrideDefaultCursor())
-			{
-				setGenericCursor();
-			}
-			else
-			{
-				log.debug("Resetting cursor");
-				clientUI.resetCursor();
+				return;
 			}
 		}
-		else if (plugin.canOverrideDefaultCursor())
+
+		if (plugin.canOverrideDefaultCursor())
 		{
 			setGenericCursor();
 		}
 		else if (!plugin.isCustomCursorPluginEnabled())
 		{
-			log.debug("Resetting cursor");
+			log.debug("Resetting cursor (resetCursor)");
 			clientUI.resetCursor();
 		}
+		else
+		{
+			// custom cursor plugin is ON - restore the custom cursor
+			boolean wasCursorRestored = restoreOriginalCursor();
+			if (!wasCursorRestored && lastDefaultCursor != null)
+			{
+				log.debug("Restoring last found cursor: {}", lastDefaultCursor.getName());
+				clientUI.setCursor(lastDefaultCursor);
+			}
+		}
+	}
+
+	private boolean restoreOriginalCursor() {
+		if (originalCursor != null)
+		{
+			log.debug("Restoring cursor: {}", originalCursor.getName());
+			clientUI.setCursor(originalCursor);
+			originalCursor = null;
+			return true;
+		}
+		return false;
 	}
 
 	private void setGenericCursor()
 	{
-		log.debug("Restoring Generic cursor");
 		if (plugin.isDefaultCursorOverlayEnabled())
 		{
 			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
 			{
+				log.debug("Restoring Generic overlay cursor");
 				clientUI.setCursor(BLANK_MOUSE);
 			}
 			else
 			{
+				log.debug("Resetting cursor (setGenericCursor)");
 				clientUI.resetCursor();
 			}
 		}
@@ -192,6 +212,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			{
 				genericCursor = createGenericCursor();
 			}
+			log.debug("Restoring Generic cursor");
 			clientUI.setCursor(genericCursor);
 		}
 	}
@@ -252,25 +273,26 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			menuEntry = menuEntries[last];
 		}
 
-		if (menuEntry == null || isEntryIgnored(menuEntry, isInSubmenu))
+		if (menuEntry != null && !isEntryIgnored(menuEntry, isInSubmenu))
+		{
+			debugTooltip(false, menuEntry);
+			processEntry(menuEntry, isInSubmenu);
+		}
+		else
 		{
 			debugTooltip(true, menuEntry);
 			if (plugin.getSpriteToDraw() != null)
 			{
 				resetCursor();
 			}
-			else if (plugin.canDefaultCursorUseOverlay())
+			else if (plugin.canDefaultCursorOverrideWithOverlay())
 			{
 				if (genericSpacerTooltip != null)
 				{
 					tooltipManager.addFront(genericSpacerTooltip);
 				}
 			}
-			return null;
 		}
-
-		debugTooltip(false, menuEntry);
-		processEntry(menuEntry, isInSubmenu);
 		return null;
 	}
 

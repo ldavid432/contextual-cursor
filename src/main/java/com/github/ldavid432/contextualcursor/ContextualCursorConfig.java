@@ -63,7 +63,7 @@ public interface ContextualCursorConfig extends Config
 		position = 0,
 		section = defaultCursorSection
 	)
-	default boolean isCustomCursorEnabled()
+	default boolean isCustomDefaultCursorEnabled()
 	{
 		return false;
 	}

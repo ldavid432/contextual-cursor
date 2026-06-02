@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022 Enriath <ikada@protonmail.ch>
+ * Copyright (c) 2026 Lake David <ldavid432@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +74,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 		if (sprite == null)
 		{
-			if (plugin.canOverrideDefaultCursor() && plugin.canDefaultCursorUseOverlay())
+			if (plugin.canDefaultCursorOverrideWithOverlay())
 			{
 				sprite = GENERIC_CURSOR_STANDALONE;
 			}

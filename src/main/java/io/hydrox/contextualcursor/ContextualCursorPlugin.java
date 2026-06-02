@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2020-2022 Enriath <ikada@protonmail.ch>
+ * Copyright (c) 2026 Lake David <ldavid432@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -134,7 +135,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean isCustomCursorPluginEnabled;
 
 	@Getter
-	private boolean isCustomCursorEnabled;
+	private boolean isCustomDefaultCursorEnabled;
 
 	@Getter
 	private boolean isDefaultCursorOverlayEnabled;
@@ -148,12 +149,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	public boolean canOverrideDefaultCursor()
 	{
-		return !isCustomCursorPluginEnabled && isCustomCursorEnabled;
+		return !isCustomCursorPluginEnabled && isCustomDefaultCursorEnabled;
 	}
 
-	public boolean canDefaultCursorUseOverlay()
+	public boolean canDefaultCursorOverrideWithOverlay()
 	{
-		return isDefaultCursorOverlayEnabled && !isLoggedOut && isCursorInBounds;
+		return canOverrideDefaultCursor() && isDefaultCursorOverlayEnabled && !isLoggedOut && isCursorInBounds;
 	}
 
 	// TODO: Surely we can reduce the number of booleans here??
@@ -193,7 +194,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		Point mousePos = client.getMouseCanvasPosition();
 		isCursorInBounds = mouseInsideBounds(mousePos, client);
 
-		isCustomCursorEnabled = config.isCustomCursorEnabled();
+		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
 		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 		cursorTheme = config.getCursorTheme();
 		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
@@ -306,7 +307,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
-				isCustomCursorEnabled = config.isCustomCursorEnabled();
+				isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
 				contextualCursorWorkerOverlay.resetCursor();
 			}
 			else if (event.getKey().equals(CURSOR_THEME))
