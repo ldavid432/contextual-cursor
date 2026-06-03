@@ -129,7 +129,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private boolean isNotIgnoredCursor(Cursor cursor)
 	{
-		return !cursor.getName().equals(BLANK_CURSOR_NAME) || !cursor.getName().equals(GENERIC_CURSOR_NAME);
+		return !cursor.getName().equals(BLANK_CURSOR_NAME) && !cursor.getName().equals(GENERIC_CURSOR_NAME);
 	}
 
 	private boolean isSavableCursorType(Cursor cursor)
