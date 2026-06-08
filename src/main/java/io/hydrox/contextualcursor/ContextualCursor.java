@@ -100,7 +100,7 @@ public enum ContextualCursor
 	),
 	SKUll(SpriteID.HEADICONS_PK, "skull"),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
-	TRAVEL(resourceSprite().fileName("travel").type(CONTEXTUAL_FULL), optionIsAnyOf("travel", "zanaris", "charter", "transport", "follow"),
+	TRAVEL(resourceSprite().fileName("travel").type(CONTEXTUAL_FULL), optionIsAnyOf("travel", "zanaris", "charter", "transport", "follow", "quick-travel"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
 	UNLOCK("unlock", hasOption("unlock"),
 		// "Use foo key --> something" | "Use foo key bar --> something"
