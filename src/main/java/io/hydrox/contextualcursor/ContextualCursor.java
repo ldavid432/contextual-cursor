@@ -161,7 +161,7 @@ public enum ContextualCursor
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate", "fletch"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, hasOption("potions"),
 		hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
-	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "set-trap", "fur clothing", "fur-clothing", "quick-falcon"),
+	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "set-trap", "fur clothing", "fur-clothing", "quick-falcon", "trapF"),
 		hasAllOf(hasOption("check"), isGroundItem()), // Various hunter traps
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
 	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "study"),
