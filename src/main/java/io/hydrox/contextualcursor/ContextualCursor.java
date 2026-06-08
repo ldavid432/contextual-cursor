@@ -92,8 +92,8 @@ public enum ContextualCursor
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story", "guide"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", optionIsAnyOf("examine", "view", "look-inside", "inspect", "investigate", "peek",
-		"look-at", "admire", "look", "look-in"),
+	SEARCH("search", optionIsAnyOf("examine", "view", "inspect", "investigate", "peek", "admire", "look"),
+		optionStartsWith("look-"),
 		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
 		hasAllOf(hasOption("search"), not(targetNamed("wiki"))),
 		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
