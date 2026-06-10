@@ -44,7 +44,6 @@ public class ContextualCursorDrawOverlay extends Overlay
 {
 	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
 	private static final Point POINTER_OFFSET = new Point(-5, 0);
-	private static final Point FULL_POINTER_OFFSET = new Point(-3, 0);
 	//The centre of the circle (biased bottom right since it's an even size), for use with sprites
 	private static final Point CENTRAL_POINT = new Point(16, 18);
 
@@ -54,7 +53,6 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point cursorOffset = POINTER_OFFSET;
-	private Point fullCursorOffset = FULL_POINTER_OFFSET;
 
 	@Inject
 	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteManager spriteManager)
@@ -94,9 +92,6 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 		switch (sprite.getType())
 		{
-			case CONTEXTUAL_FULL:
-				graphics.drawImage(image, mousePos.getX() + fullCursorOffset.getX(), mousePos.getY() + fullCursorOffset.getY(), null);
-				break;
 			case CONTEXTUAL:
 				graphics.drawImage(BLANK_CURSOR.getImage(plugin), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
 				final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - image.getWidth(null) / 2;
@@ -115,7 +110,6 @@ public class ContextualCursorDrawOverlay extends Overlay
 	{
 		scaledCenterPoint = scalePoint(CENTRAL_POINT, plugin.getCursorScale());
 		cursorOffset = scalePoint(POINTER_OFFSET, plugin.getCursorScale());
-		fullCursorOffset = scalePoint(FULL_POINTER_OFFSET, plugin.getCursorScale());
 	}
 
 }

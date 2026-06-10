@@ -7,10 +7,6 @@ public enum CursorType
 	 */
 	CONTEXTUAL,
 	/**
-	 * contextual icon + background
-	 */
-	CONTEXTUAL_FULL,
-	/**
 	 * default mouse cursor (non-contextual)
 	 */
 	DEFAULT;

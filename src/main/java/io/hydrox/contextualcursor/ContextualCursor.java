@@ -43,7 +43,6 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
 import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
 import com.github.ldavid432.contextualcursor.sprite.CursorType;
-import static com.github.ldavid432.contextualcursor.sprite.CursorType.CONTEXTUAL_FULL;
 import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
@@ -64,7 +63,7 @@ public enum ContextualCursor
 		hasAllOf(hasOption("use"), targetNamed("bank chest"))),
 	CLOSE("close", "close", "disembark"),
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration", "config"), // Wrench sprite
-	DIG(resourceSprite().fileName("dig").type(CONTEXTUAL_FULL), optionIsAnyOf("dig", "clear", "dig-up")),
+	DIG("dig", optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink", "drink-from"),
 	DROP("drop", optionIsAnyOf("drop", "empty", "deposit", "quick-deposit", "empty basket", "bank-cargo"),
 		targetStartsWith("deposit-")),
@@ -83,7 +82,7 @@ public enum ContextualCursor
 	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor", "go-down", "descend", "walk-down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
 	OPEN("open", "open", "release"),
-	PICK_LOCK(resourceSprite().fileName("picklock").type(CONTEXTUAL_FULL), optionIsAnyOf("pick-lock", "picklock")),
+	PICK_LOCK("picklock", optionIsAnyOf("pick-lock", "picklock")),
 	PICK_UP("pick_up", optionIsAnyOf("take", "withdraw", "fill", "collect-from", "pick-up"),
 		hasAllOf(hasOption("harvest"), isNpc()),  // Various NPC corpses
 		hasAllOf(optionIsAnyOf("search", "big-search"), targetStartsWith("reward")),  // various minigame reward objects
@@ -100,7 +99,7 @@ public enum ContextualCursor
 	),
 	SKUll(SpriteID.HEADICONS_PK, "skull"),
 	TALK("talk", "talk", "talk-to", "talk to", "command"),
-	TRAVEL(resourceSprite().fileName("travel").type(CONTEXTUAL_FULL), optionIsAnyOf("travel", "zanaris", "charter", "transport", "follow", "quick-travel"),
+	TRAVEL("travel", optionIsAnyOf("travel", "zanaris", "charter", "transport", "follow", "quick-travel"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
 	UNLOCK("unlock", hasOption("unlock"),
 		// "Use foo key --> something" | "Use foo key bar --> something"
