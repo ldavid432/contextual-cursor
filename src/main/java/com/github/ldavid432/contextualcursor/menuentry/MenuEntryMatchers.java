@@ -1,8 +1,16 @@
 package com.github.ldavid432.contextualcursor.menuentry;
 
-import java.util.function.BiFunction;
-import java.util.stream.Stream;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.MenuActionMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.NonNullMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.TargetMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
+import java.util.Arrays;
 import net.runelite.api.MenuAction;
+import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -12,46 +20,41 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher not(MenuEntryMatcher matcher)
 	{
-		return menuEntry -> !matcher.matches(menuEntry);
+		return new NotMatcher(matcher);
 	}
 
 	public static MenuEntryMatcher hasAnyOf(MenuEntryMatcher... matchers)
 	{
-		return menuEntry -> Stream.of(matchers).anyMatch(matcher -> matcher.matches(menuEntry));
+		return new CompositeMatcher(Operator.OR, matchers);
 	}
 
 	public static MenuEntryMatcher hasAllOf(MenuEntryMatcher... matchers)
 	{
-		return menuEntry -> Stream.of(matchers).allMatch(matcher -> matcher.matches(menuEntry));
+		return new CompositeMatcher(Operator.AND, matchers);
 	}
 
 	// Menu options
 
 	public static MenuEntryMatcher optionIsAnyOf(String... options)
 	{
-		return menuEntry -> Stream.of(options).map(MenuEntryMatchers::hasOption).anyMatch(matcher -> matcher.matches(menuEntry));
+		return hasAnyOf(Arrays.stream(options).map(MenuEntryMatchers::hasOption).toArray(MenuEntryMatcher[]::new));
 	}
 
 	public static MenuEntryMatcher hasOption(String option)
 	{
-		return onOption(option, String::equals);
+		return new OptionMatcher(option);
 	}
 
 	public static MenuEntryMatcher optionStartsWith(String optionPrefix)
 	{
-		return onOption(optionPrefix, String::startsWith);
-	}
-
-	private static MenuEntryMatcher onOption(String option, BiFunction<String, String, Boolean> test)
-	{
-		return menuEntry -> test.apply(sanitize(menuEntry.getOption()), option);
+		return new OptionMatcher(optionPrefix, StringPredicate.STARTS_WITH);
 	}
 
 	// NPCs
 
 	public static MenuEntryMatcher isNpc()
 	{
-		return menuEntry -> menuEntry.getNpc() != null;
+		return new NonNullMatcher<>(MenuEntry::getNpc);
 	}
 
 	// Objects
@@ -70,7 +73,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isGroundItem()
 	{
-		return menuEntry -> ArrayUtils.contains(GROUND_ITEM_TYPES, menuEntry.getType());
+		return new MenuActionMatcher(GROUND_ITEM_TYPES);
 	}
 
 	private static final MenuAction[] GROUND_ITEM_TYPES = {
@@ -80,52 +83,42 @@ public class MenuEntryMatchers
 
 	// Targets
 
-	private static MenuEntryMatcher onTarget(String target, BiFunction<String, String, Boolean> test)
-	{
-		return menuEntry -> test.apply(sanitize(menuEntry.getTarget()), target);
-	}
-
 	public static MenuEntryMatcher targetNamed(String target)
 	{
-		return onTarget(target, String::equals);
+		return new TargetMatcher(target);
 	}
 
 	public static MenuEntryMatcher targetStartsWith(String targetPrefix)
 	{
-		return onTarget(targetPrefix, String::startsWith);
+		return new TargetMatcher(targetPrefix, StringPredicate.STARTS_WITH);
 	}
 
 	public static MenuEntryMatcher targetEndsWith(String targetSuffix)
 	{
-		return onTarget(targetSuffix, String::endsWith);
+		return new TargetMatcher(targetSuffix, StringPredicate.ENDS_WITH);
 	}
 
 	public static MenuEntryMatcher targetContains(String targetContents)
 	{
-		return onTarget(targetContents, String::contains);
+		return new TargetMatcher(targetContents, String::contains);
 	}
 
 	// Action types
 
-	private static MenuEntryMatcher isTypeAnyOf(MenuAction... actions)
-	{
-		return menuEntry -> Stream.of(actions).anyMatch(action -> menuEntry.getType() == action);
-	}
-
 	public static MenuEntryMatcher isMovement()
 	{
-		return isTypeAnyOf(MenuAction.WALK, MenuAction.SET_HEADING);
+		return new MenuActionMatcher(MenuAction.WALK, MenuAction.SET_HEADING);
 	}
 
 	public static MenuEntryMatcher isCancel()
 	{
-		return isTypeAnyOf(MenuAction.CANCEL);
+		return new MenuActionMatcher(MenuAction.CANCEL);
 	}
 
 	// this doesn't work great
 	public static MenuEntryMatcher isInterface()
 	{
-		return isTypeAnyOf(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY);
+		return new MenuActionMatcher(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY);
 	}
 
 	// Spellbook spells
@@ -139,7 +132,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isPlayer()
 	{
-		return menuEntry -> menuEntry.getPlayer() != null;
+		return new NonNullMatcher<>(MenuEntry::getPlayer);
 	}
 
 	// Widget
@@ -151,7 +144,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isWidgetTarget()
 	{
-		return isTypeAnyOf(WIDGET_TYPES);
+		return new MenuActionMatcher(WIDGET_TYPES);
 	}
 
 	public static MenuEntryMatcher isWidgetTarget(String option, String fromTarget)
@@ -161,7 +154,7 @@ public class MenuEntryMatchers
 
 	// Util
 
-	private static String sanitize(String text)
+	public static String sanitize(String text)
 	{
 		return Text.removeTags(Text.sanitize(text).toLowerCase());
 	}
