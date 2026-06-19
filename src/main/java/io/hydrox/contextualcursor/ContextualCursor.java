@@ -25,6 +25,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
@@ -57,7 +58,7 @@ import net.runelite.api.gameval.SpriteID;
 import net.runelite.client.util.Text;
 
 @Slf4j
-public enum ContextualCursor
+public enum ContextualCursor implements Cursor
 {
 	BANK("bank", optionIsAnyOf("bank", "coffer"),
 		hasAllOf(hasOption("use"), targetNamed("bank chest"))),
@@ -182,7 +183,7 @@ public enum ContextualCursor
 	SPELL((BaseSpriteBuilder<?, ?>) null, isSpell())
 		{
 			@Override
-			protected Sprite getSprite(MenuEntry menuEntry)
+			public Sprite getSprite(MenuEntry menuEntry)
 			{
 				final Matcher spellFinder = SPELL_FINDER.matcher(menuEntry.getTarget().toLowerCase());
 
@@ -237,25 +238,14 @@ public enum ContextualCursor
 		this.matcher = hasAnyOf(matchers);
 	}
 
-	protected Sprite getSprite(MenuEntry menuEntry)
+	@Override
+	public Sprite getSprite(MenuEntry menuEntry)
 	{
 		return sprite;
 	}
 
 	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final ContextualCursor[] values = values();
-
-	public static Sprite get(MenuEntry menuEntry)
-	{
-		for (ContextualCursor cursor : values)
-		{
-			if (cursor.matcher.matches(menuEntry))
-			{
-				return cursor.getSprite(menuEntry);
-			}
-		}
-		return null;
-	}
 
 	static final ResourceSprite BLANK_CURSOR = resourceSprite().fileName("blank").build();
 	static final ResourceSprite GENERIC_CURSOR = resourceSprite().fileName("generic").build();

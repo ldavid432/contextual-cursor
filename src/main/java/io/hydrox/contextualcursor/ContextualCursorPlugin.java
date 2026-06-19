@@ -35,12 +35,14 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
+import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -110,6 +112,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Inject
 	private ChatMessageManager chatMessageManager;
+
+	@Inject
+	private CursorProvider cursorProvider;
 
 	@Getter
 	private boolean altPressed;
@@ -181,6 +186,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
+		cursorProvider.setCursors(List.of(ContextualCursor.values()));
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
 		keyManager.registerKeyListener(this);

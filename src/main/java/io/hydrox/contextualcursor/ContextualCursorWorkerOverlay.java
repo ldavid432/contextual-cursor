@@ -25,6 +25,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
@@ -70,6 +71,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private final ClientUI clientUI;
 	private final ContextualCursorPlugin plugin;
 	private final TooltipManager tooltipManager;
+	private final CursorProvider cursorProvider;
 
 	// Last top level menu entry that has a submenu
 	private MenuEntry lastSubmenuEntry;
@@ -83,7 +85,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	@Inject
 	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,
-								  TooltipManager tooltipManager)
+	                              TooltipManager tooltipManager, CursorProvider cursorProvider)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -94,6 +96,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		this.clientUI = clientUI;
 		this.plugin = plugin;
 		this.tooltipManager = tooltipManager;
+		this.cursorProvider = cursorProvider;
 	}
 
 	private void storeOriginalCursor()
@@ -367,7 +370,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private void processEntry(MenuEntry menuEntry, boolean isSubMenu)
 	{
-		Sprite sprite = ContextualCursor.get(menuEntry);
+		Sprite sprite = cursorProvider.getSprite(menuEntry);
 
 		// If we don't have a cursor for the submenu entry then use the parent cursor
 		final MenuEntry lastSubmenuEntry1 = lastSubmenuEntry;
