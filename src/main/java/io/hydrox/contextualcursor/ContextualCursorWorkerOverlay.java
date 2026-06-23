@@ -28,6 +28,7 @@ package io.hydrox.contextualcursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -72,6 +73,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private final ContextualCursorPlugin plugin;
 	private final TooltipManager tooltipManager;
 	private final CursorProvider cursorProvider;
+	private final SpriteContext spriteContext;
 
 	// Last top level menu entry that has a submenu
 	private MenuEntry lastSubmenuEntry;
@@ -85,7 +87,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	@Inject
 	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,
-	                              TooltipManager tooltipManager, CursorProvider cursorProvider)
+	                              TooltipManager tooltipManager, CursorProvider cursorProvider, SpriteContext spriteContext)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -97,6 +99,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		this.plugin = plugin;
 		this.tooltipManager = tooltipManager;
 		this.cursorProvider = cursorProvider;
+		this.spriteContext = spriteContext;
 	}
 
 	private void storeOriginalCursor()
@@ -222,7 +225,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = GENERIC_CURSOR.getImage(plugin);
+		BufferedImage icon = GENERIC_CURSOR.getImage(spriteContext);
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();

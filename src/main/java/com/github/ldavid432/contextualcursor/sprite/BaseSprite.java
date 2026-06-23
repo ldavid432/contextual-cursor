@@ -2,7 +2,6 @@ package com.github.ldavid432.contextualcursor.sprite;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.flipImage;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scaleImage;
-import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import lombok.Builder;
@@ -10,8 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.runelite.api.Client;
-import net.runelite.client.game.SpriteManager;
 
 /**
  * Base class that handles caching the image as well as image rotation and scaling. Also houses the common fields
@@ -37,17 +34,21 @@ public abstract class BaseSprite implements Sprite
 		image = null;
 	}
 
-	protected abstract BufferedImage getBaseImage(final Client client, final SpriteManager spriteManager, CursorTheme theme);
+	protected abstract BufferedImage getBaseImage(SpriteContext context);
+
+	protected double getScale(SpriteContext context)
+	{
+		return context.getCursorScale();
+	}
 
 	@Override
-	public final BufferedImage getImage(final Client client, final SpriteManager spriteManager, CursorTheme theme,
-										double scale, boolean isSmoothScaling)
+	public final BufferedImage getImage(SpriteContext context)
 	{
 		if (image == null)
 		{
-			image = getBaseImage(client, spriteManager, theme);
+			image = getBaseImage(context);
 
-			image = scaleImage(image, scale, isSmoothScaling);
+			image = scaleImage(image, getScale(context), context.isSmoothScalingEnabled());
 
 			if (isInverted)
 			{

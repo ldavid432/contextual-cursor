@@ -27,6 +27,7 @@ package io.hydrox.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR_STANDALONE;
 import java.awt.Dimension;
@@ -35,7 +36,6 @@ import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
-import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -49,20 +49,20 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
-	private final SpriteManager spriteManager;
+	private final SpriteContext spriteContext;
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point cursorOffset = POINTER_OFFSET;
 
 	@Inject
-	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteManager spriteManager)
+	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteContext spriteContext)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
 		setPriority(1f);
 		this.client = client;
 		this.plugin = plugin;
-		this.spriteManager = spriteManager;
+		this.spriteContext = spriteContext;
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 			}
 		}
 
-		BufferedImage image = sprite.getImage(client, spriteManager, plugin);
+		BufferedImage image = sprite.getImage(spriteContext);
 		if (image == null)
 		{
 			return null;
@@ -93,7 +93,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		switch (sprite.getType())
 		{
 			case CONTEXTUAL:
-				graphics.drawImage(BLANK_CURSOR.getImage(plugin), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
+				graphics.drawImage(BLANK_CURSOR.getImage(spriteContext), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
 				final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - image.getWidth(null) / 2;
 				final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - image.getHeight(null) / 2;
 				graphics.drawImage(image, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
