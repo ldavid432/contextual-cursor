@@ -21,4 +21,9 @@ public interface Sprite
 	{
 		return CacheSprite.builder();
 	}
+
+	static ItemSprite.ItemSpriteBuilder<?, ?> itemSprite()
+	{
+		return ItemSprite.builder();
+	}
 }

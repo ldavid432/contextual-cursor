@@ -18,7 +18,7 @@ public class ContextualCursorUtil
 {
 	public static BufferedImage scaleImage(BufferedImage image, ContextualCursorPlugin plugin)
 	{
-		return scaleImage(image, plugin.getCursorScale(), plugin.isSmoothScalingEnabled());
+		return scaleImage(image, plugin.getCursorScale(), plugin.isCursorSmoothScalingEnabled());
 	}
 
 	public static BufferedImage scaleImage(BufferedImage image, double scale, boolean isSmoothScaling)

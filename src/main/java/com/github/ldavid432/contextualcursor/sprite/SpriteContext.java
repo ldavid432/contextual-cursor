@@ -37,6 +37,10 @@ public class SpriteContext
 		return plugin.getCursorScale();
 	}
 
+	public double getItemScale()
+	{
+		return plugin.getItemScale();
+	}
 
 	public boolean isSmoothScalingEnabled()
 	{

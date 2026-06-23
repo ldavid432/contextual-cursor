@@ -134,7 +134,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private double cursorScale = 1.0;
 
 	@Getter
-	private boolean isSmoothScalingEnabled;
+	private double itemScale = 1.0;
+
+	@Getter
+	private boolean isCursorSmoothScalingEnabled;
+
+	@Getter
+	private boolean isItemSmoothScalingEnabled;
 
 	@Getter
 	private boolean isCustomCursorPluginEnabled;
@@ -201,11 +207,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isCursorInBounds = mouseInsideBounds(mousePos, client);
 
 		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
-		isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+		isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+		isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
 		cursorTheme = config.getCursorTheme();
 		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 		updateIgnores();
-		updateScale();
+		updateCursorScale();
+		itemScale = config.getItemScale();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
 
@@ -303,12 +311,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			}
 			else if (event.getKey().equals(SCALE))
 			{
-				updateScale();
+				updateCursorScale();
 				clearImages();
 			}
 			else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
-				isSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+				isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
 				clearImages();
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
@@ -327,6 +335,17 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 				contextualCursorWorkerOverlay.genericOverlayToggled();
 			}
+			else if (event.getKey().equals("itemScale"))
+			{
+				itemScale = (double) config.getItemScale() / 100;
+				// TODO: Can potentially only clear item images here
+				clearImages();
+			}
+			else if (event.getKey().equals("itemSmoothScaling"))
+			{
+				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
+				clearImages();
+			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))
 		{
@@ -344,7 +363,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		}
 	}
 
-	private void updateScale()
+	private void updateCursorScale()
 	{
 		cursorScale = (double) config.getCursorScale() / 100;
 		contextualCursorWorkerOverlay.updateScale();
