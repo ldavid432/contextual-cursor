@@ -33,7 +33,6 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isGroundItem;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isNpc;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
@@ -48,14 +47,11 @@ import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.SpriteID;
-import net.runelite.client.util.Text;
 
 @Slf4j
 public enum ContextualCursor implements Cursor
@@ -179,29 +175,6 @@ public enum ContextualCursor implements Cursor
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank",
 		"manage-crew", "quick-board"),
-
-	SPELL((BaseSpriteBuilder<?, ?>) null, isSpell())
-		{
-			@Override
-			public Sprite getSprite(MenuEntry menuEntry)
-			{
-				final Matcher spellFinder = SPELL_FINDER.matcher(menuEntry.getTarget().toLowerCase());
-
-				if (!spellFinder.find())
-				{
-					return null;
-				}
-
-				final String spellText = spellFinder.group(1);
-				final SpellSprite spell = SpellSprite.get(Text.sanitize(spellText));
-				if (spell == null)
-				{
-					return null;
-				}
-
-				return spell.getSprite();
-			}
-		},
 	;
 
 	private final Sprite sprite;
@@ -244,7 +217,6 @@ public enum ContextualCursor implements Cursor
 		return sprite;
 	}
 
-	private static final Pattern SPELL_FINDER = Pattern.compile(">(.*?)(?:</col>| -> )");
 	private static final ContextualCursor[] values = values();
 
 	static final ResourceSprite BLANK_CURSOR = resourceSprite().fileName("blank").build();

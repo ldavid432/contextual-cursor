@@ -172,7 +172,7 @@ public enum SpellSprite
 		}
 	}
 
-	static SpellSprite get(String spell)
+	public static SpellSprite get(String spell)
 	{
 		return map.get(spell);
 	}
