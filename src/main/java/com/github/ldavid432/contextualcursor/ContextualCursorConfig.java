@@ -130,7 +130,9 @@ public interface ContextualCursorConfig extends Config
 		description = "Scale items shown inside the contextual cursor",
 		keyName = "itemScale",
 		position = 2,
-		section = scaleSection
+		section = scaleSection,
+		// TODO: Enable once item cursors are added
+		hidden = true
 	)
 	default int getItemScale()
 	{
@@ -142,13 +144,14 @@ public interface ContextualCursorConfig extends Config
 		description = "Use a smooth scaling algorithm to scale items shown inside the cursor",
 		keyName = "itemSmoothScaling",
 		position = 3,
-		section = scaleSection
+		section = scaleSection,
+		// TODO: Enable once item cursors are added
+		hidden = true
 	)
 	default boolean isItemSmoothScalingEnabled()
 	{
 		return true;
 	}
-
 
 	@ConfigSection(
 		name = "Ignores",
