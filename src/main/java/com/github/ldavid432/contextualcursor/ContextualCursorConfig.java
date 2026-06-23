@@ -16,7 +16,9 @@ public interface ContextualCursorConfig extends Config
 	String GROUP = "contextualcursor";
 	String DEBUG_TOOLTIP = "showDebugTooltip";
 	String SCALE = "scale";
+	String ITEM_SCALE = "itemScale";
 	String SCALE_SMOOTHING = "scaleSmoothing";
+	String ITEM_SCALE_SMOOTHING = "itemSmoothScaling";
 	String CURSOR_THEME = "cursorTheme";
 	String CUSTOM_CURSOR = "customCursor";
 	String DEFAULT_CURSOR_OVERLAY = "genericCursorOverlay";
@@ -128,7 +130,7 @@ public interface ContextualCursorConfig extends Config
 	@ConfigItem(
 		name = "Item Scale",
 		description = "Scale items shown inside the contextual cursor",
-		keyName = "itemScale",
+		keyName = ITEM_SCALE,
 		position = 2,
 		section = scaleSection,
 		// TODO: Enable once item cursors are added
@@ -142,7 +144,7 @@ public interface ContextualCursorConfig extends Config
 	@ConfigItem(
 		name = "Smooth Item Scaling",
 		description = "Use a smooth scaling algorithm to scale items shown inside the cursor",
-		keyName = "itemSmoothScaling",
+		keyName = ITEM_SCALE_SMOOTHING,
 		position = 3,
 		section = scaleSection,
 		// TODO: Enable once item cursors are added

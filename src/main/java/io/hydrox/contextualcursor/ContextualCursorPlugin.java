@@ -30,6 +30,8 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSO
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEFAULT_CURSOR_OVERLAY;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
@@ -335,13 +337,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 				contextualCursorWorkerOverlay.genericOverlayToggled();
 			}
-			else if (event.getKey().equals("itemScale"))
+			else if (event.getKey().equals(ITEM_SCALE))
 			{
 				itemScale = (double) config.getItemScale() / 100;
 				// TODO: Can potentially only clear item images here
 				clearImages();
 			}
-			else if (event.getKey().equals("itemSmoothScaling"))
+			else if (event.getKey().equals(ITEM_SCALE_SMOOTHING))
 			{
 				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
 				clearImages();
