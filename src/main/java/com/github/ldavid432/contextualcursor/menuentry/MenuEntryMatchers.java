@@ -125,7 +125,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isSpell()
 	{
-		return hasAllOf(isWidgetTarget(), hasOption("cast"));
+		return hasAllOf(isWidgetTarget(), optionIsAnyOf("cast", "resurrect", "reanimate"));
 	}
 
 	// Players
