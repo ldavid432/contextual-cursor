@@ -10,7 +10,7 @@ import net.runelite.api.MenuEntry;
 public class CursorProvider
 {
 	@Setter
-	public List<Cursor> cursors;
+	public List<? extends Cursor> cursors;
 
 	public Sprite getSprite(MenuEntry menuEntry)
 	{

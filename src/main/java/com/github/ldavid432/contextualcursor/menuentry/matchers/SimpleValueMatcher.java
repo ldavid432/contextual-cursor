@@ -1,7 +1,7 @@
 package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import com.github.ldavid432.contextualcursor.menuentry.field.MenuEntryField;
+import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.MenuEntry;
@@ -11,25 +11,28 @@ public class SimpleValueMatcher<T> implements MenuEntryValueMatcher<T>
 {
 	@Getter
 	private T value;
-	private Function<MenuEntry, T> getOption;
-	private BiFunction<T, T, Boolean> predicate;
+	private MenuEntryField<T> field;
+	private ValuePredicate<T> predicate;
 
 	@Override
 	public boolean matches(MenuEntry menuEntry)
 	{
-		return predicate.apply(getOption.apply(menuEntry), value);
+		return predicate.compare(
+			field.getEntryValue(menuEntry),
+			value
+		);
 	}
 
 	@Override
-	public T getField(MenuEntry entry)
+	public T getEntryValue(MenuEntry entry)
 	{
-		return getOption.apply(entry);
+		return field.getEntryValue(entry);
 	}
 
 	@Override
-	public Boolean apply(T o, T o2)
+	public boolean compare(T o, T o2)
 	{
-		return predicate.apply(o, o2);
+		return predicate.compare(o, o2);
 	}
 }
 

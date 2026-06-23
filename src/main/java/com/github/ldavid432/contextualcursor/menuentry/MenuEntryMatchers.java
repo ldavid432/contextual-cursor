@@ -100,7 +100,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher targetContains(String targetContents)
 	{
-		return new TargetMatcher(targetContents, String::contains);
+		return new TargetMatcher(targetContents, StringPredicate.CONTAINS);
 	}
 
 	// Action types
