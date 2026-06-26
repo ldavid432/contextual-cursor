@@ -163,7 +163,7 @@ public enum ContextualCursor implements Cursor
 	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "study"),
 		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip"),
-	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter", "bask", "sacrifice", "worship", "bless"),
+	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter", "bask", "sacrifice", "worship", "bless", "recharge-prayer"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
 	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, optionIsAnyOf("craft-rune", "imbue", "reinvigorate"),
 		hasAllOf(hasOption("venerate"), targetNamed("dark altar"))), // Avoid PoH spellbook altars
