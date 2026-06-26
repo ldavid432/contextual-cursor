@@ -59,7 +59,7 @@ public enum ContextualCursor implements Cursor
 	BANK("bank", optionIsAnyOf("bank", "coffer"),
 		hasAllOf(hasOption("use"), targetNamed("bank chest"))),
 	CLOSE("close", "close", "disembark"),
-	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration", "config", "animation"),
+	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration", "config", "animation", "cosmetics", "preferences"),
 	DIG("dig", optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink", "drink-from"),
 	DROP("drop", optionIsAnyOf("drop", "empty", "deposit", "quick-deposit", "empty basket", "bank-cargo", "store"),
