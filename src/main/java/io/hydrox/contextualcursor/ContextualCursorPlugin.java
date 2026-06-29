@@ -32,13 +32,17 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEFAULT_CURSOR_OVERLAY;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE_SMOOTHING;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.PERSIST_ITEMS;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.PERSIST_SPELLS;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -157,6 +161,15 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean isDefaultCursorOverlayEnabled;
 
 	@Getter
+	private boolean isPersistSpells;
+
+	@Getter
+	private boolean isPersistItems;
+
+	@Getter
+	private boolean isShowUseItemCursorEnabled;
+
+	@Getter
 	private boolean isLoggedOut = true;
 
 	@Getter
@@ -197,7 +210,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
-		List<Cursor> cursors = new ArrayList<>(List.of(ContextualCursor.values()));
+		List<Cursor> cursors = new ArrayList<>();
+		cursors.add(new ItemCursor(client, this));
+		cursors.addAll(List.of(ContextualCursor.values()));
 		cursors.add(new SpellCursor());
 		cursorProvider.setCursors(cursors);
 
@@ -221,7 +236,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 		updateIgnores();
 		updateCursorScale();
-		itemScale = config.getItemScale();
+		itemScale = (double) config.getItemScale() / 100;
+		isPersistItems = config.shouldPersistItems();
+		isPersistSpells = config.shouldPersistSpells();
+		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
 
@@ -353,6 +371,18 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
 				clearImages();
+			}
+			else if (event.getKey().equals(PERSIST_SPELLS))
+			{
+				isPersistSpells = config.shouldPersistSpells();
+			}
+			else if (event.getKey().equals(PERSIST_ITEMS))
+			{
+				isPersistItems = config.shouldPersistItems();
+			}
+			else if (event.getKey().equals(USE_ITEM_CURSOR))
+			{
+				isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
 			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))

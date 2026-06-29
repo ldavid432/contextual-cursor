@@ -28,6 +28,7 @@ package io.hydrox.contextualcursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
 import java.awt.Color;
@@ -44,6 +45,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Menu;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -77,6 +79,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	// Last top level menu entry that has a submenu
 	private MenuEntry lastSubmenuEntry;
+	private Sprite persistedSprite;
 	private boolean isInSubmenu;
 	private boolean cursorOverriden;
 	private Cursor originalCursor;
@@ -186,7 +189,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 	}
 
-	private boolean restoreOriginalCursor() {
+	private boolean restoreOriginalCursor()
+	{
 		if (originalCursor != null)
 		{
 			log.debug("Restoring cursor: {}", originalCursor.getName());
@@ -254,6 +258,13 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	public Dimension render(Graphics2D graphics)
 	{
 		if (plugin.isAltPressed() || !plugin.isCursorInBounds())
+		{
+			return null;
+		}
+
+		// Selection takes precedence over menu entries
+		boolean isShowingSelectedCursor = processSelected();
+		if (isShowingSelectedCursor)
 		{
 			return null;
 		}
@@ -388,6 +399,51 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 
 		setSpriteToDraw(sprite);
+	}
+
+	private boolean processSelected()
+	{
+		if (client.isWidgetSelected())
+		{
+			if (persistedSprite != null)
+			{
+				setSpriteToDraw(persistedSprite);
+				return true;
+			}
+			else
+			{
+				Widget selectedWidget = client.getSelectedWidget();
+				if (selectedWidget == null)
+				{
+					return false;
+				}
+				// TODO: Separate these two booleans, theoretically we should grab the sprite from the plugin when isShowUseItemCursorEnabled is on? - if other item sprites are added then isPersistItems grab find those too
+				if (plugin.isShowUseItemCursorEnabled() && plugin.isPersistItems() && selectedWidget.getItemId() > 0)
+				{
+					log.debug("Persisting item {}", selectedWidget.getItemId());
+					// TODO: Item sprite cache
+					persistedSprite = itemSprite().id(selectedWidget.getItemId()).build();
+					setSpriteToDraw(persistedSprite);
+					return true;
+				}
+				else if (plugin.isPersistSpells() &&
+					selectedWidget.getParent() != null &&
+					selectedWidget.getParent().getId() == InterfaceID.MagicSpellbook.SPELLLAYER)
+				{
+					log.debug("Persisting spell");
+					// (Theoretically) The instant a spell is selected the sprite should be the spell sprite so we can just use getSpriteToDraw
+					//  Otherwise we would have to add logic to match the widget sprite ID to the spell which isn't ideal since spells have multiple sprites with different resolutions
+					persistedSprite = plugin.getSpriteToDraw();
+					setSpriteToDraw(persistedSprite);
+					return true;
+				}
+			}
+		}
+		else if (persistedSprite != null)
+		{
+			persistedSprite = null;
+		}
+		return false;
 	}
 
 	private boolean isEntryIgnored(MenuEntry entry, boolean isInSubmenu)

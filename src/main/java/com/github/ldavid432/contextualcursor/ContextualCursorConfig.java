@@ -22,6 +22,9 @@ public interface ContextualCursorConfig extends Config
 	String CURSOR_THEME = "cursorTheme";
 	String CUSTOM_CURSOR = "customCursor";
 	String DEFAULT_CURSOR_OVERLAY = "genericCursorOverlay";
+	String USE_ITEM_CURSOR = "useItem";
+	String PERSIST_ITEMS = "persistItems";
+	String PERSIST_SPELLS = "persistSpells";
 
 	@ConfigItem(
 		keyName = CURSOR_THEME,
@@ -132,9 +135,7 @@ public interface ContextualCursorConfig extends Config
 		description = "Scale items shown inside the contextual cursor",
 		keyName = ITEM_SCALE,
 		position = 2,
-		section = scaleSection,
-		// TODO: Enable once item cursors are added
-		hidden = true
+		section = scaleSection
 	)
 	default int getItemScale()
 	{
@@ -146,11 +147,55 @@ public interface ContextualCursorConfig extends Config
 		description = "Use a smooth scaling algorithm to scale items shown inside the cursor",
 		keyName = ITEM_SCALE_SMOOTHING,
 		position = 3,
-		section = scaleSection,
-		// TODO: Enable once item cursors are added
-		hidden = true
+		section = scaleSection
 	)
 	default boolean isItemSmoothScalingEnabled()
+	{
+		return true;
+	}
+
+	@ConfigSection(
+		name = "Miscellaneous",
+		description = "Configure miscellaneous options",
+		position = 40
+	)
+	String miscSection = "miscSection";
+
+	@ConfigItem(
+		name = "Use Item",
+		description = "Show the item being used in the cursor",
+		keyName = USE_ITEM_CURSOR,
+		position = 0,
+		section = miscSection
+	)
+	default boolean isShowUseItemCursorEnabled()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		name = "Persist Items",
+		description = "Keep showing the item cursor while an item is selected<br>" +
+			"Requires: Use Item ON<br>" +
+			"When disabled, items will only show in the cursor when hovering over a target",
+		keyName = PERSIST_ITEMS,
+		position = 1,
+		section = miscSection
+	)
+	default boolean shouldPersistItems()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		name = "Persist Spells",
+		description = "Keep showing the spell cursor while a spell is selected<br>" +
+			"When disabled, spells will only show in the cursor when hovering over a target",
+		keyName = PERSIST_SPELLS,
+		position = 2,
+		section = miscSection
+	)
+	default boolean shouldPersistSpells()
 	{
 		return true;
 	}
