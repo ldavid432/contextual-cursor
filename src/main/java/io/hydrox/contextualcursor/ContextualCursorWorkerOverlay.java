@@ -513,12 +513,12 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		String player = null;
 		if (entry.getPlayer() != null)
 		{
-			player = String.format("PLayer: %s", entry.getPlayer().getName());
+			player = String.format("Player: %s", entry.getPlayer().getName());
 		}
 
 		tooltipManager.addFront(
 			new Tooltip(
-				Stream.of(ignored, name, item, npc, player)
+				Stream.of("Contextual Cursor Debug:", ignored, name, item, npc, player)
 					.filter(Objects::nonNull)
 					.reduce((s1, s2) -> s1 + "<br>" + s2)
 					.orElse(name)

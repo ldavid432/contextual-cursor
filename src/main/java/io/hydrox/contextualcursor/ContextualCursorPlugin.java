@@ -239,6 +239,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		itemScale = (double) config.getItemScale() / 100;
 		isPersistItems = config.shouldPersistItems();
 		isPersistSpells = config.shouldPersistSpells();
+		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
 		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
