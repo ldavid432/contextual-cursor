@@ -120,6 +120,16 @@ public class ContextualCursorUtil
 				.append(changelogLine("This allows for better default cursor scaling and fixes the washed-out colors."));
 		}
 
+		// 1.11.0
+		if (config.getLastSeenVersion() < 3 && client.getGameState() != GameState.LOGGED_IN)
+		{
+			// Existing install
+			builder
+				.append(changelogLine("Items now show up in the cursor when used on another item"))
+				.append(changelogLine("Selected items and spell cursors now stay visible until the item/spell is deselected"))
+				.append(changelogLine("These new additions can be configured in the settings if desired (default on)"));
+		}
+
 		if (builder.length() != 0)
 		{
 			builder.insert(0, changelogLine("Contextual Cursor has been updated!", true, false));
