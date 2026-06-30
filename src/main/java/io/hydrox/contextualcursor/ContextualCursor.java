@@ -162,7 +162,7 @@ public enum ContextualCursor implements Cursor
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
 	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "study"),
 		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
-	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip"),
+	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip", "mine-through"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter", "bask", "sacrifice", "worship", "bless", "recharge-prayer"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at"),
 	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, optionIsAnyOf("craft-rune", "imbue", "reinvigorate"),
