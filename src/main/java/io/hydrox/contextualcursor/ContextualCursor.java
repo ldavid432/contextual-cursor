@@ -30,7 +30,6 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isGroundItem;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isNpc;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
@@ -88,9 +87,8 @@ public enum ContextualCursor implements Cursor
 	PLANK("plank", "buy-plank"),
 	READ("read", "read", "story", "guide"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", optionIsAnyOf("examine", "view", "inspect", "investigate", "peek", "admire", "look"),
+	SEARCH("search", optionIsAnyOf("examine", "view", "inspect", "investigate", "peek", "admire", "look", "check"),
 		optionStartsWith("look-"),
-		hasAllOf(hasOption("check"), not(isGroundItem())), // Avoid hunter traps
 		hasAllOf(hasOption("search"), not(targetNamed("wiki"))),
 		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
 	),
@@ -158,7 +156,6 @@ public enum ContextualCursor implements Cursor
 	HERBLORE(SpriteID.Staticons.HERBLORE, hasOption("potions"),
 		hasAllOf(optionIsAnyOf("clean"), targetStartsWith("grimy"))),
 	HUNTER(SpriteID.Staticons2.HUNTER, optionIsAnyOf("catch", "lay", "set-trap", "fur clothing", "fur-clothing", "quick-falcon", "trap", "tease"),
-		hasAllOf(hasOption("check"), isGroundItem()), // Various hunter traps
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
 	MAGIC(SpriteID.Staticons.MAGIC, optionIsAnyOf("spellbook", "teleport", "teleport menu", "study"),
 		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
