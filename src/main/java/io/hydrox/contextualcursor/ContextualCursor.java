@@ -133,7 +133,7 @@ public enum ContextualCursor implements Cursor
 		"cross", "grab", "grapple", "hurdle", "jump", "jump-up", "jump-to", "jump-off", "jump-in", "jump-on", "kick",
 		"leap", "shoot", "squeeze-past", "squeeze-through", "swing", "swing across", "swing-across", "swing-on", "tap",
 		"tag", "teeth-grip", "tread-softly", "vault", "walk-on", "walk-across", "crawl-through", "jump-over", "jump-from",
-		"slide", "slide-along"),
+		"slide", "slide-along", "jump-onto"),
 		hasAllOf(hasOption("navigate"), not(targetNamed("helm")))), // underwater agility obstacles
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade", "build-trap"),
