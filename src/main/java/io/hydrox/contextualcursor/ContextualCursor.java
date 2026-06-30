@@ -219,10 +219,9 @@ public enum ContextualCursor implements Cursor
 
 	private static final ContextualCursor[] values = values();
 
-	// TODO: rework these
-	public static final ResourceSprite BLANK_CURSOR = resourceSprite().fileName("blank").build();
-	public static final ResourceSprite GENERIC_CURSOR = resourceSprite().fileName("generic").build();
-	public static final ResourceSprite GENERIC_CURSOR_STANDALONE = resourceSprite().fileName("generic").type(CursorType.DEFAULT).build();
+	static final ResourceSprite BLANK_CURSOR = resourceSprite().fileName("blank").build();
+	static final ResourceSprite GENERIC_CURSOR = resourceSprite().fileName("generic").build();
+	static final ResourceSprite GENERIC_CURSOR_STANDALONE = resourceSprite().fileName("generic").type(CursorType.DEFAULT).build();
 
 	static void clearImages()
 	{
