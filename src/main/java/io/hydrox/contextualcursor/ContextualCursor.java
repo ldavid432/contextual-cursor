@@ -62,7 +62,7 @@ public enum ContextualCursor implements Cursor
 	CONFIGURE(SpriteID.OptionsIcons._51, "configure", "configuration", "config", "animation", "cosmetics", "preferences"),
 	DIG("dig", optionIsAnyOf("dig", "clear", "dig-up")),
 	DRINK("drink", "drink", "drink-from"),
-	DROP("drop", optionIsAnyOf("drop", "empty", "deposit", "quick-deposit", "empty basket", "bank-cargo", "store"),
+	DROP("drop", optionIsAnyOf("drop", "empty", "deposit", "quick-deposit", "empty basket", "bank-cargo", "store", "place-item"),
 		targetStartsWith("deposit-")),
 	EAT("eat", "eat", "eat-from"),
 	ENTER("enter", "climb-into", "enter", "exit", "yanille", "varrock", "seers' village", "camelot",
