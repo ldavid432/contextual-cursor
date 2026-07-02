@@ -73,7 +73,7 @@ public enum ContextualCursor implements Cursor
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
 	HEAL("heal", "heal", "help"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
-	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task"),
+	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task", "remove"),
 	LADDER("ladder", "climb"),
 	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor", "go-down", "descend", "walk-down"),
 	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
@@ -134,7 +134,7 @@ public enum ContextualCursor implements Cursor
 		"slide", "slide-along", "jump-onto"),
 		hasAllOf(hasOption("navigate"), not(targetNamed("helm")))), // underwater agility obstacles
 	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
-	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "remove", "modify", "upgrade", "build-trap"),
+	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "modify", "upgrade", "build-trap"),
 		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
 	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave", "sing-crystal"),
