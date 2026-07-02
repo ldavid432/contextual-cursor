@@ -140,7 +140,7 @@ public enum ContextualCursor implements Cursor
 	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave", "sing-crystal"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench"))), // crafting table / clockmaker's benches
 		hasAllOf(hasOption("fire"), targetNamed("pottery oven"))),
-	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick-fruit", "pay", "cure", "prune"),
+	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick-fruit", "cure", "prune"),
 		hasAllOf(hasOption("harvest"), isObject(), not(targetNamed("crystal extractor"))), // Harvesting crops only
 		hasAllOf(hasOption("collect"), targetEndsWith("coral")), // Collecting coral
 		hasAllOf(optionStartsWith("pay"), isNpc()), // Paying farmers
