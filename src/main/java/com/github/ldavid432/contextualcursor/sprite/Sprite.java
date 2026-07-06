@@ -10,8 +10,6 @@ public interface Sprite
 
 	void clearImage();
 
-	CursorType getType();
-
 	static ResourceSprite.ResourceSpriteBuilder<?, ?> resourceSprite()
 	{
 		return ResourceSprite.builder();

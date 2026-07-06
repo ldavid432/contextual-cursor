@@ -24,9 +24,4 @@ public class CacheSprite extends BaseSprite
 		}
 	}
 
-	@Override
-	public CursorType getType()
-	{
-		return CursorType.CONTEXTUAL;
-	}
 }

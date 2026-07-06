@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -14,19 +13,15 @@ import lombok.experimental.SuperBuilder;
  * Base class that handles caching the image as well as image rotation and scaling. Also houses the common fields
  */
 @SuperBuilder
-@EqualsAndHashCode(of = {"isInverted", "type"})
+@EqualsAndHashCode
 public abstract class BaseSprite implements Sprite
 {
 	@Nullable
-	protected BufferedImage image;
+	protected transient BufferedImage image;
 
 	@Builder.Default
 	@Setter
 	private boolean isInverted = false;
-
-	@Builder.Default
-	@Getter
-	private final CursorType type = CursorType.CONTEXTUAL;
 
 	@Override
 	public final void clearImage()
