@@ -183,6 +183,11 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Setter
 	private boolean isCursorInBounds;
 
+	@Inject
+	private Gson runeliteGson;
+
+	private Gson contextualCursorGson;
+
 	public boolean canOverrideDefaultCursor()
 	{
 		return !isCustomCursorPluginEnabled && isCustomDefaultCursorEnabled;
@@ -218,6 +223,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	protected void startUp()
 	{
 		initCursors();
+
+		contextualCursorGson = runeliteGson.newBuilder()
+			.registerTypeAdapter(MenuEntryMatcher.class, new MenuEntryMatcherAdapter())
+			.registerTypeAdapter(StringPredicate.class, new StringPredicateAdapter())
+			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
+			.create();
 
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);

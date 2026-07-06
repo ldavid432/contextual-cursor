@@ -18,4 +18,10 @@ public class OptionMatcher extends SimpleValueMatcher<String>
 	{
 		this(option, asStringPredicate(ValuePredicate.equals()));
 	}
+
+	@SuppressWarnings("unused") // gson constructor
+	private OptionMatcher()
+	{
+		this(null, null);
+	}
 }
