@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
 import com.github.ldavid432.contextualcursor.menuentry.field.MenuEntryField;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.MenuEntry;
@@ -9,9 +10,11 @@ import net.runelite.api.MenuEntry;
 @AllArgsConstructor
 public class SimpleValueMatcher<T> implements MenuEntryValueMatcher<T>
 {
-	@Getter
+	@Getter(onMethod_ = @VisibleForTesting)
 	private T value;
+	@Getter(onMethod_ = @VisibleForTesting)
 	private MenuEntryField<T> field;
+	@Getter(onMethod_ = @VisibleForTesting)
 	private ValuePredicate<T> predicate;
 
 	@Override

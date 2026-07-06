@@ -1,6 +1,6 @@
 package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.sanitize;
+import com.github.ldavid432.contextualcursor.menuentry.field.StringField;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import static com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate.asStringPredicate;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
@@ -11,7 +11,7 @@ public class OptionMatcher extends SimpleValueMatcher<String>
 	public OptionMatcher(String option, StringPredicate predicate)
 	{
 		// TODO: Sanitize in super?
-		super(option, entry -> sanitize(entry.getOption()), predicate);
+		super(option, StringField.OPTION, predicate);
 	}
 
 	public OptionMatcher(String option)
