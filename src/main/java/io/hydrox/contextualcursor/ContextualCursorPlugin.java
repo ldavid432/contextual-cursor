@@ -46,10 +46,17 @@ import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
+import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
+import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
+import com.github.ldavid432.contextualcursor.serialization.adapters.StringPredicateAdapter;
+import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,11 +217,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
-		List<Cursor> cursors = new ArrayList<>();
-		cursors.add(new ItemCursor(client, this));
-		cursors.addAll(List.of(ContextualCursor.values()));
-		cursors.add(new SpellCursor());
-		cursorProvider.setCursors(cursors);
+		initCursors();
 
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
@@ -247,13 +250,24 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
 	}
 
+	private void initCursors()
+	{
+		List<Cursor> cursors = new ArrayList<>();
+		cursors.add(new ItemCursor(client, this));
+		cursors.addAll(List.of(ContextualCursor.values()));
+		cursors.add(new SpellCursor());
+		cursorProvider.setCursors(cursors);
+		cursorProvider.setBackgroundCursorSprite(resourceSprite().fileName("blank").build());
+		cursorProvider.setDefaultCursorSprite(resourceSprite().fileName("generic").build());
+	}
+
 	@Override
 	protected void shutDown()
 	{
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
 		contextualCursorWorkerOverlay.shutdown();
-		clearImages();
+		cursorProvider.clearImages();
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(mouseListener);
 	}
@@ -339,12 +353,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(SCALE))
 			{
 				updateCursorScale();
-				clearImages();
+				cursorProvider.clearImages();
 			}
 			else if (event.getKey().equals(SCALE_SMOOTHING))
 			{
 				isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-				clearImages();
+				cursorProvider.clearImages();
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
@@ -354,7 +368,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(CURSOR_THEME))
 			{
 				cursorTheme = config.getCursorTheme();
-				clearImages();
+				cursorProvider.clearImages();
 				contextualCursorWorkerOverlay.updateTheme();
 			}
 			else if (event.getKey().equals(DEFAULT_CURSOR_OVERLAY))
@@ -366,12 +380,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				itemScale = (double) config.getItemScale() / 100;
 				// TODO: Can potentially only clear item images here
-				clearImages();
+				cursorProvider.clearImages();
 			}
 			else if (event.getKey().equals(ITEM_SCALE_SMOOTHING))
 			{
 				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
-				clearImages();
+				cursorProvider.clearImages();
 			}
 			else if (event.getKey().equals(PERSIST_SPELLS))
 			{
@@ -407,12 +421,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		cursorScale = (double) config.getCursorScale() / 100;
 		contextualCursorWorkerOverlay.updateScale();
 		contextualCursorDrawOverlay.updateScale();
-	}
-
-	private void clearImages()
-	{
-		ContextualCursor.clearImages();
-		SpellSprite.clearImages();
 	}
 
 	@Subscribe

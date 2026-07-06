@@ -41,12 +41,11 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
 import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
-import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
-import javax.annotation.Nullable;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.SpriteID;
@@ -175,6 +174,7 @@ public enum ContextualCursor implements Cursor
 		"manage-crew", "quick-board"),
 	;
 
+	@NonNull
 	private final Sprite sprite;
 	@Getter
 	private final MenuEntryMatcher matcher;
@@ -203,9 +203,9 @@ public enum ContextualCursor implements Cursor
 		this(cacheSprite().id(spriteID), hasAnyOf(matchers));
 	}
 
-	ContextualCursor(@Nullable BaseSpriteBuilder<?, ?> spriteBuilder, MenuEntryMatcher... matchers)
+	ContextualCursor(BaseSpriteBuilder<?, ?> spriteBuilder, MenuEntryMatcher... matchers)
 	{
-		this.sprite = spriteBuilder != null ? spriteBuilder.build() : null;
+		this.sprite = spriteBuilder.build();
 		this.matcher = hasAnyOf(matchers);
 	}
 
@@ -215,22 +215,9 @@ public enum ContextualCursor implements Cursor
 		return sprite;
 	}
 
-	private static final ContextualCursor[] values = values();
-
-	static final ResourceSprite BLANK_CURSOR = resourceSprite().fileName("blank").build();
-	static final ResourceSprite GENERIC_CURSOR = resourceSprite().fileName("generic").build();
-
-	static void clearImages()
+	@Override
+	public void clearImage()
 	{
-		for (ContextualCursor cursor : values)
-		{
-			if (cursor.sprite != null)
-			{
-				cursor.sprite.clearImage();
-			}
-		}
-
-		BLANK_CURSOR.clearImage();
-		GENERIC_CURSOR.clearImage();
+		sprite.clearImage();
 	}
 }

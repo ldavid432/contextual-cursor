@@ -38,4 +38,10 @@ public class ItemCursor implements Cursor
 			hasOption("use")
 		);
 	}
+
+	@Override
+	public void clearImage()
+	{
+		// Item sprites currently are not cached
+	}
 }

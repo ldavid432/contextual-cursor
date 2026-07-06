@@ -14,7 +14,14 @@ public class JsonCursor implements Cursor
 	@Override
 	public Sprite getSprite(MenuEntry menuEntry)
 	{
+		// For now, we will just support static sprites with JSON.
+		// Dynamic ones like the spellbook or item cursors will stay in Java.
 		return sprite;
 	}
 
+	@Override
+	public void clearImage()
+	{
+		sprite.clearImage();
+	}
 }

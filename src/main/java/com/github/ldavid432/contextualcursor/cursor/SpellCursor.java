@@ -38,4 +38,10 @@ public class SpellCursor implements Cursor
 	{
 		return isSpell();
 	}
+
+	@Override
+	public void clearImage()
+	{
+		SpellSprite.clearImages();
+	}
 }

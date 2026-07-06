@@ -30,7 +30,6 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
-import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -229,7 +228,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = GENERIC_CURSOR.getImage(spriteContext);
+		BufferedImage icon = cursorProvider.getDefaultCursorSprite().getImage(spriteContext);
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();
@@ -395,7 +394,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 		else
 		{
-			sprite = Objects.requireNonNullElse(sprite, GENERIC_CURSOR);
+			sprite = Objects.requireNonNullElse(sprite, cursorProvider.getDefaultCursorSprite());
 		}
 
 		setSpriteToDraw(sprite);

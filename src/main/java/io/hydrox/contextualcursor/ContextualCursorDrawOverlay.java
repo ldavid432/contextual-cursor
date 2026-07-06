@@ -26,10 +26,9 @@
 package io.hydrox.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
+import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
-import static io.hydrox.contextualcursor.ContextualCursor.BLANK_CURSOR;
-import static io.hydrox.contextualcursor.ContextualCursor.GENERIC_CURSOR;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -50,12 +49,13 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
 	private final SpriteContext spriteContext;
+	private final CursorProvider cursorProvider;
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point cursorOffset = POINTER_OFFSET;
 
 	@Inject
-	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteContext spriteContext)
+	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteContext spriteContext, CursorProvider cursorProvider)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
@@ -63,6 +63,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		this.client = client;
 		this.plugin = plugin;
 		this.spriteContext = spriteContext;
+		this.cursorProvider = cursorProvider;
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 			if (plugin.canDefaultCursorOverrideWithOverlay())
 			{
 				isDefaultCursorOverlay = true;
-				sprite = GENERIC_CURSOR;
+				sprite = cursorProvider.getDefaultCursorSprite();
 			}
 			else
 			{
@@ -98,7 +99,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		}
 		else
 		{
-			graphics.drawImage(BLANK_CURSOR.getImage(spriteContext), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
+			graphics.drawImage(cursorProvider.getBackgroundCursorSprite().getImage(spriteContext), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
 			final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - image.getWidth(null) / 2;
 			final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - image.getHeight(null) / 2;
 			graphics.drawImage(image, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);

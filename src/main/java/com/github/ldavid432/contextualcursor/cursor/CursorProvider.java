@@ -3,6 +3,7 @@ package com.github.ldavid432.contextualcursor.cursor;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.List;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.MenuEntry;
 
@@ -10,7 +11,15 @@ import net.runelite.api.MenuEntry;
 public class CursorProvider
 {
 	@Setter
-	public List<? extends Cursor> cursors;
+	private List<? extends Cursor> cursors;
+
+	@Setter
+	@Getter
+	private Sprite defaultCursorSprite;
+
+	@Setter
+	@Getter
+	private Sprite backgroundCursorSprite;
 
 	public Sprite getSprite(MenuEntry menuEntry)
 	{
@@ -22,5 +31,14 @@ public class CursorProvider
 			}
 		}
 		return null;
+	}
+
+	public void clearImages() {
+		for (Cursor cursor : cursors)
+		{
+			cursor.clearImage();
+		}
+		defaultCursorSprite.clearImage();
+		backgroundCursorSprite.clearImage();
 	}
 }

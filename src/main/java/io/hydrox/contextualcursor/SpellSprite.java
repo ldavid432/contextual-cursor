@@ -177,7 +177,7 @@ public enum SpellSprite
 		return map.get(spell);
 	}
 
-	static void clearImages()
+	public static void clearImages()
 	{
 		for (SpellSprite spell : map.values())
 		{

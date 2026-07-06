@@ -9,5 +9,7 @@ public interface Cursor
 {
 	Sprite getSprite(MenuEntry menuEntry);
 
+	void clearImage();
+
 	MenuEntryMatcher getMatcher();
 }
