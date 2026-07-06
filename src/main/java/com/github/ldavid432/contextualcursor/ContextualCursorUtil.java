@@ -1,5 +1,13 @@
 package com.github.ldavid432.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
+import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
+import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
+import com.github.ldavid432.contextualcursor.serialization.adapters.StringPredicateAdapter;
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -161,6 +169,19 @@ public class ContextualCursorUtil
 	private static String changelogLine(String text, boolean showNewline, boolean showBullet)
 	{
 		return ColorUtil.wrapWithColorTag((showBullet ? "* " : "") + text + (showNewline ? "<br>" : ""), Color.RED);
+	}
+
+	@SuppressWarnings("UnstableApiUsage")
+	public static Gson buildGson(Gson parent)
+	{
+		return parent.newBuilder()
+			.registerTypeAdapter(MenuEntryMatcher.class, new MenuEntryMatcherAdapter())
+			//.registerTypeAdapter(StringPredicate.class, new StringPredicateAdapter())
+			.registerTypeAdapter(new TypeToken<ValuePredicate<String>>() {}.getType(), new StringPredicateAdapter())
+			//.registerTypeAdapter(StringField.class, new StringPredicateAdapter())
+			//.registerTypeAdapter(new TypeToken<MenuEntryField<String>>() {}.getType(), new StringPredicateAdapter())
+			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
+			.create();
 	}
 
 }

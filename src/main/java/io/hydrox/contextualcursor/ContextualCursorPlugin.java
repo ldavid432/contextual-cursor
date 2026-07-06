@@ -37,6 +37,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.PERSI
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
@@ -47,16 +48,11 @@ import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
+import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
-import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
-import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
-import com.github.ldavid432.contextualcursor.serialization.adapters.StringPredicateAdapter;
-import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -224,11 +220,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		initCursors();
 
-		contextualCursorGson = runeliteGson.newBuilder()
-			.registerTypeAdapter(MenuEntryMatcher.class, new MenuEntryMatcherAdapter())
-			.registerTypeAdapter(StringPredicate.class, new StringPredicateAdapter())
-			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
-			.create();
+		contextualCursorGson = buildGson(runeliteGson);
 
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
