@@ -41,6 +41,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGs
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
+import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
@@ -259,9 +260,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		cursors.add(new ItemCursor(client, this));
 		cursors.addAll(List.of(ContextualCursor.values()));
 		cursors.add(new SpellCursor());
-		cursorProvider.setCursors(cursors);
-		cursorProvider.setBackgroundCursorSprite(resourceSprite().fileName("blank").build());
-		cursorProvider.setDefaultCursorSprite(resourceSprite().fileName("generic").build());
+		cursorProvider.setDefinition(
+			new ContextualCursorDefinition(
+				cursors,
+				/* background cursor sprite = */ resourceSprite().fileName("blank").build(),
+				/* default cursor sprite = */ resourceSprite().fileName("generic").build()
+			)
+		);
 	}
 
 	@Override
