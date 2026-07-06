@@ -22,7 +22,7 @@ public class StringPredicateAdapter implements JsonSerializer<ValuePredicate<Str
 				return asStringPredicate(ValuePredicate.equals());
 			case "startsWith":
 				return StringPredicate.STARTS_WITH;
-			case "endsWidth":
+			case "endsWith":
 				return StringPredicate.ENDS_WITH;
 			case "contains":
 				return StringPredicate.CONTAINS;
