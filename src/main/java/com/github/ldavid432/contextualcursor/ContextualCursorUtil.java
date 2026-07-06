@@ -1,7 +1,9 @@
 package com.github.ldavid432.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
+import com.github.ldavid432.contextualcursor.serialization.adapters.CursorAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.StringPredicateAdapter;
@@ -176,10 +178,8 @@ public class ContextualCursorUtil
 	{
 		return parent.newBuilder()
 			.registerTypeAdapter(MenuEntryMatcher.class, new MenuEntryMatcherAdapter())
-			//.registerTypeAdapter(StringPredicate.class, new StringPredicateAdapter())
 			.registerTypeAdapter(new TypeToken<ValuePredicate<String>>() {}.getType(), new StringPredicateAdapter())
-			//.registerTypeAdapter(StringField.class, new StringPredicateAdapter())
-			//.registerTypeAdapter(new TypeToken<MenuEntryField<String>>() {}.getType(), new StringPredicateAdapter())
+			.registerTypeAdapter(Cursor.class, new CursorAdapter())
 			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
 			.create();
 	}

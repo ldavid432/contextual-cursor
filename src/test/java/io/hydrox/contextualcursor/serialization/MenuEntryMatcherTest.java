@@ -1,4 +1,4 @@
-package io.hydrox.contextualcursor;
+package io.hydrox.contextualcursor.serialization;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
@@ -18,7 +18,7 @@ import net.runelite.api.Player;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class JsonTest
+public class MenuEntryMatcherTest
 {
 	Gson gson = buildGson(new Gson());
 
