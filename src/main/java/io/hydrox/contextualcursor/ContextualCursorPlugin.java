@@ -256,6 +256,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	private void initCursors()
 	{
+		// TODO: Load JSON
+		//ContextualCursorDefinition definition = loadLocalCursorDefinition(contextualCursorGson, "default-cursors");
 		ContextualCursorDefinition definition = null;
 
 		List<Cursor> cursors = new ArrayList<>();

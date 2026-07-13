@@ -6,13 +6,11 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CursorAdapter implements JsonSerializer<Cursor>, JsonDeserializer<Cursor>
+public class CursorAdapter implements JsonDeserializer<Cursor>
 {
 	@Override
 	public Cursor deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException
@@ -22,9 +20,4 @@ public class CursorAdapter implements JsonSerializer<Cursor>, JsonDeserializer<C
 		return context.deserialize(jsonElement, JsonCursor.class);
 	}
 
-	@Override
-	public JsonElement serialize(Cursor cursor, Type type, JsonSerializationContext jsonSerializationContext)
-	{
-		return null;
-	}
 }

@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
@@ -15,6 +16,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -24,6 +30,7 @@ import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.ImageUtil;
 
+@Slf4j
 public class ContextualCursorUtil
 {
 	public static BufferedImage scaleImage(BufferedImage image, ContextualCursorPlugin plugin)
@@ -182,6 +189,32 @@ public class ContextualCursorUtil
 			.registerTypeAdapter(Cursor.class, new CursorAdapter())
 			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
 			.create();
+	}
+
+	@Nullable
+	public static ContextualCursorDefinition loadLocalCursorDefinition(Gson gson, String fileName)
+	{
+		try
+		{
+			String resourcePath = String.format("json/%s.json", fileName);
+			InputStream inputStream = ContextualCursorPlugin.class.getResourceAsStream(resourcePath);
+
+			if (inputStream == null)
+			{
+				log.error("Cursor definition file not found: {}", resourcePath);
+				return null;
+			}
+
+			try (InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+			{
+				return gson.fromJson(reader, ContextualCursorDefinition.class);
+			}
+		}
+		catch (Exception e)
+		{
+			log.error("Failed to parse cursor definition JSON: {}", fileName, e);
+			return null;
+		}
 	}
 
 }
