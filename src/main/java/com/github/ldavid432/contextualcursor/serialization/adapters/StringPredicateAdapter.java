@@ -1,7 +1,6 @@
 package com.github.ldavid432.contextualcursor.serialization.adapters;
 
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
-import static com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate.asStringPredicate;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -19,7 +18,7 @@ public class StringPredicateAdapter implements JsonSerializer<ValuePredicate<Str
 		switch (jsonElement.getAsString())
 		{
 			case "equals":
-				return asStringPredicate(ValuePredicate.equals());
+				return StringPredicate.EQUALS;
 			case "startsWith":
 				return StringPredicate.STARTS_WITH;
 			case "endsWith":
@@ -28,7 +27,7 @@ public class StringPredicateAdapter implements JsonSerializer<ValuePredicate<Str
 				return StringPredicate.CONTAINS;
 		}
 
-		return asStringPredicate(ValuePredicate.equals());
+		return StringPredicate.EQUALS;
 	}
 
 	@Override

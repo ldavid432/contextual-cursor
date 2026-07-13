@@ -1,14 +1,16 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.awt.image.BufferedImage;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @EqualsAndHashCode(of = "id", callSuper = true)
 public class CacheSprite extends BaseSprite
 {
-
+	@Getter(onMethod_ = @VisibleForTesting)
 	private final int id;
 
 	@Override

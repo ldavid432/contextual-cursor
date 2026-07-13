@@ -219,9 +219,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
-		initCursors();
-
 		contextualCursorGson = buildGson(runeliteGson);
+
+		initCursors();
 
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
@@ -256,17 +256,34 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	private void initCursors()
 	{
+		ContextualCursorDefinition definition = null;
+
 		List<Cursor> cursors = new ArrayList<>();
 		cursors.add(new ItemCursor(client, this));
-		cursors.addAll(List.of(ContextualCursor.values()));
+		if (definition != null)
+		{
+			cursors.addAll(definition.getCursors());
+		}
+		else
+		{
+			cursors.addAll(List.of(ContextualCursor.values()));
+		}
 		cursors.add(new SpellCursor());
-		cursorProvider.setDefinition(
-			new ContextualCursorDefinition(
-				cursors,
-				/* background cursor sprite = */ resourceSprite().fileName("blank").build(),
-				/* default cursor sprite = */ resourceSprite().fileName("generic").build()
-			)
-		);
+
+		if (definition != null)
+		{
+			cursorProvider.setDefinition(definition.withCursors(cursors));
+		}
+		else
+		{
+			cursorProvider.setDefinition(
+				new ContextualCursorDefinition(
+					cursors,
+					resourceSprite().fileName("generic").build(),
+					resourceSprite().fileName("blank").build()
+				)
+			);
+		}
 	}
 
 	@Override

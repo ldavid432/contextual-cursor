@@ -90,6 +90,26 @@ public class MenuEntryMatcherTest
 	}
 
 	@Test
+	public void test_OptionMatcher_WithDefaultEqualsPredicate()
+	{
+		SimpleValueMatcher<String> match = gson.fromJson("{\"type\": \"option\", \"value\": \"walk here\"}", OptionMatcher.class);
+
+		assert match != null;
+		assert match instanceof OptionMatcher;
+
+		assert match.getValue() != null;
+		assert Objects.equals(match.getValue(), "walk here");
+
+		assert match.getPredicate() != null;
+
+		MenuEntry entry = Mockito.mock(MenuEntry.class);
+		Mockito.when(entry.getOption()).thenReturn("walk here");
+
+		assert match.matches(entry);
+
+	}
+
+	@Test
 	public void test_TargetMatcher()
 	{
 		SimpleValueMatcher<String> match = gson.fromJson("{\"type\": \"target\", \"predicate\": \"endsWith\", \"value\": \"goblin\"}", TargetMatcher.class);

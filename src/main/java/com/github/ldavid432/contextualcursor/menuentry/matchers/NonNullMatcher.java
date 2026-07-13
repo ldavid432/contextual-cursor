@@ -3,8 +3,10 @@ package com.github.ldavid432.contextualcursor.menuentry.matchers;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import java.util.function.Function;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 import net.runelite.api.MenuEntry;
 
+@ToString
 @AllArgsConstructor
 public class NonNullMatcher<T> implements MenuEntryMatcher
 {

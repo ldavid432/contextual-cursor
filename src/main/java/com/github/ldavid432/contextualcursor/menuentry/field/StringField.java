@@ -1,9 +1,15 @@
 package com.github.ldavid432.contextualcursor.menuentry.field;
 
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.sanitize;
+import lombok.AllArgsConstructor;
+import lombok.experimental.Delegate;
 
-public interface StringField extends MenuEntryField<String>
+@AllArgsConstructor
+public enum StringField implements MenuEntryField<String>
 {
-	StringField OPTION = entry -> sanitize(entry.getOption());
-	StringField TARGET = entry -> sanitize(entry.getTarget());
+	OPTION(entry -> sanitize(entry.getOption())),
+	TARGET(entry -> sanitize(entry.getTarget()));
+
+	@Delegate
+	private final MenuEntryField<String> function;
 }

@@ -76,12 +76,12 @@ public class MenuEntryMatcherAdapter implements JsonSerializer<MenuEntryMatcher>
 				matcher = MenuEntryMatchers.isPlayer();
 				break;
 			case "isWidgetTarget":
-				String widgetOption = object.get("option").getAsString();
-				String widgetFromTarget = object.get("fromTarget").getAsString();
+				JsonElement widgetOption = object.get("option");
+				JsonElement widgetFromTarget = object.get("fromTarget");
 
 				if (widgetOption != null && widgetFromTarget != null)
 				{
-					matcher = MenuEntryMatchers.isWidgetTarget(widgetOption, widgetFromTarget);
+					matcher = MenuEntryMatchers.isWidgetTarget(widgetOption.getAsString(), widgetFromTarget.getAsString());
 					break;
 				}
 
@@ -89,9 +89,9 @@ public class MenuEntryMatcherAdapter implements JsonSerializer<MenuEntryMatcher>
 				break;
 		}
 
-		boolean isInverted = object.get("isInverted").getAsBoolean();
+		JsonElement isInverted = object.get("isInverted");
 
-		if (isInverted)
+		if (isInverted != null && isInverted.getAsBoolean())
 		{
 			matcher = new NotMatcher(matcher);
 		}

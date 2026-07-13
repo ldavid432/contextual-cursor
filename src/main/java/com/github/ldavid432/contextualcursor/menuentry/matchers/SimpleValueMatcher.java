@@ -5,8 +5,10 @@ import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate
 import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import net.runelite.api.MenuEntry;
 
+@ToString
 @AllArgsConstructor
 public class SimpleValueMatcher<T> implements MenuEntryValueMatcher<T>
 {

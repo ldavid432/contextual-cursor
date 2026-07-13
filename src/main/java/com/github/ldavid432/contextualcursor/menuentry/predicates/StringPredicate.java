@@ -1,13 +1,16 @@
 package com.github.ldavid432.contextualcursor.menuentry.predicates;
 
-public interface StringPredicate extends ValuePredicate<String>
-{
-	StringPredicate STARTS_WITH = String::startsWith;
-	StringPredicate ENDS_WITH = String::endsWith;
-	StringPredicate CONTAINS = String::contains;
+import lombok.AllArgsConstructor;
+import lombok.experimental.Delegate;
 
-	static StringPredicate asStringPredicate(ValuePredicate<String> predicate)
-	{
-		return predicate::compare;
-	}
+@AllArgsConstructor
+public enum StringPredicate implements ValuePredicate<String>
+{
+	STARTS_WITH(String::startsWith),
+	ENDS_WITH(String::endsWith),
+	CONTAINS(String::contains),
+	EQUALS(String::equals);
+
+	@Delegate
+	private final ValuePredicate<String> predicate;
 }
