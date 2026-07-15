@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.menuentry;
 
+import com.github.ldavid432.contextualcursor.menuentry.matchers.BooleanMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.MenuActionMatcher;
@@ -7,6 +8,7 @@ import com.github.ldavid432.contextualcursor.menuentry.matchers.NonNullMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.TargetMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.predicates.BooleanPredicate;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import java.util.Arrays;
 import net.runelite.api.MenuAction;
@@ -86,6 +88,16 @@ public class MenuEntryMatchers
 		MenuAction.GROUND_ITEM_FIRST_OPTION, MenuAction.GROUND_ITEM_SECOND_OPTION, MenuAction.GROUND_ITEM_THIRD_OPTION,
 		MenuAction.GROUND_ITEM_FOURTH_OPTION, MenuAction.GROUND_ITEM_FIFTH_OPTION, MenuAction.EXAMINE_ITEM_GROUND
 	};
+
+	// Inventory Items
+
+	public static MenuEntryMatcher isInterfaceItem()
+	{
+		return hasAllOf(
+			new BooleanMatcher(BooleanPredicate.IS_ITEM),
+			hasAllOf(new BooleanMatcher(BooleanPredicate.HAS_ITEM_ID), hasOption("use", "examine"))
+		);
+	}
 
 	// Targets
 
