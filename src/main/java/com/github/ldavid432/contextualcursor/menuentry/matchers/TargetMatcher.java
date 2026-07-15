@@ -9,7 +9,7 @@ public class TargetMatcher extends SimpleValueMatcher<String>
 {
 	public TargetMatcher(String target, StringPredicate predicate)
 	{
-		super(target, StringField.TARGET, predicate);
+		super(target, StringField.TARGET, predicate, "target");
 	}
 
 	public TargetMatcher(String target)

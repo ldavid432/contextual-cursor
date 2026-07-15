@@ -2,16 +2,18 @@ package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.google.common.annotations.VisibleForTesting;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.runelite.api.MenuEntry;
 
 @ToString
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NotMatcher implements MenuEntryMatcher
 {
 	@Getter(onMethod_ = @VisibleForTesting)
+	@NonNull
 	private MenuEntryMatcher parent;
 
 	@Override
@@ -19,4 +21,8 @@ public class NotMatcher implements MenuEntryMatcher
 	{
 		return !parent.matches(menuEntry);
 	}
+
+	// not used atm
+	@Getter
+	private final String type = "not";
 }

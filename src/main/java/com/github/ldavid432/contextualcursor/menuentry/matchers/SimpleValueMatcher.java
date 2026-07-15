@@ -18,6 +18,8 @@ public class SimpleValueMatcher<T> implements MenuEntryValueMatcher<T>
 	private MenuEntryField<T> field;
 	@Getter(onMethod_ = @VisibleForTesting)
 	private ValuePredicate<T> predicate;
+	@Getter
+	private String type;
 
 	@Override
 	public boolean matches(MenuEntry menuEntry)

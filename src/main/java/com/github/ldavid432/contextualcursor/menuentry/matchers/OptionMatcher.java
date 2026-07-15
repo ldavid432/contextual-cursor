@@ -9,7 +9,7 @@ public class OptionMatcher extends SimpleValueMatcher<String>
 {
 	public OptionMatcher(String option, StringPredicate predicate)
 	{
-		super(option, StringField.OPTION, predicate);
+		super(option, StringField.OPTION, predicate, "option");
 	}
 
 	public OptionMatcher(String option)

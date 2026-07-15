@@ -54,14 +54,14 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isNpc()
 	{
-		return new NonNullMatcher<>(MenuEntry::getNpc);
+		return new NonNullMatcher<>("isNpc", MenuEntry::getNpc);
 	}
 
 	// Objects
 
 	public static MenuEntryMatcher isObject()
 	{
-		return menuEntry -> ArrayUtils.contains(OBJECT_TYPES, menuEntry.getType());
+		return new MenuActionMatcher("isObject", OBJECT_TYPES);
 	}
 
 	private static final MenuAction[] OBJECT_TYPES = {
@@ -73,7 +73,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isGroundItem()
 	{
-		return new MenuActionMatcher(GROUND_ITEM_TYPES);
+		return new MenuActionMatcher("isGroundItem", GROUND_ITEM_TYPES);
 	}
 
 	private static final MenuAction[] GROUND_ITEM_TYPES = {
@@ -107,18 +107,18 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isMovement()
 	{
-		return new MenuActionMatcher(MenuAction.WALK, MenuAction.SET_HEADING);
+		return new MenuActionMatcher("isMovement", MenuAction.WALK, MenuAction.SET_HEADING);
 	}
 
 	public static MenuEntryMatcher isCancel()
 	{
-		return new MenuActionMatcher(MenuAction.CANCEL);
+		return new MenuActionMatcher("isCancel", MenuAction.CANCEL);
 	}
 
 	// this doesn't work great
 	public static MenuEntryMatcher isInterface()
 	{
-		return new MenuActionMatcher(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY);
+		return new MenuActionMatcher("isInterface", MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY);
 	}
 
 	// Spellbook spells
@@ -132,7 +132,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isPlayer()
 	{
-		return new NonNullMatcher<>(MenuEntry::getPlayer);
+		return new NonNullMatcher<>("isPlayer", MenuEntry::getPlayer);
 	}
 
 	// Widget
@@ -144,7 +144,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isWidgetTarget()
 	{
-		return new MenuActionMatcher(WIDGET_TYPES);
+		return new MenuActionMatcher("isWidgetTarget", WIDGET_TYPES);
 	}
 
 	public static MenuEntryMatcher isWidgetTarget(String option, String fromTarget)

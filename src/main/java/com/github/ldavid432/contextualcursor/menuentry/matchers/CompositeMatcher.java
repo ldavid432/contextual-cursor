@@ -4,14 +4,14 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.List;
 import javax.annotation.Nonnull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.runelite.api.MenuEntry;
 
 @ToString
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CompositeMatcher implements MenuEntryMatcher
 {
 	@Getter(onMethod_ = @VisibleForTesting)
@@ -45,5 +45,10 @@ public class CompositeMatcher implements MenuEntryMatcher
 	{
 		AND,
 		OR
+	}
+
+	public String getType()
+	{
+		return "composite";
 	}
 }

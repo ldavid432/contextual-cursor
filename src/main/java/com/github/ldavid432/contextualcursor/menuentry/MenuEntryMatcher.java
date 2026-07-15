@@ -5,4 +5,6 @@ import net.runelite.api.MenuEntry;
 public interface MenuEntryMatcher
 {
 	boolean matches(MenuEntry menuEntry);
+
+	String getType();
 }

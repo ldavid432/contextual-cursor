@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import net.runelite.api.MenuAction;
@@ -10,11 +11,15 @@ import org.apache.commons.lang3.ArrayUtils;
 @ToString
 public class MenuActionMatcher implements MenuEntryMatcher
 {
+	@Getter
+	private String type;
+
 	@NonNull
 	private final MenuAction[] types;
 
-	public MenuActionMatcher(MenuAction... types)
+	public MenuActionMatcher(String type, MenuAction... types)
 	{
+		this.type = type;
 		this.types = types;
 	}
 
