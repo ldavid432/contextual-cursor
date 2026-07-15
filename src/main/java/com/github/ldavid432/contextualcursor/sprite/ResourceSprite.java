@@ -21,4 +21,9 @@ public class ResourceSprite extends BaseSprite
 		return context.getTheme().getImage(fileName);
 	}
 
+	@Override
+	public String getType()
+	{
+		return "resource";
+	}
 }

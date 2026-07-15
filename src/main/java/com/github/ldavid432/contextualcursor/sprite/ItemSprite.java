@@ -27,4 +27,9 @@ public class ItemSprite extends BaseSprite
 		return context.getItemManager().getImage(id, quantity, false);
 	}
 
+	@Override
+	public String getType()
+	{
+		return "item";
+	}
 }

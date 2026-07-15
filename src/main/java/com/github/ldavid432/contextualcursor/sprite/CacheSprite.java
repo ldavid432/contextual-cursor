@@ -26,4 +26,9 @@ public class CacheSprite extends BaseSprite
 		}
 	}
 
+	@Override
+	public String getType()
+	{
+		return "cache";
+	}
 }

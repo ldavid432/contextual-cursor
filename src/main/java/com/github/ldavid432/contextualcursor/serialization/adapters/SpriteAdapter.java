@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor.serialization.adapters;
 
 import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
+import com.github.ldavid432.contextualcursor.sprite.ItemSprite;
 import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.gson.JsonDeserializationContext;
@@ -27,6 +28,8 @@ public class SpriteAdapter implements JsonDeserializer<Sprite>
 				return context.deserialize(object, ResourceSprite.class);
 			case "cache":
 				return context.deserialize(object, CacheSprite.class);
+			case "item":
+				return context.deserialize(object, ItemSprite.class);
 			default:
 				log.error("Invalid sprite type");
 		}
