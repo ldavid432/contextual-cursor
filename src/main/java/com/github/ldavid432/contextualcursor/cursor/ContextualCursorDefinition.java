@@ -14,4 +14,13 @@ public class ContextualCursorDefinition
 	Sprite defaultCursorSprite;
 
 	Sprite backgroundCursorSprite;
+
+	public void clearImages() {
+		for (Cursor cursor : getCursors())
+		{
+			cursor.clearImage();
+		}
+		getDefaultCursorSprite().clearImage();
+		getBackgroundCursorSprite().clearImage();
+	}
 }
