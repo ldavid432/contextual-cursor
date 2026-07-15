@@ -5,12 +5,14 @@ import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.MenuActionMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NonNullMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.NonSerializableMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.TargetMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.BooleanPredicate;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import java.util.Arrays;
+import java.util.function.Predicate;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
@@ -40,6 +42,12 @@ public class MenuEntryMatchers
 			return matchers[0];
 		}
 		return new CompositeMatcher(Operator.AND, matchers);
+	}
+
+	// For uses of MenuEntryMatcher that don't need to be serialized (i.e. in MenuTarget)
+	public static MenuEntryMatcher nonSerializable(Predicate<MenuEntry> predicate)
+	{
+		return new NonSerializableMatcher(predicate);
 	}
 
 	// Menu options

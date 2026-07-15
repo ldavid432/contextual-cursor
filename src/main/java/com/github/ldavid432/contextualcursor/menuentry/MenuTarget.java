@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor.menuentry;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isCancel;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isGroundItem;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isInterface;
@@ -11,13 +12,11 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isPlayer;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.nonSerializable;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import io.hydrox.contextualcursor.ContextualCursor;
-import java.util.Arrays;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import lombok.Getter;
-import net.runelite.api.MenuEntry;
 
 public enum MenuTarget
 {
@@ -29,22 +28,21 @@ public enum MenuTarget
 	GROUND_ITEM(ContextualCursorConfig::shouldIgnoreGroundItems, isGroundItem()),
 	OBJECT(ContextualCursorConfig::shouldIgnoreObjects, isObject()),
 	PLAYER(ContextualCursorConfig::shouldIgnorePlayers, isPlayer()),
-	OTHER(c -> false, e -> true);
+	OTHER(c -> false, nonSerializable(e -> false));
 
 	private final Function<ContextualCursorConfig, Boolean> isIgnored;
 	@Getter
-	private final Predicate<MenuEntry> matcher;
+	private final MenuEntryMatcher matcher;
 
 	public boolean isIgnored(ContextualCursorConfig config)
 	{
 		return isIgnored.apply(config);
 	}
 
-	@SafeVarargs
-	MenuTarget(Function<ContextualCursorConfig, Boolean> isIgnored, Predicate<MenuEntry>... matchers)
+	MenuTarget(Function<ContextualCursorConfig, Boolean> isIgnored, MenuEntryMatcher... matchers)
 	{
 		this.isIgnored = isIgnored;
-		this.matcher = menuEntry -> Arrays.stream(matchers).anyMatch(matcher -> matcher.test(menuEntry));
+		this.matcher = hasAnyOf(matchers);
 	}
 
 	public static final MenuTarget[] VALUES = values();

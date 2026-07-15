@@ -4,6 +4,7 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.nonSerializable;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
@@ -32,8 +33,8 @@ public class ItemCursor implements Cursor
 	public MenuEntryMatcher getMatcher()
 	{
 		return hasAllOf(
-			e -> plugin.isShowUseItemCursorEnabled(),
-			e -> client.isWidgetSelected() && client.getSelectedWidget() != null && client.getSelectedWidget().getItemId() > 0,
+			nonSerializable(e -> plugin.isShowUseItemCursorEnabled()),
+			nonSerializable(e -> client.isWidgetSelected() && client.getSelectedWidget() != null && client.getSelectedWidget().getItemId() > 0),
 			isWidgetTarget(),
 			hasOption("use")
 		);
