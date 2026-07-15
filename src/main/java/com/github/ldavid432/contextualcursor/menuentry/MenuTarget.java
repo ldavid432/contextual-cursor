@@ -11,7 +11,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isPlayer;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionIsAnyOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import io.hydrox.contextualcursor.ContextualCursor;
 import java.util.function.Function;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public enum MenuTarget
 {
 	ALWAYS_IGNORED(c -> true, isMovement(), isCancel()),
 	ITEM(ContextualCursorConfig::shouldIgnoreItems, MenuEntry::isItemOp,
-		hasAllOf(entry -> entry.getItemId() > 0, optionIsAnyOf("use", "examine"))),
+		hasAllOf(entry -> entry.getItemId() > 0, hasOption("use", "examine"))),
 	SPELL(ContextualCursorConfig::shouldIgnoreSpells, isSpell()),
 	INTERFACE(ContextualCursorConfig::shouldIgnoreInterfaces, hasAllOf(isInterface(), not(ContextualCursor.WIKI.getMatcher()))),
 	NPC(ContextualCursorConfig::shouldIgnoreNpcs, isNpc()),

@@ -12,7 +12,6 @@ import java.util.Arrays;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
-import org.apache.commons.lang3.ArrayUtils;
 
 public class MenuEntryMatchers
 {
@@ -25,24 +24,31 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher hasAnyOf(MenuEntryMatcher... matchers)
 	{
+		if (matchers.length == 1)
+		{
+			return matchers[0];
+		}
 		return new CompositeMatcher(Operator.OR, matchers);
 	}
 
 	public static MenuEntryMatcher hasAllOf(MenuEntryMatcher... matchers)
 	{
+		if (matchers.length == 1)
+		{
+			return matchers[0];
+		}
 		return new CompositeMatcher(Operator.AND, matchers);
 	}
 
 	// Menu options
 
-	public static MenuEntryMatcher optionIsAnyOf(String... options)
+	public static MenuEntryMatcher hasOption(String... options)
 	{
+		if (options.length == 1)
+		{
+			return new OptionMatcher(options[0]);
+		}
 		return hasAnyOf(Arrays.stream(options).map(MenuEntryMatchers::hasOption).toArray(MenuEntryMatcher[]::new));
-	}
-
-	public static MenuEntryMatcher hasOption(String option)
-	{
-		return new OptionMatcher(option);
 	}
 
 	public static MenuEntryMatcher optionStartsWith(String optionPrefix)
@@ -125,7 +131,7 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher isSpell()
 	{
-		return hasAllOf(isWidgetTarget(), optionIsAnyOf("cast", "resurrect", "reanimate"));
+		return hasAllOf(isWidgetTarget(), hasOption("cast", "resurrect", "reanimate"));
 	}
 
 	// Players
