@@ -1,10 +1,11 @@
 package com.github.ldavid432.contextualcursor.menuentry.predicates;
 
+import java.util.function.BiFunction;
 import lombok.AllArgsConstructor;
 import lombok.experimental.Delegate;
 
 @AllArgsConstructor
-public enum StringPredicate implements ValuePredicate<String>
+public enum StringPredicate
 {
 	STARTS_WITH(String::startsWith),
 	ENDS_WITH(String::endsWith),
@@ -12,5 +13,5 @@ public enum StringPredicate implements ValuePredicate<String>
 	EQUALS(String::equals);
 
 	@Delegate
-	private final ValuePredicate<String> predicate;
+	private final BiFunction<String, String, Boolean> predicate;
 }

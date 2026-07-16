@@ -20,6 +20,8 @@ public class CompositeMatcher implements MenuEntryMatcher
 	@Getter(onMethod_ = @VisibleForTesting)
 	@NonNull
 	private List<MenuEntryMatcher> children;
+	@Getter
+	private final String type = "composite";
 
 	public CompositeMatcher(@Nonnull Operator operator, MenuEntryMatcher... matchers)
 	{
@@ -45,10 +47,5 @@ public class CompositeMatcher implements MenuEntryMatcher
 	{
 		AND,
 		OR
-	}
-
-	public String getType()
-	{
-		return "composite";
 	}
 }

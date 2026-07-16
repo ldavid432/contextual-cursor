@@ -2,9 +2,11 @@ package com.github.ldavid432.contextualcursor.cursor;
 
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.MenuEntry;
 
+@AllArgsConstructor
 public class JsonCursor implements Cursor
 {
 	private Sprite sprite;

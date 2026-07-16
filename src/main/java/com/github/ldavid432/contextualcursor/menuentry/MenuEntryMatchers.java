@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.menuentry;
 
+import com.github.ldavid432.contextualcursor.menuentry.field.StringField;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.BooleanMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
@@ -7,8 +8,7 @@ import com.github.ldavid432.contextualcursor.menuentry.matchers.MenuActionMatche
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NonNullMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NonSerializableMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.TargetMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.BooleanPredicate;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import java.util.Arrays;
@@ -56,14 +56,19 @@ public class MenuEntryMatchers
 	{
 		if (options.length == 1)
 		{
-			return new OptionMatcher(options[0]);
+			return hasOption(options[0]);
 		}
 		return hasAnyOf(Arrays.stream(options).map(MenuEntryMatchers::hasOption).toArray(MenuEntryMatcher[]::new));
 	}
 
+	public static MenuEntryMatcher hasOption(String option)
+	{
+		return new SimpleStringMatcher(option, StringField.OPTION, StringPredicate.EQUALS);
+	}
+
 	public static MenuEntryMatcher optionStartsWith(String optionPrefix)
 	{
-		return new OptionMatcher(optionPrefix, StringPredicate.STARTS_WITH);
+		return new SimpleStringMatcher(optionPrefix, StringField.OPTION, StringPredicate.STARTS_WITH);
 	}
 
 	// NPCs
@@ -111,22 +116,22 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher targetNamed(String target)
 	{
-		return new TargetMatcher(target);
+		return new SimpleStringMatcher(target, StringField.TARGET, StringPredicate.EQUALS);
 	}
 
 	public static MenuEntryMatcher targetStartsWith(String targetPrefix)
 	{
-		return new TargetMatcher(targetPrefix, StringPredicate.STARTS_WITH);
+		return new SimpleStringMatcher(targetPrefix, StringField.TARGET, StringPredicate.STARTS_WITH);
 	}
 
 	public static MenuEntryMatcher targetEndsWith(String targetSuffix)
 	{
-		return new TargetMatcher(targetSuffix, StringPredicate.ENDS_WITH);
+		return new SimpleStringMatcher(targetSuffix, StringField.TARGET, StringPredicate.ENDS_WITH);
 	}
 
 	public static MenuEntryMatcher targetContains(String targetContents)
 	{
-		return new TargetMatcher(targetContents, StringPredicate.CONTAINS);
+		return new SimpleStringMatcher(targetContents, StringField.TARGET, StringPredicate.CONTAINS);
 	}
 
 	// Action types

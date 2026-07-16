@@ -12,7 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public class MenuActionMatcher implements MenuEntryMatcher
 {
 	@Getter
-	private String type;
+	private final String type;
 
 	@NonNull
 	private final MenuAction[] types;

@@ -41,7 +41,6 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
 import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
@@ -220,7 +219,7 @@ public enum ContextualCursor implements Cursor
 		{
 			if (matcher instanceof String)
 			{
-				matchers.add(new OptionMatcher((String) matcher));
+				matchers.add(hasOption((String) matcher));
 			}
 			else if (matcher instanceof MenuEntryMatcher)
 			{

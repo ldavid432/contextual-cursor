@@ -16,13 +16,13 @@ public class NotMatcher implements MenuEntryMatcher
 	@NonNull
 	private MenuEntryMatcher parent;
 
+	@Getter
+	private final String type = "not";
+
 	@Override
 	public boolean matches(MenuEntry menuEntry)
 	{
 		return !parent.matches(menuEntry);
 	}
 
-	// not used atm
-	@Getter
-	private final String type = "not";
 }

@@ -14,16 +14,12 @@ public class ResourceSprite extends BaseSprite
 	@Getter(onMethod_ = @VisibleForTesting)
 	@Nonnull
 	private final String fileName;
+	@Getter
+	private final String type = "resource";
 
 	@Override
 	protected BufferedImage getBaseImage(SpriteContext context)
 	{
 		return context.getTheme().getImage(fileName);
-	}
-
-	@Override
-	public String getType()
-	{
-		return "resource";
 	}
 }

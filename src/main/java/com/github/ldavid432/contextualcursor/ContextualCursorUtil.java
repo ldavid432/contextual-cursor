@@ -3,13 +3,10 @@ package com.github.ldavid432.contextualcursor;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.predicates.ValuePredicate;
 import com.github.ldavid432.contextualcursor.serialization.adapters.CursorAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
-import com.github.ldavid432.contextualcursor.serialization.adapters.StringPredicateAdapter;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
@@ -180,12 +177,11 @@ public class ContextualCursorUtil
 		return ColorUtil.wrapWithColorTag((showBullet ? "* " : "") + text + (showNewline ? "<br>" : ""), Color.RED);
 	}
 
-	@SuppressWarnings("UnstableApiUsage")
 	public static Gson buildGson(Gson parent)
 	{
+		// TODO: See if we can add an exclusion strategy to avoid serializing default values to optimize size
 		return parent.newBuilder()
 			.registerTypeAdapter(MenuEntryMatcher.class, new MenuEntryMatcherAdapter())
-			.registerTypeAdapter(new TypeToken<ValuePredicate<String>>() {}.getType(), new StringPredicateAdapter())
 			.registerTypeAdapter(Cursor.class, new CursorAdapter())
 			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
 			.create();

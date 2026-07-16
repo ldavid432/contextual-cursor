@@ -12,6 +12,8 @@ public class CacheSprite extends BaseSprite
 {
 	@Getter(onMethod_ = @VisibleForTesting)
 	private final int id;
+	@Getter
+	private final String type = "cache";
 
 	@Override
 	protected BufferedImage getBaseImage(SpriteContext context)
@@ -24,11 +26,5 @@ public class CacheSprite extends BaseSprite
 		{
 			return context.getSpriteManager().getSprite(id, 0);
 		}
-	}
-
-	@Override
-	public String getType()
-	{
-		return "cache";
 	}
 }

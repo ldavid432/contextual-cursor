@@ -4,8 +4,7 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.TargetMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatcher;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -22,35 +21,64 @@ public class MenuEntryMatcherAdapter implements JsonSerializer<MenuEntryMatcher>
 	@Override
 	public MenuEntryMatcher deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException
 	{
-		JsonObject object = jsonElement.getAsJsonObject();
-
-		String matcherType = object.get("type").getAsString();
-		if (matcherType == null) return null;
-
 		MenuEntryMatcher matcher = null;
 
+		if (jsonElement.isJsonObject())
+		{
+			JsonObject object = jsonElement.getAsJsonObject();
+
+			matcher = deserializeObject(object, context);
+		}
+		else if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString())
+		{
+			matcher = deserializeString(jsonElement.getAsString());
+		}
+
+		return matcher;
+	}
+
+	private MenuEntryMatcher deserializeObject(JsonObject object, JsonDeserializationContext context)
+	{
+		String matcherType = object.get("type").getAsString();
+		if (matcherType == null)
+		{
+			return null;
+		}
+
+		MenuEntryMatcher matcher = null;
 		switch (matcherType)
 		{
+			case "not":
+				matcher = context.deserialize(object, NotMatcher.class);
+				break;
 			case "composite":
 				matcher = context.deserialize(object, CompositeMatcher.class);
 				break;
-			case "option":
-			case "target":
-				Type simpleType;
-				switch (matcherType)
+			case "string":
+				matcher = context.deserialize(object, SimpleStringMatcher.class);
+				break;
+			case "isWidgetTarget":
+				JsonElement widgetOption = object.get("option");
+				JsonElement widgetFromTarget = object.get("fromTarget");
+
+				if (widgetOption != null && widgetFromTarget != null)
 				{
-					case "option":
-						simpleType = OptionMatcher.class;
-						break;
-					case "target":
-						simpleType = TargetMatcher.class;
-						break;
-					default:
-						throw new JsonParseException("Impossible");
+					matcher = MenuEntryMatchers.isWidgetTarget(widgetOption.getAsString(), widgetFromTarget.getAsString());
+					break;
 				}
 
-				matcher = context.deserialize(object, simpleType);
+				matcher = MenuEntryMatchers.isWidgetTarget();
 				break;
+		}
+
+		return matcher;
+	}
+
+	private MenuEntryMatcher deserializeString(String string)
+	{
+		MenuEntryMatcher matcher = null;
+		switch (string)
+		{
 			case "isNpc":
 				matcher = MenuEntryMatchers.isNpc();
 				break;
@@ -74,34 +102,20 @@ public class MenuEntryMatcherAdapter implements JsonSerializer<MenuEntryMatcher>
 				break;
 			case "isPlayer":
 				matcher = MenuEntryMatchers.isPlayer();
-				break;
-			case "isWidgetTarget":
-				JsonElement widgetOption = object.get("option");
-				JsonElement widgetFromTarget = object.get("fromTarget");
-
-				if (widgetOption != null && widgetFromTarget != null)
-				{
-					matcher = MenuEntryMatchers.isWidgetTarget(widgetOption.getAsString(), widgetFromTarget.getAsString());
-					break;
-				}
-
-				matcher = MenuEntryMatchers.isWidgetTarget();
-				break;
 		}
-
-		JsonElement isInverted = object.get("isInverted");
-
-		if (isInverted != null && isInverted.getAsBoolean())
-		{
-			matcher = new NotMatcher(matcher);
-		}
-
 		return matcher;
 	}
 
 	@Override
 	public JsonElement serialize(MenuEntryMatcher menuEntryMatcher, Type type, JsonSerializationContext jsonSerializationContext)
 	{
-		return null;
+		if (deserializeString(menuEntryMatcher.getType()) != null)
+		{
+			return jsonSerializationContext.serialize(menuEntryMatcher.getType());
+		}
+		else
+		{
+			return jsonSerializationContext.serialize(menuEntryMatcher);
+		}
 	}
 }
