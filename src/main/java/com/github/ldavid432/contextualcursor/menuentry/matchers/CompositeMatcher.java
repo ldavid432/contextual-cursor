@@ -45,7 +45,10 @@ public class CompositeMatcher implements MenuEntryMatcher
 
 	public enum Operator
 	{
+		/** Has ALL */
 		AND,
+		/** Has ANY */
 		OR
 	}
 }
+

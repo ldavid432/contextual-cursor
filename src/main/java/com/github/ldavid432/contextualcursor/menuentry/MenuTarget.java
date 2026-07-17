@@ -12,7 +12,6 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isPlayer;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isSpell;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.nonSerializable;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import io.hydrox.contextualcursor.ContextualCursor;
 import java.util.function.Function;
@@ -28,7 +27,7 @@ public enum MenuTarget
 	GROUND_ITEM(ContextualCursorConfig::shouldIgnoreGroundItems, isGroundItem()),
 	OBJECT(ContextualCursorConfig::shouldIgnoreObjects, isObject()),
 	PLAYER(ContextualCursorConfig::shouldIgnorePlayers, isPlayer()),
-	OTHER(c -> false, nonSerializable(e -> false));
+	OTHER(c -> false, e -> false);
 
 	private final Function<ContextualCursorConfig, Boolean> isIgnored;
 	@Getter

@@ -35,6 +35,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isNpc;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isObject;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTargetOption;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionStartsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetContains;
@@ -100,7 +101,7 @@ public enum ContextualCursor implements Cursor
 	UNLOCK("unlock", "unlock",
 		// "Use foo key --> something" | "Use foo key bar --> something"
 		hasAllOf(hasOption("use"), isWidgetTarget(), hasAnyOf(targetContains("key ->"), hasAllOf(targetContains(" key "), not(targetContains("half")), targetContains(" ->"))))),
-	UNTIE("untie", "tether", isWidgetTarget("use", "rope")),
+	UNTIE("untie", "tether", isWidgetTargetOption("use", "rope")),
 	USE("use", "use", "pet", "touch"),
 	WIKI("wiki", "lookup-entity", targetNamed("wiki"), targetStartsWith("wiki ->")),
 

@@ -3,9 +3,15 @@ package com.github.ldavid432.contextualcursor;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import com.github.ldavid432.contextualcursor.serialization.adapters.CursorAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
+import com.github.ldavid432.contextualcursor.serialization.adapters.SkipFieldDefaultsTypeAdapterFactory;
 import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
+import com.github.ldavid432.contextualcursor.sprite.BaseSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.gson.Gson;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
@@ -179,8 +185,15 @@ public class ContextualCursorUtil
 
 	public static Gson buildGson(Gson parent)
 	{
-		// TODO: See if we can add an exclusion strategy to avoid serializing default values to optimize size
 		return parent.newBuilder()
+			.registerTypeAdapterFactory(
+				// Avoid deserializing some default values to reduce the file size
+				SkipFieldDefaultsTypeAdapterFactory.builder()
+					.add(BaseSprite.class, "isInverted", false)
+					.add(SimpleStringMatcher.class, "predicate", StringPredicate.EQUALS)
+					.add(CompositeMatcher.class, "operator", Operator.OR)
+					.build()
+			)
 			.registerTypeAdapter(MenuEntryMatcher.class, new MenuEntryMatcherAdapter())
 			.registerTypeAdapter(Cursor.class, new CursorAdapter())
 			.registerTypeAdapter(Sprite.class, new SpriteAdapter())
