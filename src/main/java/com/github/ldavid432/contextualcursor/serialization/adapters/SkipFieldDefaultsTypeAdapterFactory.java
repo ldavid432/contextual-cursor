@@ -44,8 +44,6 @@ public final class SkipFieldDefaultsTypeAdapterFactory implements TypeAdapterFac
 		Object defaultValue;
 	}
 
-	private final List<FieldDefault> fieldDefaults;
-
 	// raw defaults grouped by the declaring parent class (jsonFieldName -> raw default Object)
 	private final Map<Class<?>, Map<String, Object>> rawDefaultsByClass = new HashMap<>();
 
@@ -57,8 +55,8 @@ public final class SkipFieldDefaultsTypeAdapterFactory implements TypeAdapterFac
 
 	private SkipFieldDefaultsTypeAdapterFactory(List<FieldDefault> fieldDefaults)
 	{
-		this.fieldDefaults = fieldDefaults != null ? Collections.unmodifiableList(new ArrayList<>(fieldDefaults)) : Collections.emptyList();
-		for (FieldDefault fd : this.fieldDefaults)
+		List<FieldDefault> fieldDefaults1 = fieldDefaults != null ? Collections.unmodifiableList(new ArrayList<>(fieldDefaults)) : Collections.emptyList();
+		for (FieldDefault fd : fieldDefaults1)
 		{
 			rawDefaultsByClass.computeIfAbsent(fd.getParentClass(), c -> new HashMap<>()).put(fd.getJsonFieldName(), fd.getDefaultValue());
 		}

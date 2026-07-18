@@ -13,7 +13,10 @@ public class CursorProvider
 
 	public void setDefinition(ContextualCursorDefinition definition)
 	{
-		clearImages();
+		if (this.definition != null)
+		{
+			clearImages();
+		}
 		this.definition = definition;
 	}
 
