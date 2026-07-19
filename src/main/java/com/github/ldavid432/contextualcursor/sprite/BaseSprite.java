@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -21,6 +22,7 @@ public abstract class BaseSprite implements Sprite
 
 	@Builder.Default
 	@Setter
+	@Getter
 	private boolean isInverted = false;
 
 	@Override

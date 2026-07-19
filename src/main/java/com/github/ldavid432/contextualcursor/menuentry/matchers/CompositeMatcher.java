@@ -1,19 +1,27 @@
 package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
+import com.google.common.annotations.VisibleForTesting;
 import java.util.List;
 import javax.annotation.Nonnull;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import net.runelite.api.MenuEntry;
 
-@AllArgsConstructor
+@ToString
+@RequiredArgsConstructor
 public class CompositeMatcher implements MenuEntryMatcher
 {
+	@Getter(onMethod_ = @VisibleForTesting)
 	@NonNull
 	private Operator operator;
+	@Getter(onMethod_ = @VisibleForTesting)
 	@NonNull
 	private List<MenuEntryMatcher> children;
+	@Getter
+	private final String type = "composite";
 
 	public CompositeMatcher(@Nonnull Operator operator, MenuEntryMatcher... matchers)
 	{
@@ -37,7 +45,10 @@ public class CompositeMatcher implements MenuEntryMatcher
 
 	public enum Operator
 	{
+		/** Has ALL */
 		AND,
+		/** Has ANY */
 		OR
 	}
 }
+

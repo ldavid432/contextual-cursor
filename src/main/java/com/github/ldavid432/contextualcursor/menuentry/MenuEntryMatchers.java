@@ -1,18 +1,16 @@
 package com.github.ldavid432.contextualcursor.menuentry;
 
+import com.github.ldavid432.contextualcursor.menuentry.field.StringField;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.MenuActionMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.NonNullMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.OptionMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.matchers.TargetMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.StaticMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import java.util.Arrays;
+import java.util.function.Function;
 import net.runelite.api.MenuAction;
-import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
-import org.apache.commons.lang3.ArrayUtils;
 
 public class MenuEntryMatchers
 {
@@ -25,131 +23,134 @@ public class MenuEntryMatchers
 
 	public static MenuEntryMatcher hasAnyOf(MenuEntryMatcher... matchers)
 	{
+		if (matchers.length == 1)
+		{
+			return matchers[0];
+		}
 		return new CompositeMatcher(Operator.OR, matchers);
 	}
 
 	public static MenuEntryMatcher hasAllOf(MenuEntryMatcher... matchers)
 	{
+		if (matchers.length == 1)
+		{
+			return matchers[0];
+		}
 		return new CompositeMatcher(Operator.AND, matchers);
 	}
 
 	// Menu options
 
-	public static MenuEntryMatcher optionIsAnyOf(String... options)
+	public static MenuEntryMatcher hasOption(String... options)
 	{
-		return hasAnyOf(Arrays.stream(options).map(MenuEntryMatchers::hasOption).toArray(MenuEntryMatcher[]::new));
+		if (options.length == 1)
+		{
+			return hasOption(options[0]);
+		}
+		return hasAnyOf(mapArray(options, MenuEntryMatchers::hasOption));
 	}
 
 	public static MenuEntryMatcher hasOption(String option)
 	{
-		return new OptionMatcher(option);
+		return new SimpleStringMatcher(option, StringField.OPTION, StringPredicate.EQUALS);
 	}
 
 	public static MenuEntryMatcher optionStartsWith(String optionPrefix)
 	{
-		return new OptionMatcher(optionPrefix, StringPredicate.STARTS_WITH);
+		return new SimpleStringMatcher(optionPrefix, StringField.OPTION, StringPredicate.STARTS_WITH);
 	}
-
-	// NPCs
-
-	public static MenuEntryMatcher isNpc()
-	{
-		return new NonNullMatcher<>(MenuEntry::getNpc);
-	}
-
-	// Objects
-
-	public static MenuEntryMatcher isObject()
-	{
-		return menuEntry -> ArrayUtils.contains(OBJECT_TYPES, menuEntry.getType());
-	}
-
-	private static final MenuAction[] OBJECT_TYPES = {
-		MenuAction.GAME_OBJECT_FIRST_OPTION, MenuAction.GAME_OBJECT_SECOND_OPTION, MenuAction.GAME_OBJECT_THIRD_OPTION,
-		MenuAction.GAME_OBJECT_FOURTH_OPTION, MenuAction.GAME_OBJECT_FIFTH_OPTION, MenuAction.EXAMINE_OBJECT
-	};
-
-	// Ground Items
-
-	public static MenuEntryMatcher isGroundItem()
-	{
-		return new MenuActionMatcher(GROUND_ITEM_TYPES);
-	}
-
-	private static final MenuAction[] GROUND_ITEM_TYPES = {
-		MenuAction.GROUND_ITEM_FIRST_OPTION, MenuAction.GROUND_ITEM_SECOND_OPTION, MenuAction.GROUND_ITEM_THIRD_OPTION,
-		MenuAction.GROUND_ITEM_FOURTH_OPTION, MenuAction.GROUND_ITEM_FIFTH_OPTION, MenuAction.EXAMINE_ITEM_GROUND
-	};
 
 	// Targets
 
 	public static MenuEntryMatcher targetNamed(String target)
 	{
-		return new TargetMatcher(target);
+		return new SimpleStringMatcher(target, StringField.TARGET, StringPredicate.EQUALS);
 	}
 
 	public static MenuEntryMatcher targetStartsWith(String targetPrefix)
 	{
-		return new TargetMatcher(targetPrefix, StringPredicate.STARTS_WITH);
+		return new SimpleStringMatcher(targetPrefix, StringField.TARGET, StringPredicate.STARTS_WITH);
 	}
 
 	public static MenuEntryMatcher targetEndsWith(String targetSuffix)
 	{
-		return new TargetMatcher(targetSuffix, StringPredicate.ENDS_WITH);
+		return new SimpleStringMatcher(targetSuffix, StringField.TARGET, StringPredicate.ENDS_WITH);
 	}
 
 	public static MenuEntryMatcher targetContains(String targetContents)
 	{
-		return new TargetMatcher(targetContents, StringPredicate.CONTAINS);
+		return new SimpleStringMatcher(targetContents, StringField.TARGET, StringPredicate.CONTAINS);
 	}
 
-	// Action types
+	public static MenuEntryMatcher isWidgetTargetOption(String option, String fromTarget)
+	{
+		return hasAllOf(hasOption(option), isWidgetTarget(), targetStartsWith(fromTarget + " ->"));
+	}
+
+	// Menu Actions
+
+	public static MenuEntryMatcher menuActionIsAnyOf(MenuAction... actions)
+	{
+
+		return hasAnyOf(mapArray(actions, MenuEntryMatchers::hasMenuAction));
+	}
+
+	public static MenuEntryMatcher hasMenuAction(MenuAction action)
+	{
+		return e -> e.getType() == action;
+	}
+
+	// Static Matchers (maybe just delete these and use enums directly?)
+
+	public static MenuEntryMatcher isNpc()
+	{
+		return StaticMatcher.IS_NPC;
+	}
+
+	public static MenuEntryMatcher isObject()
+	{
+		return StaticMatcher.IS_OBJECT;
+	}
+
+	public static MenuEntryMatcher isGroundItem()
+	{
+		return StaticMatcher.IS_GROUND_ITEM;
+	}
+
+	public static MenuEntryMatcher isInterfaceItem()
+	{
+		return StaticMatcher.IS_INTERFACE_ITEM;
+	}
 
 	public static MenuEntryMatcher isMovement()
 	{
-		return new MenuActionMatcher(MenuAction.WALK, MenuAction.SET_HEADING);
+		return StaticMatcher.IS_MOVEMENT;
 	}
 
 	public static MenuEntryMatcher isCancel()
 	{
-		return new MenuActionMatcher(MenuAction.CANCEL);
+		return StaticMatcher.IS_CANCEL;
 	}
 
 	// this doesn't work great
 	public static MenuEntryMatcher isInterface()
 	{
-		return new MenuActionMatcher(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY);
+		return StaticMatcher.IS_INTERFACE;
 	}
-
-	// Spellbook spells
 
 	public static MenuEntryMatcher isSpell()
 	{
-		return hasAllOf(isWidgetTarget(), optionIsAnyOf("cast", "resurrect", "reanimate"));
+		return StaticMatcher.IS_SPELL;
 	}
-
-	// Players
 
 	public static MenuEntryMatcher isPlayer()
 	{
-		return new NonNullMatcher<>(MenuEntry::getPlayer);
+		return StaticMatcher.IS_PLAYER;
 	}
-
-	// Widget
-
-	private static final MenuAction[] WIDGET_TYPES = new MenuAction[]{
-		MenuAction.WIDGET_TARGET_ON_GAME_OBJECT, MenuAction.WIDGET_TARGET_ON_NPC, MenuAction.WIDGET_TARGET_ON_PLAYER,
-		MenuAction.WIDGET_TARGET_ON_GROUND_ITEM, MenuAction.WIDGET_TARGET_ON_WIDGET, MenuAction.WIDGET_TARGET
-	};
 
 	public static MenuEntryMatcher isWidgetTarget()
 	{
-		return new MenuActionMatcher(WIDGET_TYPES);
-	}
-
-	public static MenuEntryMatcher isWidgetTarget(String option, String fromTarget)
-	{
-		return hasAllOf(hasOption(option), isWidgetTarget(), targetStartsWith(fromTarget + " ->"));
+		return StaticMatcher.IS_WIDGET_TARGET;
 	}
 
 	// Util
@@ -157,5 +158,10 @@ public class MenuEntryMatchers
 	public static String sanitize(String text)
 	{
 		return Text.removeTags(Text.sanitize(text).toLowerCase());
+	}
+
+	private static <T> MenuEntryMatcher[] mapArray(T[] array, Function<T, MenuEntryMatcher> map)
+	{
+		return Arrays.stream(array).map(map).toArray(MenuEntryMatcher[]::new);
 	}
 }

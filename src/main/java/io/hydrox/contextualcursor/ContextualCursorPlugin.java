@@ -37,26 +37,23 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.PERSI
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadLocalCursorDefinition;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
+import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
+import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
-import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
-import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
-import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
-import com.github.ldavid432.contextualcursor.serialization.adapters.StringPredicateAdapter;
-import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,6 +180,11 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Setter
 	private boolean isCursorInBounds;
 
+	@Inject
+	private Gson runeliteGson;
+
+	private Gson contextualCursorGson;
+
 	public boolean canOverrideDefaultCursor()
 	{
 		return !isCustomCursorPluginEnabled && isCustomDefaultCursorEnabled;
@@ -217,6 +219,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
+		contextualCursorGson = buildGson(runeliteGson);
+
 		initCursors();
 
 		overlayManager.add(contextualCursorWorkerOverlay);
@@ -252,13 +256,32 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	private void initCursors()
 	{
-		List<Cursor> cursors = new ArrayList<>();
-		cursors.add(new ItemCursor(client, this));
-		cursors.addAll(List.of(ContextualCursor.values()));
+		ContextualCursorDefinition definition = null;
+		switch (config.getCursorSource())
+		{
+			case LOCAL_JSON:
+				try
+				{
+					definition = loadLocalCursorDefinition(contextualCursorGson, "local-cursors");
+					break;
+				}
+				catch (Exception e)
+				{
+					log.error("Could not load local cursor JSON", e);
+					// fall-through
+				}
+			case JAVA:
+				definition = ContextualCursor.toCursorDefinition();
+				break;
+		}
+
+		assert definition != null;
+
+		List<Cursor> cursors = new ArrayList<>(definition.getCursors());
+		cursors.add(0, new ItemCursor(client, this));
 		cursors.add(new SpellCursor());
-		cursorProvider.setCursors(cursors);
-		cursorProvider.setBackgroundCursorSprite(resourceSprite().fileName("blank").build());
-		cursorProvider.setDefaultCursorSprite(resourceSprite().fileName("generic").build());
+
+		cursorProvider.setDefinition(definition.withCursors(cursors));
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.github.ldavid432.contextualcursor.sprite;
 import java.awt.image.BufferedImage;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
@@ -15,6 +16,9 @@ public class ItemSprite extends BaseSprite
 	@Builder.Default
 	private final int quantity = 1;
 
+	@Getter
+	private final String type = "item";
+
 	@Override
 	protected double getScale(SpriteContext context)
 	{
@@ -26,5 +30,4 @@ public class ItemSprite extends BaseSprite
 	{
 		return context.getItemManager().getImage(id, quantity, false);
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GROUP;
+import com.github.ldavid432.contextualcursor.config.CursorSource;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
@@ -51,6 +52,18 @@ public interface ContextualCursorConfig extends Config
 	default Keybind getHideKeybind()
 	{
 		return Keybind.ALT;
+	}
+
+	@ConfigItem(
+		keyName = "cursorSource",
+		name = "",
+		description = "",
+		position = 3,
+		hidden = true
+	)
+	default CursorSource getCursorSource()
+	{
+		return CursorSource.LOCAL_JSON;
 	}
 
 	@ConfigSection(
@@ -316,7 +329,7 @@ public interface ContextualCursorConfig extends Config
 		return false;
 	}
 
-	int CURRENT_VERSION = 2;
+	int CURRENT_VERSION = 3;
 
 	@ConfigItem(
 		name = "",

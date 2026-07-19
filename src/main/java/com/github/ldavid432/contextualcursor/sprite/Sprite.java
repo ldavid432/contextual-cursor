@@ -10,6 +10,8 @@ public interface Sprite
 
 	void clearImage();
 
+	String getType();
+
 	static ResourceSprite.ResourceSpriteBuilder<?, ?> resourceSprite()
 	{
 		return ResourceSprite.builder();
