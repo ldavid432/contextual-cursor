@@ -8,6 +8,8 @@ import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatc
 import com.github.ldavid432.contextualcursor.menuentry.matchers.StaticMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import java.util.Arrays;
+import java.util.function.Function;
+import net.runelite.api.MenuAction;
 import net.runelite.client.util.Text;
 
 public class MenuEntryMatchers
@@ -45,7 +47,7 @@ public class MenuEntryMatchers
 		{
 			return hasOption(options[0]);
 		}
-		return hasAnyOf(Arrays.stream(options).map(MenuEntryMatchers::hasOption).toArray(MenuEntryMatcher[]::new));
+		return hasAnyOf(mapArray(options, MenuEntryMatchers::hasOption));
 	}
 
 	public static MenuEntryMatcher hasOption(String option)
@@ -85,6 +87,18 @@ public class MenuEntryMatchers
 		return hasAllOf(hasOption(option), isWidgetTarget(), targetStartsWith(fromTarget + " ->"));
 	}
 
+	// Menu Actions
+
+	public static MenuEntryMatcher menuActionIsAnyOf(MenuAction... actions)
+	{
+
+		return hasAnyOf(mapArray(actions, MenuEntryMatchers::hasMenuAction));
+	}
+
+	public static MenuEntryMatcher hasMenuAction(MenuAction action)
+	{
+		return e -> e.getType() == action;
+	}
 
 	// Static Matchers (maybe just delete these and use enums directly?)
 
@@ -144,5 +158,10 @@ public class MenuEntryMatchers
 	public static String sanitize(String text)
 	{
 		return Text.removeTags(Text.sanitize(text).toLowerCase());
+	}
+
+	private static <T> MenuEntryMatcher[] mapArray(T[] array, Function<T, MenuEntryMatcher> map)
+	{
+		return Arrays.stream(array).map(map).toArray(MenuEntryMatcher[]::new);
 	}
 }

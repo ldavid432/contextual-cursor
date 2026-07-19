@@ -27,7 +27,7 @@ public enum MenuTarget
 	GROUND_ITEM(ContextualCursorConfig::shouldIgnoreGroundItems, isGroundItem()),
 	OBJECT(ContextualCursorConfig::shouldIgnoreObjects, isObject()),
 	PLAYER(ContextualCursorConfig::shouldIgnorePlayers, isPlayer()),
-	OTHER(c -> false, e -> false);
+	OTHER(c -> false, e -> true);
 
 	private final Function<ContextualCursorConfig, Boolean> isIgnored;
 	@Getter
