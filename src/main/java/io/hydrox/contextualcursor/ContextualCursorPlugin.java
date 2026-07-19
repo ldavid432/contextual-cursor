@@ -39,6 +39,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadLocalCursorDefinition;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
@@ -48,7 +49,6 @@ import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
@@ -256,36 +256,32 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	private void initCursors()
 	{
-		// TODO: Load JSON
-		//ContextualCursorDefinition definition = loadLocalCursorDefinition(contextualCursorGson, "default-cursors");
 		ContextualCursorDefinition definition = null;
+		switch (config.getCursorSource())
+		{
+			case LOCAL_JSON:
+				try
+				{
+					definition = loadLocalCursorDefinition(contextualCursorGson, "local-cursors");
+					break;
+				}
+				catch (Exception e)
+				{
+					log.error("Could not load local cursor JSON", e);
+					// fall-through
+				}
+			case JAVA:
+				definition = ContextualCursor.toCursorDefinition();
+				break;
+		}
 
-		List<Cursor> cursors = new ArrayList<>();
-		cursors.add(new ItemCursor(client, this));
-		if (definition != null)
-		{
-			cursors.addAll(definition.getCursors());
-		}
-		else
-		{
-			cursors.addAll(List.of(ContextualCursor.values()));
-		}
+		assert definition != null;
+
+		List<Cursor> cursors = new ArrayList<>(definition.getCursors());
+		cursors.add(0, new ItemCursor(client, this));
 		cursors.add(new SpellCursor());
 
-		if (definition != null)
-		{
-			cursorProvider.setDefinition(definition.withCursors(cursors));
-		}
-		else
-		{
-			cursorProvider.setDefinition(
-				new ContextualCursorDefinition(
-					cursors,
-					resourceSprite().fileName("generic").build(),
-					resourceSprite().fileName("blank").build()
-				)
-			);
-		}
+		cursorProvider.setDefinition(definition.withCursors(cursors));
 	}
 
 	@Override

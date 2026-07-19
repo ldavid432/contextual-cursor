@@ -236,6 +236,7 @@ public enum ContextualCursor implements Cursor
 		return hasAnyOf(matchers.toArray(MenuEntryMatcher[]::new));
 	}
 
+	@NonNull
 	public static ContextualCursorDefinition toCursorDefinition()
 	{
 		return new ContextualCursorDefinition(
