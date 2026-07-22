@@ -1,0 +1,157 @@
+package com.github.ldavid432.contextualcursor.overlay;
+
+import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.menuentry.ContextualCursorState;
+import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
+import io.hydrox.contextualcursor.ContextualCursorPlugin;
+import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import javax.inject.Inject;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.Point;
+import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayPosition;
+
+/**
+ * V2 render overlay
+ */
+@Slf4j
+@AllArgsConstructor
+public class ContextualCursorV2DrawOverlay extends Overlay
+{
+	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
+	private static final Point POINTER_OFFSET = new Point(-5, 0);
+	//The centre of the circle (biased bottom right since it's an even size), for use with sprites
+	private static final Point CENTRAL_POINT = new Point(16, 18);
+
+	private final Client client;
+	private final ContextualCursorPlugin plugin;
+	private final ClientUI clientUi;
+	private final SpriteContext spriteContext;
+	private final CursorProvider cursorProvider;
+
+	private Point scaledCenterPoint = CENTRAL_POINT;
+	private Point cursorOffset = POINTER_OFFSET;
+
+	@Inject
+	ContextualCursorV2DrawOverlay(Client client, ClientUI clientUi, ContextualCursorPlugin plugin, SpriteContext spriteContext,
+	                              CursorProvider cursorProvider)
+	{
+		setPosition(OverlayPosition.DYNAMIC);
+		setLayer(OverlayLayer.ALWAYS_ON_TOP);
+		setPriority(1f);
+		this.client = client;
+		this.spriteContext = spriteContext;
+		this.clientUi = clientUi;
+		this.plugin = plugin;
+		this.cursorProvider = cursorProvider;
+	}
+
+	@Override
+	public Dimension render(Graphics2D graphics)
+	{
+		if (!plugin.isOverlayV2() || plugin.isAltPressed())
+		{
+			return null;
+		}
+
+		final ContextualCursorState nextState = plugin.getNextState();
+		ContextualCursorState currentState = plugin.getCurrentState();
+
+		if (nextState != null)
+		{
+			if (!nextState.equals(currentState))
+			{
+				log.debug("Changing state from \n  {} \n  to {}", currentState, nextState);
+			}
+			ContextualCursorState previousState = plugin.getPreviousState();
+			boolean isCursorChange = (previousState != null ? previousState.getCursor() : null) != nextState.getCursor();
+
+			plugin.setPreviousState(currentState);
+			currentState = nextState;
+			plugin.setCurrentState(nextState);
+
+			if (isCursorChange)
+			{
+				log.debug("Changing cursor from {} to {}",
+					((previousState != null && previousState.getCursor() != null) ? previousState.getCursor().getName() : null),
+					(nextState.getCursor() != null ? nextState.getCursor().getName() : null)
+				);
+				onCursorChange(currentState.getCursor());
+			}
+		}
+
+		if (currentState != null)
+		{
+			onRender(currentState, graphics);
+		}
+
+		return null;
+	}
+
+	private void onCursorChange(Cursor newCursor)
+	{
+		if (newCursor == null)
+		{
+			clientUi.resetCursor();
+		}
+		else
+		{
+			cursorProvider.saveCurrentExternalCursor();
+			clientUi.setCursor(newCursor);
+		}
+	}
+
+
+	private void onRender(ContextualCursorState currentState, Graphics2D graphics)
+	{
+		ensureCursor(currentState);
+
+		final Point mousePos = client.getMouseCanvasPosition();
+
+		BufferedImage cursorImage = spriteImageOrNull(currentState.getCursorSprite());
+		if (cursorImage != null)
+		{
+			graphics.drawImage(cursorImage, mousePos.getX(), mousePos.getY(), null);
+		}
+
+		BufferedImage backgroundImage = spriteImageOrNull(currentState.getCursorBackground());
+		if (backgroundImage != null)
+		{
+			graphics.drawImage(backgroundImage, mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
+		}
+
+		BufferedImage foregroundImage = spriteImageOrNull(currentState.getCursorForeground());
+		if (foregroundImage != null)
+		{
+			final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - foregroundImage.getWidth(null) / 2;
+			final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - foregroundImage.getHeight(null) / 2;
+			graphics.drawImage(foregroundImage, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+		}
+	}
+
+	// Restores cursor if another plugin has saved and restored the blank cursor at an incorrect time
+	private void ensureCursor(ContextualCursorState state)
+	{
+		if (clientUi.getCurrentCursor().getName().equals(BLANK_CURSOR_NAME) && state.getCursor() != null && !state.isExternalCursor())
+		{
+			clientUi.setCursor(state.getCursor());
+		}
+	}
+
+	private BufferedImage spriteImageOrNull(Sprite sprite)
+	{
+		return sprite != null ? sprite.getImage(spriteContext) : null;
+	}
+
+
+
+}

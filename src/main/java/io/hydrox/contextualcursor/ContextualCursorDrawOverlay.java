@@ -69,6 +69,8 @@ public class ContextualCursorDrawOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		if (plugin.isOverlayV2()) return null;
+
 		Sprite sprite = plugin.getSpriteToDraw();
 		boolean isDefaultCursorOverlay = false;
 

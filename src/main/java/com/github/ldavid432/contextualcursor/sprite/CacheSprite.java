@@ -4,8 +4,10 @@ import com.google.common.annotations.VisibleForTesting;
 import java.awt.image.BufferedImage;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+@ToString(of = "id")
 @SuperBuilder
 @EqualsAndHashCode(of = "id", callSuper = true)
 public class CacheSprite extends BaseSprite

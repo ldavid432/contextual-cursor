@@ -59,15 +59,15 @@ import net.runelite.client.util.ColorUtil;
 @Slf4j
 public class ContextualCursorWorkerOverlay extends Overlay
 {
-	private static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
-	private static final String GENERIC_CURSOR_NAME = "contextual-cursor-generic";
-	private static final Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(
+	public static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
+	public static final String GENERIC_CURSOR_NAME = "contextual-cursor-generic";
+	public static final Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(
 		new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB),
 		new java.awt.Point(0, 0),
 		BLANK_CURSOR_NAME
 	);
-	private static final int MENU_OPTION_HEIGHT = 15;
-	private static final int MENU_EXTRA_TOP = 4;
+	public static final int MENU_OPTION_HEIGHT = 15;
+	public static final int MENU_EXTRA_TOP = 4;
 
 	private final Client client;
 	private final ClientUI clientUI;
@@ -156,6 +156,8 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	void resetCursor()
 	{
+		if (plugin.isOverlayV2()) return;
+
 		if (cursorOverriden)
 		{
 			cursorOverriden = false;
@@ -256,7 +258,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (plugin.isAltPressed() || !plugin.isCursorInBounds())
+		if (plugin.isOverlayV2() || plugin.isAltPressed() || !plugin.isCursorInBounds())
 		{
 			return null;
 		}

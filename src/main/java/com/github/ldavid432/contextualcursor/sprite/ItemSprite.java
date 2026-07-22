@@ -4,8 +4,10 @@ import java.awt.image.BufferedImage;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+@ToString(of = "id")
 @SuperBuilder
 @EqualsAndHashCode(of = {"id", "quantity"}, callSuper = true)
 public class ItemSprite extends BaseSprite

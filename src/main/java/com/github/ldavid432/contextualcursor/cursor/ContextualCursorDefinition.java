@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor.cursor;
 
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.List;
+import javax.annotation.Nullable;
 import lombok.Value;
 import lombok.With;
 
@@ -13,6 +14,7 @@ public class ContextualCursorDefinition
 
 	Sprite defaultCursorSprite;
 
+	@Nullable
 	Sprite backgroundCursorSprite;
 
 	public void clearImages() {
@@ -20,7 +22,10 @@ public class ContextualCursorDefinition
 		{
 			cursor.clearImage();
 		}
-		getDefaultCursorSprite().clearImage();
-		getBackgroundCursorSprite().clearImage();
+		defaultCursorSprite.clearImage();
+		if (backgroundCursorSprite != null)
+		{
+			backgroundCursorSprite.clearImage();
+		}
 	}
 }

@@ -26,6 +26,7 @@ public interface ContextualCursorConfig extends Config
 	String USE_ITEM_CURSOR = "useItem";
 	String PERSIST_ITEMS = "persistItems";
 	String PERSIST_SPELLS = "persistSpells";
+	String OVERLAY_V2 = "cursorOverlayV2";
 
 	@ConfigItem(
 		keyName = CURSOR_THEME,
@@ -325,6 +326,19 @@ public interface ContextualCursorConfig extends Config
 		section = debugSection
 	)
 	default boolean isDebugTooltipEnabled()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		name = "Overlay V2",
+		description = "Use the V2 overlay for rendering the contextual cursor (and default cursor if enabled)<br>" +
+			"<strong>Currently experimental<strong>",
+		keyName = OVERLAY_V2,
+		position = 1,
+		section = debugSection
+	)
+	default boolean isOverlayV2()
 	{
 		return false;
 	}
