@@ -48,7 +48,7 @@ import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
-import com.github.ldavid432.contextualcursor.menuentry.ContextualCursorState;
+import com.github.ldavid432.contextualcursor.overlay.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2DrawOverlay;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2WorkerOverlay;

@@ -1,7 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
-import com.github.ldavid432.contextualcursor.menuentry.ContextualCursorState;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
 import java.awt.Dimension;

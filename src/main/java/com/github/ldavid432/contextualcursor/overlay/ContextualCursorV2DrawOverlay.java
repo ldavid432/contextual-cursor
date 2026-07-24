@@ -2,7 +2,6 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
-import com.github.ldavid432.contextualcursor.menuentry.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;

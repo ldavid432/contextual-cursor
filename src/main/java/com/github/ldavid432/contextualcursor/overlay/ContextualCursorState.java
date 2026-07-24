@@ -1,4 +1,4 @@
-package com.github.ldavid432.contextualcursor.menuentry;
+package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_MOUSE;
