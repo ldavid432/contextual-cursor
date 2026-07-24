@@ -4,33 +4,32 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.MENU_EXTRA_TOP;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.MENU_OPTION_HEIGHT;
-import java.awt.Color;
-import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.function.BiFunction;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
 import net.runelite.api.MenuEntry;
-import net.runelite.client.ui.overlay.tooltip.Tooltip;
-import net.runelite.client.ui.overlay.tooltip.TooltipManager;
-import net.runelite.client.util.ColorUtil;
 
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class MenuEntryProvider
 {
-	@Inject
-	private Client client;
-	@Inject
-	private ContextualCursorPlugin plugin;
-	@Inject
-	private TooltipManager tooltipManager;
+	private final Client client;
+	private final ContextualCursorPlugin plugin;
 
 	@Getter
-	private MenuEntry lastSubmenuEntry;
+	private MenuEntry lastSubmenuEntry = null;
 	@Getter
-	private boolean isInSubmenu;
+	private boolean isInSubmenu = false;
+
+	@Setter
+	@Nullable
+	private BiFunction<MenuEntry, Boolean, Void> listener = null;
 
 	public MenuEntry getMenuEntry()
 	{
@@ -57,12 +56,18 @@ public class MenuEntryProvider
 
 		if (menuEntry != null && !isEntryIgnored(menuEntry, isInSubmenu))
 		{
-			debugTooltip(false, menuEntry);
+			if (listener != null)
+			{
+				listener.apply(menuEntry, false);
+			}
 			return menuEntry;
 		}
 		else
 		{
-			debugTooltip(true, menuEntry);
+			if (listener != null)
+			{
+				listener.apply(menuEntry, true);
+			}
 			return null;
 		}
 	}
@@ -154,54 +159,6 @@ public class MenuEntryProvider
 			}
 		}
 		return MenuTarget.OTHER;
-	}
-
-	// TODO: Move
-	private void debugTooltip(boolean isIgnored, MenuEntry entry)
-	{
-		if (entry == null || !plugin.isDebugTooltipEnabled())
-		{
-			return;
-		}
-
-		String ignored = null;
-		if (isIgnored)
-		{
-			ignored = ColorUtil.wrapWithColorTag("Ignored", Color.RED);
-		}
-
-		String name = String.format("option=%s, type=%s", entry.getOption(), entry.getType());
-		if (entry.getTarget() != null && !entry.getTarget().isBlank())
-		{
-			name += String.format(", target=%s", entry.getTarget());
-		}
-
-		String item = null;
-		if (entry.isItemOp() || entry.getItemId() > 0)
-		{
-			item = String.format("Item: isItemOp=%s, id=%s", entry.isItemOp(), entry.getItemId());
-		}
-
-		String npc = null;
-		if (entry.getNpc() != null)
-		{
-			npc = String.format("NPC: %s", entry.getNpc().getName());
-		}
-
-		String player = null;
-		if (entry.getPlayer() != null)
-		{
-			player = String.format("Player: %s", entry.getPlayer().getName());
-		}
-
-		tooltipManager.addFront(
-			new Tooltip(
-				Stream.of("Contextual Cursor Debug:", ignored, name, item, npc, player)
-					.filter(Objects::nonNull)
-					.reduce((s1, s2) -> s1 + "<br>" + s2)
-					.orElse(name)
-			)
-		);
 	}
 
 }
