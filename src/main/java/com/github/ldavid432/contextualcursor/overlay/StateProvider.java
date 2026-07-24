@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
@@ -17,42 +18,44 @@ import net.runelite.client.ui.overlay.tooltip.Tooltip;
 
 @Slf4j
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class StateProvider
 {
-	@Inject
-	private CursorProvider cursorProvider;
-	@Inject
-	private MenuEntryProvider menuEntryProvider;
-	@Inject
-	private SpriteProvider spriteProvider;
-	@Inject
-	private ContextualCursorPlugin plugin;
+	private final CursorProvider cursorProvider;
+	private final MenuEntryProvider menuEntryProvider;
+	private final SpriteProvider spriteProvider;
+	private final ContextualCursorPlugin plugin;
+	private final SelectedItemProvider selectedItemProvider;
 
 	private Tooltip contextualCursorspacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
 
 	public ContextualCursorState getState(@Nullable ContextualCursorState previousState)
 	{
-		MenuEntry menuEntry = null;
-		if (!plugin.isAltPressed() && plugin.isCursorInBounds())
-		{
-			menuEntry = menuEntryProvider.getMenuEntry();
-		}
+		// Selection takes precedence over menu entries
+		Sprite sprite = selectedItemProvider.getSelectedSprite();
 
-		log.debug("Menu Entry: {}", menuEntry != null ? menuEntry.getOption() : "null");
-
-		if (menuEntry == null)
+		if (sprite == null)
 		{
-			// TODO: Confirm these checks
-			if ((previousState != null && previousState.getCursorForeground() != null) ||
-				plugin.canDefaultCursorOverrideWithOverlay() || !plugin.isCursorInBounds() || plugin.isLoggedOut())
+			MenuEntry menuEntry = null;
+			if (!plugin.isAltPressed() && plugin.isCursorInBounds())
 			{
-				return defaultCursorState(previousState);
+				menuEntry = menuEntryProvider.getMenuEntry();
 			}
-			return null;
-		}
 
-		Sprite sprite = spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu());
+			if (menuEntry == null)
+			{
+				// TODO: Confirm these checks
+				if ((previousState != null && previousState.getCursorForeground() != null) ||
+					plugin.canDefaultCursorOverrideWithOverlay() || !plugin.isCursorInBounds() || plugin.isLoggedOut())
+				{
+					return defaultCursorState(previousState);
+				}
+				return null;
+			}
+
+			sprite = spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu());
+		}
 
 		return ContextualCursorState.contextualCursor(sprite, cursorProvider.getBackgroundCursorSprite(), contextualCursorspacerTooltip);
 	}
