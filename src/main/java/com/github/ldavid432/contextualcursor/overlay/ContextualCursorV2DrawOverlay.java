@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -11,7 +12,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
@@ -24,7 +25,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
  * V2 render overlay
  */
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ContextualCursorV2DrawOverlay extends Overlay
 {
 	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
@@ -42,17 +43,11 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 	private Point cursorOffset = POINTER_OFFSET;
 
 	@Inject
-	ContextualCursorV2DrawOverlay(Client client, ClientUI clientUi, ContextualCursorPlugin plugin, SpriteContext spriteContext,
-	                              CursorProvider cursorProvider)
+	void init()
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
 		setPriority(1f);
-		this.client = client;
-		this.spriteContext = spriteContext;
-		this.clientUi = clientUi;
-		this.plugin = plugin;
-		this.cursorProvider = cursorProvider;
 	}
 
 	@Override
@@ -89,7 +84,7 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 			}
 		}
 
-		if (currentState != null)
+		if (currentState != null && graphics != null)
 		{
 			onRender(currentState, graphics);
 		}
@@ -152,6 +147,11 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 		return sprite != null ? sprite.getImage(spriteContext) : null;
 	}
 
-
+	// TODO: Move to CursorProvider?
+	public void updateScale()
+	{
+		scaledCenterPoint = scalePoint(CENTRAL_POINT, plugin.getCursorScale());
+		cursorOffset = scalePoint(POINTER_OFFSET, plugin.getCursorScale());
+	}
 
 }

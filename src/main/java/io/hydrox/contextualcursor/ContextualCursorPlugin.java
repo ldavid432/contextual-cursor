@@ -88,7 +88,6 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
-import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
@@ -133,9 +132,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Inject
 	private Client client;
-
-	@Inject
-	private ClientUI clientUI;
 
 	@Inject
 	private ChatMessageManager chatMessageManager;
@@ -258,8 +254,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
-		overlayManager.add(drawOverlayV2);
 		overlayManager.add(workerOverlayV2);
+		overlayManager.add(drawOverlayV2);
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(mouseListener);
 
@@ -327,8 +323,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		overlayManager.remove(contextualCursorDrawOverlay);
 		overlayManager.remove(workerOverlayV2);
 		overlayManager.remove(drawOverlayV2);
+		workerOverlayV2.shutdown();
 		contextualCursorWorkerOverlay.shutdown();
-		// TODO: render shutdown v2
 		cursorProvider.clearImages();
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(mouseListener);
@@ -355,19 +351,11 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				contextualCursorWorkerOverlay.resetCursor();
 				if (isOverlayV2)
 				{
-					// TODO: call overlay?
-					ContextualCursorState resetState = stateProvider.defaultCursorState(null);
+					nextState = stateProvider.defaultCursorState(previousState);
+					drawOverlayV2.render(null);
 					currentState = null;
 					previousState = null;
-					nextState = resetState;
-					if (resetState.getCursor() != null)
-					{
-						clientUI.setCursor(resetState.getCursor());
-					}
-					else
-					{
-						clientUI.resetCursor();
-					}
+					nextState = null;
 				}
 				break;
 			case LOADING:
@@ -509,9 +497,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		contextualCursorWorkerOverlay.updateScale();
 		contextualCursorDrawOverlay.updateScale();
 		stateProvider.updateScale();
+		drawOverlayV2.updateScale();
 	}
 
-	// TODO: move into render?
+	// TODO: move into render()?
 	@Subscribe
 	public void onClientTick(ClientTick event)
 	{
