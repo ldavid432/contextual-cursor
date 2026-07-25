@@ -1,5 +1,8 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
+import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
+import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
@@ -28,6 +31,27 @@ public class CursorProvider
 
 	@Inject
 	private SpriteContext spriteContext;
+
+	@Getter
+	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
+		@Override
+		public void onScaleChange(double cursorScale, double itemScale)
+		{
+			clearImages();
+		}
+
+		@Override
+		public void onScaleSmoothingChange(boolean cursorSmoothing, boolean itemSmoothing)
+		{
+			clearImages();
+		}
+
+		@Override
+		public void onThemeChange(CursorTheme theme)
+		{
+			clearImages();
+		}
+	};
 
 	// TODO: Move awt cursor logic out?
 	@Nullable

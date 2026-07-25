@@ -1,13 +1,17 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
+import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.github.ldavid432.contextualcursor.state.ContextualCursorState;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,15 @@ public class StateProvider
 
 	private Tooltip contextualCursorspacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
+
+	@Getter
+	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
+		@Override
+		public void onScaleChange(double cursorScale, double itemScale)
+		{
+			updateScale();
+		}
+	};
 
 	public ContextualCursorState getState(@Nullable ContextualCursorState previousState)
 	{

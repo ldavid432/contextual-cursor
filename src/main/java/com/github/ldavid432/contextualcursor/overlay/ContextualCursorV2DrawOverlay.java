@@ -2,8 +2,11 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
+import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
+import com.github.ldavid432.contextualcursor.state.ContextualCursorState;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
 import java.awt.Cursor;
@@ -11,6 +14,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -40,6 +44,15 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point cursorOffset = POINTER_OFFSET;
+
+	@Getter
+	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
+		@Override
+		public void onScaleChange(double cursorScale, double itemScale)
+		{
+			updateScale();
+		}
+	};
 
 	@Inject
 	void init()

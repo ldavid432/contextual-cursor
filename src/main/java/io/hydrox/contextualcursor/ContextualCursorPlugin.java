@@ -48,11 +48,12 @@ import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
-import com.github.ldavid432.contextualcursor.overlay.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
+import com.github.ldavid432.contextualcursor.state.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2DrawOverlay;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2WorkerOverlay;
 import com.github.ldavid432.contextualcursor.overlay.StateProvider;
+import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
@@ -63,6 +64,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.Getter;
@@ -214,6 +216,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	private Gson contextualCursorGson;
 
+	private final List<ProviderCallbacks> callbacks = new ArrayList<>();
+
 	public boolean canOverrideDefaultCursor()
 	{
 		return !isCustomCursorPluginEnabled && isCustomDefaultCursorEnabled;
@@ -274,14 +278,17 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		cursorTheme = config.getCursorTheme();
 		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 		updateIgnores();
-		updateCursorScale();
-		itemScale = (double) config.getItemScale() / 100;
+		updateScale();
 		isPersistItems = config.shouldPersistItems();
 		isPersistSpells = config.shouldPersistSpells();
 		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
 		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
+
+		callbacks.add(cursorProvider.getCallbacks());
+		callbacks.add(stateProvider.getCallbacks());
+		callbacks.add(drawOverlayV2.getCallbacks());
 
 		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
 	}
@@ -319,6 +326,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Override
 	protected void shutDown()
 	{
+		callbacks.remove(cursorProvider.getCallbacks());
+		callbacks.remove(stateProvider.getCallbacks());
+		callbacks.remove(drawOverlayV2.getCallbacks());
+
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
 		overlayManager.remove(workerOverlayV2);
@@ -331,6 +342,14 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		previousState = null;
 		currentState = null;
 		nextState = null;
+	}
+
+	private void callCallbacks(Consumer<ProviderCallbacks> block)
+	{
+		for (ProviderCallbacks callback : callbacks)
+		{
+			block.accept(callback);
+		}
 	}
 
 	// TODO: Show while hopping?
@@ -349,6 +368,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			case LOGIN_SCREEN:
 				isLoggedOut = true;
 				contextualCursorWorkerOverlay.resetCursor();
+				// TODO: add to ProviderCallbacks?
 				if (isOverlayV2)
 				{
 					nextState = stateProvider.defaultCursorState(previousState);
@@ -420,15 +440,16 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				isDebugTooltipEnabled = config.isDebugTooltipEnabled();
 			}
-			else if (event.getKey().equals(SCALE))
+			else if (event.getKey().equals(SCALE) || event.getKey().equals(ITEM_SCALE))
 			{
-				updateCursorScale();
-				cursorProvider.clearImages();
+				updateScale();
+				callCallbacks(c -> c.onScaleChange(cursorScale, itemScale));
 			}
-			else if (event.getKey().equals(SCALE_SMOOTHING))
+			else if (event.getKey().equals(SCALE_SMOOTHING) || event.getKey().equals(ITEM_SCALE_SMOOTHING))
 			{
 				isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-				cursorProvider.clearImages();
+				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
+				callCallbacks(c -> c.onScaleSmoothingChange(isCursorSmoothScalingEnabled, isItemSmoothScalingEnabled));
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
@@ -438,25 +459,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(CURSOR_THEME))
 			{
 				cursorTheme = config.getCursorTheme();
-				cursorProvider.clearImages();
+				callCallbacks(c -> c.onThemeChange(cursorTheme));
 				contextualCursorWorkerOverlay.updateTheme();
 			}
 			else if (event.getKey().equals(DEFAULT_CURSOR_OVERLAY))
 			{
 				isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 				contextualCursorWorkerOverlay.genericOverlayToggled();
-			}
-			else if (event.getKey().equals(ITEM_SCALE))
-			{
-				itemScale = (double) config.getItemScale() / 100;
-				// TODO: Can potentially only clear item images here
-				cursorProvider.clearImages();
-				stateProvider.updateScale();
-			}
-			else if (event.getKey().equals(ITEM_SCALE_SMOOTHING))
-			{
-				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
-				cursorProvider.clearImages();
 			}
 			else if (event.getKey().equals(PERSIST_SPELLS))
 			{
@@ -491,13 +500,12 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		}
 	}
 
-	private void updateCursorScale()
+	private void updateScale()
 	{
 		cursorScale = (double) config.getCursorScale() / 100;
+		itemScale = (double) config.getItemScale() / 100;
 		contextualCursorWorkerOverlay.updateScale();
 		contextualCursorDrawOverlay.updateScale();
-		stateProvider.updateScale();
-		drawOverlayV2.updateScale();
 	}
 
 	// TODO: move into render()?
