@@ -57,9 +57,7 @@ public class StateProvider
 
 			if (menuEntry == null)
 			{
-				// TODO: Confirm these checks
-				if ((previousState != null && previousState.getCursorForeground() != null) ||
-					plugin.canDefaultCursorOverrideWithOverlay() || !plugin.isCursorInBounds() || plugin.isLoggedOut())
+				if (plugin.canOverrideDefaultCursor() || !plugin.isCursorInBounds() || plugin.isLoggedOut())
 				{
 					return defaultCursorState(previousState);
 				}

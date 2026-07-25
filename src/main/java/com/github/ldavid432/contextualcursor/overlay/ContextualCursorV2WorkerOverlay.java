@@ -49,7 +49,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isOverlayV2() || plugin.isAltPressed())
+		if (!plugin.isOverlayV2())
 		{
 			return null;
 		}
@@ -57,14 +57,26 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 		// TODO: Confirm if this placement is ok
 		cursorProvider.checkLastCursor();
 
-		ContextualCursorState state = stateProvider.getState(plugin.getPreviousState());
-		plugin.setNextState(state);
+		ContextualCursorState nextState;
+
+		if (plugin.isAltPressed()) {
+			if (plugin.isCustomCursorPluginEnabled())
+			{
+				nextState = ContextualCursorState.externalCursor(cursorProvider.getLastExternalCursor());
+			} else {
+				nextState = ContextualCursorState.clearCursor();
+			}
+		} else {
+			nextState = stateProvider.getState(plugin.getPreviousState());
+		}
+
+		plugin.setNextState(nextState);
 
 		// Tooltips must be rendered in OverlayLayer.ABOVE_WIDGETS in order to be before the mouse tooltips plugin
 		//  while graphics need to be ALWAYS_ON_TOP to be above the right click menu
-		if (state != null && state.getTooltip() != null)
+		if (nextState != null && nextState.getTooltip() != null)
 		{
-			tooltipManager.addFront(state.getTooltip());
+			tooltipManager.addFront(nextState.getTooltip());
 		}
 
 		return null;

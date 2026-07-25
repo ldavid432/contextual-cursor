@@ -65,7 +65,7 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isOverlayV2() || plugin.isAltPressed())
+		if (!plugin.isOverlayV2())
 		{
 			return null;
 		}
