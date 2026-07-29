@@ -45,11 +45,13 @@ import com.github.ldavid432.contextualcursor.sprite.CursorType;
 import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
+import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
 import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.SpriteID;
 
 @Slf4j
@@ -85,6 +87,7 @@ public enum ContextualCursor implements Cursor
 		optionStartsWith("take-")
 	),
 	PLANK("plank", "buy-plank"),
+	PROD(itemSprite().id(ItemID.CATTLEPROD), hasOption("prod")),
 	READ("read", "read", "story", "guide"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
 	SEARCH("search", optionIsAnyOf("examine", "view", "inspect", "investigate", "peek", "admire", "look", "check"),
@@ -138,7 +141,7 @@ public enum ContextualCursor implements Cursor
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, optionIsAnyOf("build", "modify", "upgrade", "build-trap"),
 		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
-	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave", "sing-crystal"),
+	CRAFTING(SpriteID.Staticons.CRAFTING, optionIsAnyOf("spin", "weave", "sing-crystal", "start-golem", "shape-golem", "insert-core"),
 		hasAllOf(hasOption("craft"), not(targetNamed("shipwrights' workbench"))), // crafting table / clockmaker's benches
 		hasAllOf(hasOption("fire"), targetNamed("pottery oven"))),
 	FARMING(SpriteID.Staticons2.FARMING, optionIsAnyOf("check-health", "rake", "pick-fruit", "cure", "prune"),
