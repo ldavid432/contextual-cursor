@@ -1,19 +1,18 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import com.github.ldavid432.contextualcursor.state.ContextualCursorState;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.ui.overlay.components.ImageComponent;
@@ -22,7 +21,7 @@ import net.runelite.client.ui.overlay.tooltip.Tooltip;
 @Slf4j
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class StateProvider
+public class StateProvider implements ProviderCallbacks
 {
 	private final CursorProvider cursorProvider;
 	private final MenuEntryProvider menuEntryProvider;
@@ -33,7 +32,7 @@ public class StateProvider
 	private Tooltip contextualCursorspacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
 
-	@Getter
+	@Delegate
 	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
 		@Override
 		public void onScaleChange(double cursorScale, double itemScale)
@@ -42,8 +41,18 @@ public class StateProvider
 		}
 	};
 
-	public ContextualCursorState getState(@Nullable ContextualCursorState previousState)
+	public ContextualCursorState getState()
 	{
+		if (plugin.isAltPressed())
+		{
+			if (plugin.isCustomCursorPluginEnabled())
+			{
+				return ContextualCursorState.externalCursor(cursorProvider.getLastCustomCursor());
+			} else {
+				return ContextualCursorState.clearCursor();
+			}
+		}
+
 		// Selection takes precedence over menu entries
 		Sprite sprite = selectedItemProvider.getSelectedSprite();
 
@@ -57,11 +66,7 @@ public class StateProvider
 
 			if (menuEntry == null)
 			{
-				if (plugin.canOverrideDefaultCursor() || !plugin.isCursorInBounds() || plugin.isLoggedOut())
-				{
-					return defaultCursorState(previousState);
-				}
-				return null;
+				return defaultCursorState();
 			}
 
 			sprite = spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu());
@@ -71,15 +76,12 @@ public class StateProvider
 	}
 
 	// Reset cursor to a default cursor state, one of: no custom cursor, external custom cursor, our custom cursor, or our custom overlay
-	public ContextualCursorState defaultCursorState(@Nullable ContextualCursorState previousState)
+	public ContextualCursorState defaultCursorState()
 	{
-		if (previousState != null && previousState.getCursorForeground() != null)
+		Cursor lastCustomCursor = cursorProvider.getLastCustomCursor();
+		if (lastCustomCursor != null)
 		{
-			Cursor savedCursor = cursorProvider.getLastExternalCursor();
-			if (savedCursor != null)
-			{
-				return ContextualCursorState.externalCursor(savedCursor);
-			}
+			return ContextualCursorState.externalCursor(lastCustomCursor);
 		}
 
 		if (plugin.canOverrideDefaultCursor())
@@ -90,20 +92,7 @@ public class StateProvider
 		{
 			return ContextualCursorState.clearCursor();
 		}
-		else
-		{
-			// custom cursor plugin is ON - restore the custom cursor
-			Cursor savedCursor = cursorProvider.getLastExternalCursor();
-			if (savedCursor != null)
-			{
-				return ContextualCursorState.externalCursor(savedCursor);
-			}
 
-			if (cursorProvider.getLastDefaultCursor() != null)
-			{
-				return ContextualCursorState.genericCursor(cursorProvider.getLastDefaultCursor());
-			}
-		}
 		return null;
 	}
 

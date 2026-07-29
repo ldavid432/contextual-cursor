@@ -1,7 +1,7 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
-import com.github.ldavid432.contextualcursor.state.ContextualCursorState;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.ui.overlay.Overlay;
@@ -22,6 +23,7 @@ import net.runelite.client.util.ColorUtil;
 /**
  * V2 worker overlay - this must be separate in order for the tooltips to be rendered correctly in front of the mouse tooltips plugin
  */
+@Slf4j
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ContextualCursorV2WorkerOverlay extends Overlay
 {
@@ -54,21 +56,11 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 			return null;
 		}
 
-		// TODO: Confirm if this placement is ok
 		cursorProvider.checkLastCursor();
 
 		ContextualCursorState nextState;
 
-		if (plugin.isAltPressed()) {
-			if (plugin.isCustomCursorPluginEnabled())
-			{
-				nextState = ContextualCursorState.externalCursor(cursorProvider.getLastExternalCursor());
-			} else {
-				nextState = ContextualCursorState.clearCursor();
-			}
-		} else {
-			nextState = stateProvider.getState(plugin.getPreviousState());
-		}
+		nextState = stateProvider.getState();
 
 		plugin.setNextState(nextState);
 

@@ -10,10 +10,10 @@ import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_C
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
@@ -21,7 +21,7 @@ import net.runelite.client.ui.ClientUI;
 
 @Slf4j
 @Singleton
-public class CursorProvider
+public class CursorProvider implements ProviderCallbacks
 {
 	@Delegate
 	private ContextualCursorDefinition definition;
@@ -32,7 +32,7 @@ public class CursorProvider
 	@Inject
 	private SpriteContext spriteContext;
 
-	@Getter
+	@Delegate
 	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
 		@Override
 		public void onScaleChange(double cursorScale, double itemScale)
@@ -54,13 +54,11 @@ public class CursorProvider
 	};
 
 	// TODO: Move awt cursor logic out?
-	@Nullable
-	private java.awt.Cursor storedCursor = null;
-
 	private java.awt.Cursor defaultCursor = null;
 
 	@Getter
-	private java.awt.Cursor lastDefaultCursor = null;
+	@Setter
+	private java.awt.Cursor lastCustomCursor = null;
 
 	public void clearImages()
 	{
@@ -96,20 +94,6 @@ public class CursorProvider
 		);
 	}
 
-	public java.awt.Cursor getLastExternalCursor()
-	{
-		return storedCursor;
-	}
-
-	public void saveCurrentExternalCursor()
-	{
-		java.awt.Cursor cursor = clientUI.getCurrentCursor();
-		if (isNotIgnoredCursor(cursor) && isSavableCursorType(cursor))
-		{
-			storedCursor = cursor;
-		}
-	}
-
 	public void setDefinition(ContextualCursorDefinition definition)
 	{
 		if (this.definition != null)
@@ -140,16 +124,11 @@ public class CursorProvider
 	{
 		java.awt.Cursor currentCursor = clientUI.getCurrentCursor();
 
-		if (isNotIgnoredCursor(currentCursor) && isSavableCursorType(currentCursor) && lastDefaultCursor != currentCursor)
+		if (isNotIgnoredCursor(currentCursor) && currentCursor.getType() == java.awt.Cursor.CUSTOM_CURSOR && lastCustomCursor != currentCursor)
 		{
 			log.debug("Setting last default cursor: {}", currentCursor.getName());
-			lastDefaultCursor = currentCursor;
+			lastCustomCursor = currentCursor;
 		}
-	}
-
-	private boolean isSavableCursorType(java.awt.Cursor cursor)
-	{
-		return cursor.getType() == java.awt.Cursor.DEFAULT_CURSOR || cursor.getType() == java.awt.Cursor.CUSTOM_CURSOR;
 	}
 
 }

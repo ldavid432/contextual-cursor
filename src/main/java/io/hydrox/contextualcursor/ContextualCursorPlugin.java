@@ -38,6 +38,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.PERSI
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
+import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadLocalCursorDefinition;
@@ -49,7 +50,6 @@ import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
-import com.github.ldavid432.contextualcursor.state.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2DrawOverlay;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2WorkerOverlay;
 import com.github.ldavid432.contextualcursor.overlay.StateProvider;
@@ -256,6 +256,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 		initCursors();
 
+		currentState = stateProvider.defaultCursorState();
+
 		overlayManager.add(contextualCursorWorkerOverlay);
 		overlayManager.add(contextualCursorDrawOverlay);
 		overlayManager.add(workerOverlayV2);
@@ -286,9 +288,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
 
-		callbacks.add(cursorProvider.getCallbacks());
-		callbacks.add(stateProvider.getCallbacks());
-		callbacks.add(drawOverlayV2.getCallbacks());
+		callbacks.add(cursorProvider);
+		callbacks.add(stateProvider);
+		callbacks.add(drawOverlayV2);
 
 		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
 	}
@@ -326,19 +328,22 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Override
 	protected void shutDown()
 	{
-		callbacks.remove(cursorProvider.getCallbacks());
-		callbacks.remove(stateProvider.getCallbacks());
-		callbacks.remove(drawOverlayV2.getCallbacks());
+		callbacks.remove(cursorProvider);
+		callbacks.remove(stateProvider);
+		callbacks.remove(drawOverlayV2);
 
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
 		overlayManager.remove(workerOverlayV2);
 		overlayManager.remove(drawOverlayV2);
+
 		workerOverlayV2.shutdown();
 		contextualCursorWorkerOverlay.shutdown();
 		cursorProvider.clearImages();
+
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(mouseListener);
+
 		previousState = null;
 		currentState = null;
 		nextState = null;
@@ -371,7 +376,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				// TODO: add to ProviderCallbacks?
 				if (isOverlayV2)
 				{
-					nextState = stateProvider.defaultCursorState(previousState);
+					nextState = stateProvider.defaultCursorState();
 					drawOverlayV2.render(null);
 					currentState = null;
 					previousState = null;
@@ -488,7 +493,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		{
 			isCustomCursorPluginEnabled = Boolean.parseBoolean(event.getNewValue());
 			// Delaying this until after CustomCursorPlugin has run its shutdown which clears the cursor
-			clientThread.invoke(() -> contextualCursorWorkerOverlay.resetCursor());
+			clientThread.invoke(() -> {
+				contextualCursorWorkerOverlay.resetCursor();
+				if (!isCustomCursorPluginEnabled)
+				{
+					cursorProvider.setLastCustomCursor(null);
+				}
+			});
 		}
 	}
 
