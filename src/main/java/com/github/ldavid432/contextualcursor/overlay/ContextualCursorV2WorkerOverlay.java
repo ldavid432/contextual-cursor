@@ -77,7 +77,6 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 	public void shutdown()
 	{
 		menuEntryProvider.setListener(null);
-		// TODO: Reset cursor?
 	}
 
 	private void debugTooltip(boolean isIgnored, MenuEntry entry)

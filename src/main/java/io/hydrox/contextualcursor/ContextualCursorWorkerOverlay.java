@@ -54,8 +54,6 @@ import net.runelite.client.ui.overlay.tooltip.Tooltip;
 import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 import net.runelite.client.util.ColorUtil;
 
-// TODO: Break up this class, it is getting bloated
-
 @Slf4j
 public class ContextualCursorWorkerOverlay extends Overlay
 {

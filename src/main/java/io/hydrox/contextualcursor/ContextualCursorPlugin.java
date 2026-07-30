@@ -373,7 +373,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			case LOGIN_SCREEN:
 				isLoggedOut = true;
 				contextualCursorWorkerOverlay.resetCursor();
-				// TODO: add to ProviderCallbacks?
 				if (isOverlayV2)
 				{
 					nextState = stateProvider.defaultCursorState();
