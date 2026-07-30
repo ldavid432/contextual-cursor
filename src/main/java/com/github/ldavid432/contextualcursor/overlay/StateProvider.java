@@ -59,7 +59,7 @@ public class StateProvider implements ProviderCallbacks
 		if (sprite == null)
 		{
 			MenuEntry menuEntry = null;
-			if (!plugin.isAltPressed() && plugin.isCursorInBounds())
+			if (plugin.isCursorInBounds())
 			{
 				menuEntry = menuEntryProvider.getMenuEntry();
 			}
@@ -83,8 +83,7 @@ public class StateProvider implements ProviderCallbacks
 		{
 			return ContextualCursorState.externalCursor(lastCustomCursor);
 		}
-
-		if (plugin.canOverrideDefaultCursor())
+		else if (plugin.canOverrideDefaultCursor())
 		{
 			return pluginDefaultCursorState();
 		}
@@ -106,6 +105,7 @@ public class StateProvider implements ProviderCallbacks
 			}
 			else
 			{
+				// Overlays don't render outside the game canvas or when logged out
 				return ContextualCursorState.clearCursor();
 			}
 		}

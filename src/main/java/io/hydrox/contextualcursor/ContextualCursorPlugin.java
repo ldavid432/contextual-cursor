@@ -273,11 +273,14 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		Point mousePos = client.getMouseCanvasPosition();
 		isCursorInBounds = mouseInsideBounds(mousePos, client);
 
+		callbacks.add(cursorProvider);
+		callbacks.add(stateProvider);
+		callbacks.add(drawOverlayV2);
+
 		isOverlayV2 = config.isOverlayV2();
 		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
-		isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-		isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
-		cursorTheme = config.getCursorTheme();
+		updateScaleEnabled();
+		updateTheme();
 		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 		updateIgnores();
 		updateScale();
@@ -287,10 +290,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
 		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
-
-		callbacks.add(cursorProvider);
-		callbacks.add(stateProvider);
-		callbacks.add(drawOverlayV2);
 
 		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
 	}
@@ -447,13 +446,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(SCALE) || event.getKey().equals(ITEM_SCALE))
 			{
 				updateScale();
-				callCallbacks(c -> c.onScaleChange(cursorScale, itemScale));
 			}
 			else if (event.getKey().equals(SCALE_SMOOTHING) || event.getKey().equals(ITEM_SCALE_SMOOTHING))
 			{
-				isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
-				isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
-				callCallbacks(c -> c.onScaleSmoothingChange(isCursorSmoothScalingEnabled, isItemSmoothScalingEnabled));
+				updateScaleEnabled();
 			}
 			else if (event.getKey().equals(CUSTOM_CURSOR))
 			{
@@ -462,9 +458,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			}
 			else if (event.getKey().equals(CURSOR_THEME))
 			{
-				cursorTheme = config.getCursorTheme();
-				callCallbacks(c -> c.onThemeChange(cursorTheme));
-				contextualCursorWorkerOverlay.updateTheme();
+				updateTheme();
 			}
 			else if (event.getKey().equals(DEFAULT_CURSOR_OVERLAY))
 			{
@@ -516,6 +510,21 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		itemScale = (double) config.getItemScale() / 100;
 		contextualCursorWorkerOverlay.updateScale();
 		contextualCursorDrawOverlay.updateScale();
+		callCallbacks(c -> c.onScaleChange(cursorScale, itemScale));
+	}
+
+	private void updateScaleEnabled()
+	{
+		isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+		isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
+		callCallbacks(c -> c.onScaleSmoothingChange(isCursorSmoothScalingEnabled, isItemSmoothScalingEnabled));
+	}
+
+	private void updateTheme()
+	{
+		cursorTheme = config.getCursorTheme();
+		callCallbacks(c -> c.onThemeChange(cursorTheme));
+		contextualCursorWorkerOverlay.updateTheme();
 	}
 
 	// TODO: move into render()?

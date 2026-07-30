@@ -80,7 +80,9 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 				log.debug("Changing state from \n  {} \n  to {}", currentState, nextState);
 			}
 			ContextualCursorState previousState = plugin.getPreviousState();
-			boolean isCursorChange = (previousState != null ? previousState.getCursor() : null) != nextState.getCursor();
+			boolean isCursorChange = ((previousState != null ? previousState.getCursor() : null) != nextState.getCursor()) ||
+				// Another plugin has saved and restored our blank cursor, messing up our state. We need to restore it here
+				(clientUi.getCurrentCursor().getName().equals(BLANK_CURSOR_NAME) && nextState.getCursor() != null && !nextState.isExternalCursor());
 
 			plugin.setPreviousState(currentState);
 			currentState = nextState;
@@ -118,8 +120,6 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 
 	private void onRender(ContextualCursorState currentState, Graphics2D graphics)
 	{
-		ensureCursor(currentState);
-
 		final Point mousePos = client.getMouseCanvasPosition();
 
 		BufferedImage cursorImage = spriteImageOrNull(currentState.getCursorSprite());
@@ -140,15 +140,6 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 			final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - foregroundImage.getWidth(null) / 2;
 			final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - foregroundImage.getHeight(null) / 2;
 			graphics.drawImage(foregroundImage, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
-		}
-	}
-
-	// Restores cursor if another plugin has saved and restored the blank cursor at an incorrect time
-	private void ensureCursor(ContextualCursorState state)
-	{
-		if (clientUi.getCurrentCursor().getName().equals(BLANK_CURSOR_NAME) && state.getCursor() != null && !state.isExternalCursor())
-		{
-			clientUi.setCursor(state.getCursor());
 		}
 	}
 

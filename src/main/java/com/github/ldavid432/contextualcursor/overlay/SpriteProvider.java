@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.MenuEntry;
 
+// TODO: This is really small, is it needed?
 @Singleton
 public class SpriteProvider
 {

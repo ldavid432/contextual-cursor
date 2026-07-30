@@ -56,7 +56,7 @@ public class ContextualCursorState {
 	@Override
 	public String toString()
 	{
-		return "AbstractContextualCursorState{" +
+		return "ContextualCursorState{" +
 			textOrEmpty("cursor=", cursor != null ? cursor.getName() : null) +
 			textOrEmpty(", isExternalCursor=", isExternalCursor ? true : null) +
 			textOrEmpty(", cursorSprite=", cursorSprite) +

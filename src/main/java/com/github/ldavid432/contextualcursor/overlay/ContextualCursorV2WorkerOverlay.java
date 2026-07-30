@@ -58,9 +58,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 
 		cursorProvider.checkLastCursor();
 
-		ContextualCursorState nextState;
-
-		nextState = stateProvider.getState();
+		ContextualCursorState nextState = stateProvider.getState();
 
 		plugin.setNextState(nextState);
 
