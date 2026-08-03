@@ -2,7 +2,6 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
-import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -40,7 +39,6 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 	private final ContextualCursorPlugin plugin;
 	private final ClientUI clientUi;
 	private final SpriteContext spriteContext;
-	private final CursorProvider cursorProvider;
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point cursorOffset = POINTER_OFFSET;
