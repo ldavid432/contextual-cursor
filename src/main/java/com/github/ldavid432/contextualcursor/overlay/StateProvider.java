@@ -43,6 +43,13 @@ public class StateProvider implements ProviderCallbacks
 
 	public ContextualCursorState getState()
 	{
+		Cursor currentCursor = clientUI.getCurrentCursor();
+		// Cursors set by external plugin
+		if (currentCursor.getType() != Cursor.DEFAULT_CURSOR && currentCursor.getType() != Cursor.CUSTOM_CURSOR)
+		{
+			return ContextualCursorState.externalCursor(currentCursor);
+		}
+
 		if (plugin.isAltPressed())
 		{
 			if (plugin.isCustomCursorPluginEnabled())
