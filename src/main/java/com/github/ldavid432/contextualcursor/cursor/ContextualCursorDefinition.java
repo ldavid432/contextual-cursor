@@ -12,8 +12,10 @@ public class ContextualCursorDefinition
 	@With
 	List<? extends Cursor> cursors;
 
+	@With
 	Sprite defaultCursorSprite;
 
+	@With
 	@Nullable
 	Sprite backgroundCursorSprite;
 

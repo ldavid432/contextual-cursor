@@ -30,6 +30,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSO
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEFAULT_CURSOR_OVERLAY;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.HIDE_CURSOR_BACKGROUND;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.OVERLAY_V2;
@@ -321,7 +322,14 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		cursors.add(0, new ItemCursor(client, this));
 		cursors.add(new SpellCursor());
 
-		cursorProvider.setDefinition(definition.withCursors(cursors));
+		definition = definition.withCursors(cursors);
+
+		if (config.isHideCursorBackgroundEnabled())
+		{
+			definition = definition.withBackgroundCursorSprite(definition.getDefaultCursorSprite());
+		}
+
+		cursorProvider.setDefinition(definition);
 	}
 
 	@Override
@@ -454,7 +462,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
 				contextualCursorWorkerOverlay.resetCursor();
 			}
-			else if (event.getKey().equals(CURSOR_THEME))
+			else if (event.getKey().equals(CURSOR_THEME) || event.getKey().equals(HIDE_CURSOR_BACKGROUND))
 			{
 				updateTheme();
 			}

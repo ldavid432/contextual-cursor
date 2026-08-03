@@ -27,6 +27,14 @@ public interface ContextualCursorConfig extends Config
 	String PERSIST_ITEMS = "persistItems";
 	String PERSIST_SPELLS = "persistSpells";
 	String OVERLAY_V2 = "cursorOverlayV2";
+	String HIDE_CURSOR_BACKGROUND = "hideCursorBackground";
+
+	@ConfigSection(
+		name = "Theme",
+		description = "Modify the cursor theme",
+		position = 0
+	)
+	String themeSection = "themeSection";
 
 	@ConfigItem(
 		keyName = CURSOR_THEME,
@@ -34,11 +42,24 @@ public interface ContextualCursorConfig extends Config
 		description = "Theme for the contextual cursor frame and default cursor<br>" +
 			"OldSchool: Custom-made theme to match the osrs UI<br>" +
 			"RuneScape 2: Sprites taken directly from RS2",
-		position = 1
+		position = 0,
+		section = themeSection
 	)
 	default CursorTheme getCursorTheme()
 	{
 		return CursorTheme.RS2;
+	}
+
+	@ConfigItem(
+		keyName = HIDE_CURSOR_BACKGROUND,
+		name = "Hide Cursor Background",
+		description = "Hides the cursor background sprite so you will only see the inner sprites",
+		position = 1,
+		section = themeSection
+	)
+	default boolean isHideCursorBackgroundEnabled()
+	{
+		return false;
 	}
 
 	@ConfigItem(
