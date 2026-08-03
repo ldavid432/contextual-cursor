@@ -2,6 +2,8 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
+import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +12,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.InterfaceID;
@@ -25,13 +28,22 @@ import net.runelite.client.util.ColorUtil;
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class ContextualCursorV2WorkerOverlay extends Overlay
+public class ContextualCursorV2WorkerOverlay extends Overlay implements ProviderCallbacks
 {
 	private final CursorProvider cursorProvider;
 	private final StateProvider stateProvider;
 	private final ContextualCursorPlugin plugin;
 	private final TooltipManager tooltipManager;
 	private final MenuEntryProvider menuEntryProvider;
+
+	@Delegate
+	private final ProviderCallbacks callback = new EmptyProviderCallbacks() {
+		@Override
+		public void onShutdown()
+		{
+			menuEntryProvider.setListener(null);
+		}
+	};
 
 	@Inject
 	void init()
@@ -56,8 +68,6 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 			return null;
 		}
 
-		cursorProvider.checkLastCursor();
-
 		ContextualCursorState nextState = stateProvider.getState();
 
 		plugin.setNextState(nextState);
@@ -70,11 +80,6 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 		}
 
 		return null;
-	}
-
-	public void shutdown()
-	{
-		menuEntryProvider.setListener(null);
 	}
 
 	private void debugTooltip(boolean isIgnored, MenuEntry entry)

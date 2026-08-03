@@ -15,6 +15,8 @@ import com.github.ldavid432.contextualcursor.sprite.BaseSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.gson.Gson;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
+import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
+import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -224,6 +226,11 @@ public class ContextualCursorUtil
 			log.error("Failed to parse cursor definition JSON: {}", fileName, e);
 			return null;
 		}
+	}
+
+	public static boolean isExternalCustomCursor(java.awt.Cursor cursor)
+	{
+		return !cursor.getName().equals(BLANK_CURSOR_NAME) && !cursor.getName().equals(GENERIC_CURSOR_NAME) && cursor.getType() == java.awt.Cursor.CUSTOM_CURSOR;
 	}
 
 }

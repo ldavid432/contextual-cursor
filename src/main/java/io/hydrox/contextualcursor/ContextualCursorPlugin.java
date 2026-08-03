@@ -276,6 +276,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		callbacks.add(cursorProvider);
 		callbacks.add(stateProvider);
 		callbacks.add(drawOverlayV2);
+		callbacks.add(workerOverlayV2);
 
 		isOverlayV2 = config.isOverlayV2();
 		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
@@ -330,15 +331,14 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		callbacks.remove(cursorProvider);
 		callbacks.remove(stateProvider);
 		callbacks.remove(drawOverlayV2);
+		callbacks.remove(workerOverlayV2);
 
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
 		overlayManager.remove(workerOverlayV2);
 		overlayManager.remove(drawOverlayV2);
 
-		workerOverlayV2.shutdown();
 		contextualCursorWorkerOverlay.shutdown();
-		cursorProvider.clearImages();
 
 		keyManager.unregisterKeyListener(this);
 		mouseManager.unregisterMouseListener(mouseListener);
@@ -490,7 +490,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				contextualCursorWorkerOverlay.resetCursor();
 				if (!isCustomCursorPluginEnabled)
 				{
-					cursorProvider.setLastCustomCursor(null);
+					stateProvider.setLastExternalCustomCursor(null);
 				}
 			});
 		}

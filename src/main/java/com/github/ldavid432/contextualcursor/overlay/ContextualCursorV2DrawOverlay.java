@@ -82,7 +82,8 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 			ContextualCursorState previousState = plugin.getPreviousState();
 			boolean isCursorChange = ((previousState != null ? previousState.getCursor() : null) != nextState.getCursor()) ||
 				// Another plugin has saved and restored our blank cursor, messing up our state. We need to restore it here
-				(clientUi.getCurrentCursor().getName().equals(BLANK_CURSOR_NAME) && nextState.getCursor() != null && !nextState.isExternalCursor());
+				(clientUi.getCurrentCursor().getName().equals(BLANK_CURSOR_NAME) && nextState.getCursor() != null &&
+					!nextState.getCursor().getName().equals(BLANK_CURSOR_NAME) && !nextState.isExternalCursor());
 
 			plugin.setPreviousState(currentState);
 			currentState = nextState;

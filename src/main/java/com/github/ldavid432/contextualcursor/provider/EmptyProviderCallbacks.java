@@ -4,7 +4,8 @@ import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class EmptyProviderCallbacks implements ProviderCallbacks {
+public class EmptyProviderCallbacks implements ProviderCallbacks
+{
 
 	@Override
 	public void onThemeChange(CursorTheme theme)
@@ -18,6 +19,11 @@ public class EmptyProviderCallbacks implements ProviderCallbacks {
 
 	@Override
 	public void onScaleSmoothingChange(boolean cursorSmoothing, boolean itemSmoothing)
+	{
+	}
+
+	@Override
+	public void onShutdown()
 	{
 	}
 }

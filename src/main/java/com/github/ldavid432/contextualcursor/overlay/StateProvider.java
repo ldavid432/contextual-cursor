@@ -1,20 +1,28 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.isExternalCustomCursor;
+import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
+import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Cursor;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
+import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.components.ImageComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
 
@@ -28,22 +36,52 @@ public class StateProvider implements ProviderCallbacks
 	private final SpriteProvider spriteProvider;
 	private final ContextualCursorPlugin plugin;
 	private final SelectedItemProvider selectedItemProvider;
+	private final ClientUI clientUI;
+	private final SpriteContext spriteContext;
 
 	private Tooltip contextualCursorspacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
+	private Cursor defaultCursor = null;
+	@Setter
+	private Cursor lastExternalCustomCursor = null;
 
 	@Delegate
-	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
+	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks()
+	{
 		@Override
 		public void onScaleChange(double cursorScale, double itemScale)
 		{
 			updateScale();
+			defaultCursor = null;
+		}
+
+		@Override
+		public void onScaleSmoothingChange(boolean cursorSmoothing, boolean itemSmoothing)
+		{
+			defaultCursor = null;
+		}
+
+		@Override
+		public void onThemeChange(CursorTheme theme)
+		{
+			defaultCursor = null;
+		}
+
+		@Override
+		public void onShutdown()
+		{
+			defaultCursor = null;
 		}
 	};
 
 	public ContextualCursorState getState()
 	{
 		Cursor currentCursor = clientUI.getCurrentCursor();
+		if (isExternalCustomCursor(currentCursor) && lastExternalCustomCursor != currentCursor)
+		{
+			lastExternalCustomCursor = currentCursor;
+		}
+
 		// Cursors set by external plugin
 		if (currentCursor.getType() != Cursor.DEFAULT_CURSOR && currentCursor.getType() != Cursor.CUSTOM_CURSOR)
 		{
@@ -54,8 +92,10 @@ public class StateProvider implements ProviderCallbacks
 		{
 			if (plugin.isCustomCursorPluginEnabled())
 			{
-				return ContextualCursorState.externalCursor(cursorProvider.getLastCustomCursor());
-			} else {
+				return ContextualCursorState.externalCursor(lastExternalCustomCursor);
+			}
+			else
+			{
 				return ContextualCursorState.clearCursor();
 			}
 		}
@@ -85,10 +125,9 @@ public class StateProvider implements ProviderCallbacks
 	// Reset cursor to a default cursor state, one of: no custom cursor, external custom cursor, our custom cursor, or our custom overlay
 	public ContextualCursorState defaultCursorState()
 	{
-		Cursor lastCustomCursor = cursorProvider.getLastCustomCursor();
-		if (lastCustomCursor != null)
+		if (lastExternalCustomCursor != null)
 		{
-			return ContextualCursorState.externalCursor(lastCustomCursor);
+			return ContextualCursorState.externalCursor(lastExternalCustomCursor);
 		}
 		else if (plugin.canOverrideDefaultCursor())
 		{
@@ -118,7 +157,11 @@ public class StateProvider implements ProviderCallbacks
 		}
 		else
 		{
-			return ContextualCursorState.genericCursor(cursorProvider.getDefaultCursor());
+			if (defaultCursor == null)
+			{
+				defaultCursor = createGenericCursor();
+			}
+			return ContextualCursorState.genericCursor(defaultCursor);
 		}
 	}
 
@@ -145,8 +188,25 @@ public class StateProvider implements ProviderCallbacks
 		}
 	}
 
+	private Cursor createGenericCursor()
+	{
+		BufferedImage icon = cursorProvider.getDefaultCursorSprite().getImage(spriteContext);
+		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = result.createGraphics();
+		g.drawImage(icon, 0, 0, null);
+		g.dispose();
+
+		return Toolkit.getDefaultToolkit().createCustomCursor(
+			result,
+			new java.awt.Point(0, 0),
+			GENERIC_CURSOR_NAME
+		);
+	}
+
 	@ToString(of = "name")
-	static class ContextualCursorTooltip extends Tooltip {
+	static class ContextualCursorTooltip extends Tooltip
+	{
 
 		// Just used in toString
 		private final String name;
