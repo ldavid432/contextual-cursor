@@ -254,7 +254,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		contextualCursorGson = buildGson(runeliteGson);
 
-		initCursors();
+		updateCursorDefinition();
 
 		currentState = stateProvider.defaultCursorState();
 
@@ -294,7 +294,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
 	}
 
-	private void initCursors()
+	private void updateCursorDefinition()
 	{
 		ContextualCursorDefinition definition = null;
 		switch (config.getCursorSource())
@@ -302,7 +302,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			case LOCAL_JSON:
 				try
 				{
-					definition = loadLocalCursorDefinition(contextualCursorGson, "local-cursors");
+					definition = loadLocalCursorDefinition(contextualCursorGson, cursorTheme.getLocalFileName());
 					break;
 				}
 				catch (Exception e)
@@ -521,6 +521,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private void updateTheme()
 	{
 		cursorTheme = config.getCursorTheme();
+		updateCursorDefinition();
 		callCallbacks(c -> c.onThemeChange(cursorTheme));
 		contextualCursorWorkerOverlay.updateTheme();
 	}

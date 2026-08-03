@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadImage;
 import com.google.common.annotations.VisibleForTesting;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nonnull;
@@ -22,6 +23,6 @@ public class ResourceSprite extends BaseSprite
 	@Override
 	protected BufferedImage getBaseImage(SpriteContext context)
 	{
-		return context.getTheme().getImage(fileName);
+		return loadImage(fileName);
 	}
 }
