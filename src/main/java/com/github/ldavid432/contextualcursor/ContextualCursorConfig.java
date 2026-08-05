@@ -56,7 +56,9 @@ public interface ContextualCursorConfig extends Config
 		description = "Hides the contextual cursor background<br>" +
 			"The default cursor will remain visible when hovering.",
 		position = 1,
-		section = themeSection
+		section = themeSection,
+		// Doesn't work with V1 overlay - will unhide when V1 is removed
+		hidden = true
 	)
 	default boolean isCursorBackgroundHidden()
 	{
