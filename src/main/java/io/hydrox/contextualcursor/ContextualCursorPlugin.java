@@ -206,6 +206,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private boolean isOverlayV2;
 
 	@Getter
+	private boolean isCursorBackgroundHidden;
+
+	@Getter
 	private boolean isLoggedOut = true;
 
 	@Getter
@@ -253,6 +256,28 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
+		// init cached values
+		isOverlayV2 = config.isOverlayV2();
+		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
+		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
+		isPersistItems = config.shouldPersistItems();
+		isPersistSpells = config.shouldPersistSpells();
+		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
+		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
+		isCursorBackgroundHidden = config.isCursorBackgroundHidden();
+		isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+		isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
+		cursorTheme = config.getCursorTheme();
+		cursorScale = (double) config.getCursorScale() / 100;
+		itemScale = (double) config.getItemScale() / 100;
+		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
+		if (client.getGameState() == GameState.LOGGED_IN)
+		{
+			isLoggedOut = false;
+		}
+		Point mousePos = client.getMouseCanvasPosition();
+		isCursorInBounds = mouseInsideBounds(mousePos, client);
+
 		contextualCursorGson = buildGson(runeliteGson);
 
 		updateCursorDefinition();
@@ -266,30 +291,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(mouseListener);
 
-		if (client.getGameState() == GameState.LOGGED_IN)
-		{
-			isLoggedOut = false;
-		}
-
-		Point mousePos = client.getMouseCanvasPosition();
-		isCursorInBounds = mouseInsideBounds(mousePos, client);
-
+		// Provide initial values to all subscribers
 		callbacks.add(cursorProvider);
 		callbacks.add(stateProvider);
-		callbacks.add(drawOverlayV2);
-
-		isOverlayV2 = config.isOverlayV2();
-		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
 		updateScaleEnabled();
 		updateTheme();
-		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
 		updateIgnores();
 		updateScale();
-		isPersistItems = config.shouldPersistItems();
-		isPersistSpells = config.shouldPersistSpells();
-		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
-		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
-		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
 		contextualCursorWorkerOverlay.resetCursor();
 
 		handleChangelog(config, chatMessageManager, client, isCustomCursorPluginEnabled);
@@ -312,7 +320,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 					// fall-through
 				}
 			case JAVA:
-				definition = ContextualCursor.toCursorDefinition();
+				definition = ContextualCursor.toCursorDefinition(cursorTheme == CursorTheme.OSRS);
 				break;
 		}
 
@@ -323,11 +331,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		cursors.add(new SpellCursor());
 
 		definition = definition.withCursors(cursors);
-
-		if (config.isHideCursorBackgroundEnabled())
-		{
-			definition = definition.withBackgroundCursorSprite(definition.getDefaultCursorSprite());
-		}
+		definition.updateScale(cursorScale);
 
 		cursorProvider.setDefinition(definition);
 	}
@@ -337,7 +341,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	{
 		callbacks.remove(cursorProvider);
 		callbacks.remove(stateProvider);
-		callbacks.remove(drawOverlayV2);
 
 		overlayManager.remove(contextualCursorWorkerOverlay);
 		overlayManager.remove(contextualCursorDrawOverlay);
@@ -462,7 +465,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
 				contextualCursorWorkerOverlay.resetCursor();
 			}
-			else if (event.getKey().equals(CURSOR_THEME) || event.getKey().equals(HIDE_CURSOR_BACKGROUND))
+			else if (event.getKey().equals(CURSOR_THEME))
 			{
 				updateTheme();
 			}
@@ -486,6 +489,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			else if (event.getKey().equals(OVERLAY_V2))
 			{
 				isOverlayV2 = config.isOverlayV2();
+			}
+			else if (event.getKey().equals(HIDE_CURSOR_BACKGROUND))
+			{
+				isCursorBackgroundHidden = config.isCursorBackgroundHidden();
 			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))

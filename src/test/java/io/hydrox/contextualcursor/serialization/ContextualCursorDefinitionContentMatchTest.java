@@ -4,7 +4,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGs
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadLocalCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
-import com.github.ldavid432.contextualcursor.cursor.JsonCursor;
+import com.github.ldavid432.contextualcursor.serialization.JsonCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
@@ -230,8 +230,8 @@ public class ContextualCursorDefinitionContentMatchTest
 	{
 		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "local-cursors");
 
-		Sprite defaultSprite = definition.getDefaultCursorSprite();
-		Sprite backgroundSprite = definition.getBackgroundCursorSprite();
+		Sprite defaultSprite = definition.getDefaultCursor().getSprite();
+		Sprite backgroundSprite = definition.getBackgroundCursor().getSprite();
 
 		assert defaultSprite != null : "Default cursor sprite is null";
 		assert backgroundSprite != null : "Background cursor sprite is null";

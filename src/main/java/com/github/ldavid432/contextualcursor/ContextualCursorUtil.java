@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import javax.annotation.Nullable;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
@@ -61,7 +62,8 @@ public class ContextualCursorUtil
 		}
 	}
 
-	public static Point scalePoint(Point point, double scale)
+	@NonNull
+	public static Point scalePoint(@NonNull Point point, double scale)
 	{
 		if (scale == 1.0)
 		{
@@ -232,5 +234,7 @@ public class ContextualCursorUtil
 	{
 		return !cursor.getName().equals(BLANK_CURSOR_NAME) && !cursor.getName().equals(GENERIC_CURSOR_NAME) && cursor.getType() == java.awt.Cursor.CUSTOM_CURSOR;
 	}
+
+	public static Point EMPTY_POINT = new Point(0, 0);
 
 }

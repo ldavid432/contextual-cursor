@@ -23,6 +23,10 @@ public class CursorProvider implements ProviderCallbacks
 		public void onScaleChange(double cursorScale, double itemScale)
 		{
 			clearImages();
+			if (definition != null)
+			{
+				definition.updateScale(cursorScale);
+			}
 		}
 
 		@Override

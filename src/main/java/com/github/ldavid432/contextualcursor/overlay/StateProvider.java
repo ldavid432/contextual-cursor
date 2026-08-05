@@ -4,6 +4,7 @@ import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.isExternalCustomCursor;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -39,7 +40,7 @@ public class StateProvider implements ProviderCallbacks
 	private final ClientUI clientUI;
 	private final SpriteContext spriteContext;
 
-	private Tooltip contextualCursorspacerTooltip;
+	private Tooltip contextualCursorSpacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
 	private Cursor defaultCursor = null;
 	@Setter
@@ -119,7 +120,7 @@ public class StateProvider implements ProviderCallbacks
 			sprite = spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu());
 		}
 
-		return ContextualCursorState.contextualCursor(sprite, cursorProvider.getBackgroundCursorSprite(), contextualCursorspacerTooltip);
+		return contextualCursor(sprite);
 	}
 
 	// Reset cursor to a default cursor state, one of: no custom cursor, external custom cursor, our custom cursor, or our custom overlay
@@ -147,7 +148,7 @@ public class StateProvider implements ProviderCallbacks
 		{
 			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
 			{
-				return ContextualCursorState.genericCursorOverlay(cursorProvider.getDefaultCursorSprite(), defaultCursorSpacerTooltip);
+				return ContextualCursorState.genericCursorOverlay(cursorProvider.getDefaultCursor(), defaultCursorSpacerTooltip);
 			}
 			else
 			{
@@ -165,16 +166,53 @@ public class StateProvider implements ProviderCallbacks
 		}
 	}
 
+	private ContextualCursorState contextualCursor(Sprite sprite)
+	{
+		// TODO: Cache the scaled point?
+		OffsetCursor contextualCursor = new OffsetCursor(sprite, cursorProvider.getForegroundCursorCenter());
+		contextualCursor.updateScale(plugin.getCursorScale());
+
+		if (plugin.isCursorBackgroundHidden())
+		{
+			// Merge default state + contextual state
+			ContextualCursorState defaultState = defaultCursorState();
+			if (plugin.canDefaultCursorOverrideWithOverlay())
+			{
+				return ContextualCursorState.contextualCursor(
+					contextualCursor,
+					defaultState.getCursorBackground(),
+					// TODO: Maybe this spacer should be smaller
+					contextualCursorSpacerTooltip
+				);
+			}
+			else
+			{
+				return ContextualCursorState.contextualCursorHybrid(
+					contextualCursor,
+					defaultState.getCursor()
+				);
+			}
+		}
+		else
+		{
+			return ContextualCursorState.contextualCursor(
+				contextualCursor,
+				cursorProvider.getBackgroundCursor(),
+				contextualCursorSpacerTooltip
+			);
+		}
+	}
+
 	public void updateScale()
 	{
 		int spacerHeight = (int) ((40 * plugin.getCursorScale()) - 30);
 		if (spacerHeight > 0)
 		{
-			contextualCursorspacerTooltip = new ContextualCursorTooltip("contextual-cursor-spacer", spacerHeight);
+			contextualCursorSpacerTooltip = new ContextualCursorTooltip("contextual-cursor-spacer", spacerHeight);
 		}
 		else
 		{
-			contextualCursorspacerTooltip = null;
+			contextualCursorSpacerTooltip = null;
 		}
 
 		spacerHeight = (int) ((25 * plugin.getCursorScale()) - 30);
@@ -190,7 +228,7 @@ public class StateProvider implements ProviderCallbacks
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = cursorProvider.getDefaultCursorSprite().getImage(spriteContext);
+		BufferedImage icon = cursorProvider.getDefaultCursor().getSprite().getImage(spriteContext);
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();

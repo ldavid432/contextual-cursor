@@ -27,6 +27,7 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
+import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
@@ -47,6 +48,8 @@ import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
+import static io.hydrox.contextualcursor.ContextualCursorDrawOverlay.CENTRAL_POINT;
+import static io.hydrox.contextualcursor.ContextualCursorDrawOverlay.POINTER_OFFSET;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -240,12 +243,13 @@ public enum ContextualCursor implements Cursor
 	}
 
 	@NonNull
-	public static ContextualCursorDefinition toCursorDefinition()
+	public static ContextualCursorDefinition toCursorDefinition(boolean isOSRS)
 	{
 		return new ContextualCursorDefinition(
 			List.of(values()),
-			resourceSprite().fileName("generic").build(),
-			resourceSprite().fileName("blank").build()
+			new OffsetCursor(resourceSprite().fileName("generic" + (isOSRS ? "_osrs" : "")).build()),
+			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), POINTER_OFFSET),
+			CENTRAL_POINT
 		);
 	}
 }

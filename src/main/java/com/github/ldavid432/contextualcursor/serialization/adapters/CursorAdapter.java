@@ -1,7 +1,7 @@
 package com.github.ldavid432.contextualcursor.serialization.adapters;
 
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
-import com.github.ldavid432.contextualcursor.cursor.JsonCursor;
+import com.github.ldavid432.contextualcursor.serialization.JsonCursor;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

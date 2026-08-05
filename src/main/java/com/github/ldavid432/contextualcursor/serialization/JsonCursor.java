@@ -1,5 +1,6 @@
-package com.github.ldavid432.contextualcursor.cursor;
+package com.github.ldavid432.contextualcursor.serialization;
 
+import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.AllArgsConstructor;

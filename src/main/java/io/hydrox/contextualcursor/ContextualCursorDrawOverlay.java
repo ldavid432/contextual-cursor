@@ -42,9 +42,9 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 public class ContextualCursorDrawOverlay extends Overlay
 {
 	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
-	private static final Point POINTER_OFFSET = new Point(-5, 0);
+	public static final Point POINTER_OFFSET = new Point(-5, 0);
 	//The centre of the circle (biased bottom right since it's an even size), for use with sprites
-	private static final Point CENTRAL_POINT = new Point(16, 18);
+	public static final Point CENTRAL_POINT = new Point(16, 18);
 
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
@@ -79,7 +79,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 			if (plugin.canDefaultCursorOverrideWithOverlay())
 			{
 				isDefaultCursorOverlay = true;
-				sprite = cursorProvider.getDefaultCursorSprite();
+				sprite = cursorProvider.getDefaultCursor().getSprite();
 			}
 			else
 			{
@@ -101,7 +101,7 @@ public class ContextualCursorDrawOverlay extends Overlay
 		}
 		else
 		{
-			graphics.drawImage(cursorProvider.getBackgroundCursorSprite().getImage(spriteContext), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
+			graphics.drawImage(cursorProvider.getBackgroundCursor().getSprite().getImage(spriteContext), mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
 			final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - image.getWidth(null) / 2;
 			final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - image.getHeight(null) / 2;
 			graphics.drawImage(image, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);

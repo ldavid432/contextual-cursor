@@ -25,7 +25,7 @@ public class SpriteProvider
 		}
 		else
 		{
-			sprite = Objects.requireNonNullElse(sprite, cursorProvider.getDefaultCursorSprite());
+			sprite = Objects.requireNonNullElse(sprite, cursorProvider.getDefaultCursor().getSprite());
 		}
 
 		return sprite;

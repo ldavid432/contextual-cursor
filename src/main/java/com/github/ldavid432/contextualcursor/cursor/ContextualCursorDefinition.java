@@ -1,10 +1,9 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
-import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import java.util.List;
-import javax.annotation.Nullable;
 import lombok.Value;
 import lombok.With;
+import net.runelite.api.Point;
 
 @Value
 public class ContextualCursorDefinition
@@ -13,21 +12,26 @@ public class ContextualCursorDefinition
 	List<? extends Cursor> cursors;
 
 	@With
-	Sprite defaultCursorSprite;
+	OffsetCursor defaultCursor;
 
 	@With
-	@Nullable
-	Sprite backgroundCursorSprite;
+	OffsetCursor backgroundCursor;
+
+	@With
+	Point foregroundCursorCenter;
 
 	public void clearImages() {
 		for (Cursor cursor : getCursors())
 		{
 			cursor.clearImage();
 		}
-		defaultCursorSprite.clearImage();
-		if (backgroundCursorSprite != null)
-		{
-			backgroundCursorSprite.clearImage();
-		}
+		defaultCursor.getSprite().clearImage();
+		backgroundCursor.getSprite().clearImage();
+	}
+
+	public void updateScale(double scale)
+	{
+		defaultCursor.updateScale(scale);
+		backgroundCursor.updateScale(scale);
 	}
 }

@@ -1,6 +1,6 @@
 package com.github.ldavid432.contextualcursor;
 
-import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_MOUSE;
 import java.awt.Cursor;
 import javax.annotation.Nullable;
@@ -13,34 +13,29 @@ public class ContextualCursorState {
 	@Nullable
 	Cursor cursor;
 
-	boolean isExternalCursor;
-
-	// cursor overlay
 	@Nullable
-	Sprite cursorSprite;
+	OffsetCursor cursorBackground;
 
+	// The offset here is technically the center
 	@Nullable
-	Sprite cursorBackground;
-
-	@Nullable
-	Sprite cursorForeground;
+	OffsetCursor cursorForeground;
 
 	@Nullable
 	Tooltip tooltip;
 
 	public static ContextualCursorState genericCursor(Cursor cursor)
 	{
-		return state(cursor, false, null, null, null, null);
+		return state(cursor, null, null, null);
 	}
 
-	public static ContextualCursorState genericCursorOverlay(Sprite sprite, Tooltip tooltip)
+	public static ContextualCursorState genericCursorOverlay(OffsetCursor cursor, Tooltip tooltip)
 	{
-		return state(BLANK_MOUSE, false, sprite, null, null, tooltip);
+		return state(BLANK_MOUSE, cursor, null, tooltip);
 	}
 
 	public static ContextualCursorState externalCursor(Cursor cursor)
 	{
-		return state(cursor, true, null, null, null, null);
+		return state(cursor, null, null, null);
 	}
 
 	public static ContextualCursorState clearCursor()
@@ -48,9 +43,15 @@ public class ContextualCursorState {
 		return genericCursor(null);
 	}
 
-	public static ContextualCursorState contextualCursor(Sprite foreground, Sprite background, Tooltip tooltip)
+	public static ContextualCursorState contextualCursor(OffsetCursor foreground, OffsetCursor background, Tooltip tooltip)
 	{
-		return state(BLANK_MOUSE, false, null, background, foreground, tooltip);
+		return state(BLANK_MOUSE, background, foreground, tooltip);
+	}
+
+	// Contextual cursor with background disabled and cursor overlay disabled
+	public static ContextualCursorState contextualCursorHybrid(OffsetCursor foreground, Cursor cursor)
+	{
+		return state(cursor, null, foreground, null);
 	}
 
 	@Override
@@ -58,8 +59,6 @@ public class ContextualCursorState {
 	{
 		return "ContextualCursorState{" +
 			textOrEmpty("cursor=", cursor != null ? cursor.getName() : null) +
-			textOrEmpty(", isExternalCursor=", isExternalCursor ? true : null) +
-			textOrEmpty(", cursorSprite=", cursorSprite) +
 			textOrEmpty(", cursorBackground=", cursorBackground) +
 			textOrEmpty(", cursorForeground=", cursorForeground) +
 			textOrEmpty(", tooltip=", tooltip) +

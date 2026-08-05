@@ -39,7 +39,7 @@ public interface ContextualCursorConfig extends Config
 	@ConfigItem(
 		keyName = CURSOR_THEME,
 		name = "Cursor Theme",
-		description = "Theme for the contextual cursor frame and default cursor<br>" +
+		description = "Theme for the contextual cursor background and default cursor<br>" +
 			"OldSchool: Custom-made theme to match the osrs UI<br>" +
 			"RuneScape 2: Sprites taken directly from RS2",
 		position = 0,
@@ -53,11 +53,12 @@ public interface ContextualCursorConfig extends Config
 	@ConfigItem(
 		keyName = HIDE_CURSOR_BACKGROUND,
 		name = "Hide Cursor Background",
-		description = "Hides the cursor background sprite so you will only see the inner sprites",
+		description = "Hides the contextual cursor background<br>" +
+			"The default cursor will remain visible when hovering.",
 		position = 1,
 		section = themeSection
 	)
-	default boolean isHideCursorBackgroundEnabled()
+	default boolean isCursorBackgroundHidden()
 	{
 		return false;
 	}

@@ -1,20 +1,20 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
-import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
-import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_POINT;
+import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
+import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
@@ -28,29 +28,12 @@ import net.runelite.client.ui.overlay.OverlayPosition;
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCallbacks
+public class ContextualCursorV2DrawOverlay extends Overlay
 {
-	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
-	private static final Point POINTER_OFFSET = new Point(-5, 0);
-	//The centre of the circle (biased bottom right since it's an even size), for use with sprites
-	private static final Point CENTRAL_POINT = new Point(16, 18);
-
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
 	private final ClientUI clientUi;
 	private final SpriteContext spriteContext;
-
-	private Point scaledCenterPoint = CENTRAL_POINT;
-	private Point cursorOffset = POINTER_OFFSET;
-
-	@Delegate
-	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
-		@Override
-		public void onScaleChange(double cursorScale, double itemScale)
-		{
-			updateScale();
-		}
-	};
 
 	@Inject
 	void init()
@@ -81,7 +64,7 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 			boolean isCursorChange = ((previousState != null ? previousState.getCursor() : null) != nextState.getCursor()) ||
 				// Another plugin has saved and restored our blank cursor, messing up our state. We need to restore it here
 				(clientUi.getCurrentCursor().getName().equals(BLANK_CURSOR_NAME) && nextState.getCursor() != null &&
-					!nextState.getCursor().getName().equals(BLANK_CURSOR_NAME) && !nextState.isExternalCursor());
+					!nextState.getCursor().getName().equals(BLANK_CURSOR_NAME) && nextState.getCursor().getName().equals(GENERIC_CURSOR_NAME));
 
 			plugin.setPreviousState(currentState);
 			currentState = nextState;
@@ -121,37 +104,34 @@ public class ContextualCursorV2DrawOverlay extends Overlay implements ProviderCa
 	{
 		final Point mousePos = client.getMouseCanvasPosition();
 
-		BufferedImage cursorImage = spriteImageOrNull(currentState.getCursorSprite());
-		if (cursorImage != null)
+		OffsetCursor background = currentState.getCursorBackground();
+		if (background != null)
 		{
-			graphics.drawImage(cursorImage, mousePos.getX(), mousePos.getY(), null);
+			BufferedImage backgroundImage = spriteImageOrNull(currentState.getCursorBackground().getSprite());
+			if (backgroundImage != null)
+			{
+				graphics.drawImage(backgroundImage, mousePos.getX() + background.getOffset().getX(), mousePos.getY() + background.getOffset().getY(), null);
+			}
 		}
 
-		BufferedImage backgroundImage = spriteImageOrNull(currentState.getCursorBackground());
-		if (backgroundImage != null)
+		OffsetCursor foreground = currentState.getCursorForeground();
+		if (foreground != null)
 		{
-			graphics.drawImage(backgroundImage, mousePos.getX() + cursorOffset.getX(), mousePos.getY() + cursorOffset.getY(), null);
-		}
-
-		BufferedImage foregroundImage = spriteImageOrNull(currentState.getCursorForeground());
-		if (foregroundImage != null)
-		{
-			final int spriteX = cursorOffset.getX() + scaledCenterPoint.getX() - foregroundImage.getWidth(null) / 2;
-			final int spriteY = cursorOffset.getY() + scaledCenterPoint.getY() - foregroundImage.getHeight(null) / 2;
-			graphics.drawImage(foregroundImage, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+			BufferedImage foregroundImage = spriteImageOrNull(foreground.getSprite());
+			if (foregroundImage != null)
+			{
+				Point backgroundOffset = background != null ? background.getOffset() : EMPTY_POINT;
+				final int spriteX = backgroundOffset.getX() + foreground.getOffset().getX() - foregroundImage.getWidth(null) / 2;
+				final int spriteY = backgroundOffset.getY() + foreground.getOffset().getY() - foregroundImage.getHeight(null) / 2;
+				graphics.drawImage(foregroundImage, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);
+			}
 		}
 	}
 
+	@Nullable
 	private BufferedImage spriteImageOrNull(Sprite sprite)
 	{
 		return sprite != null ? sprite.getImage(spriteContext) : null;
-	}
-
-	// TODO: Move to CursorProvider?
-	public void updateScale()
-	{
-		scaledCenterPoint = scalePoint(CENTRAL_POINT, plugin.getCursorScale());
-		cursorOffset = scalePoint(POINTER_OFFSET, plugin.getCursorScale());
 	}
 
 }

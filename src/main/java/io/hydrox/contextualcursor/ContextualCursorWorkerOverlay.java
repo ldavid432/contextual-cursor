@@ -228,7 +228,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = cursorProvider.getDefaultCursorSprite().getImage(spriteContext);
+		BufferedImage icon = cursorProvider.getDefaultCursor().getSprite().getImage(spriteContext);
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();
@@ -394,7 +394,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 		}
 		else
 		{
-			sprite = Objects.requireNonNullElse(sprite, cursorProvider.getDefaultCursorSprite());
+			sprite = Objects.requireNonNullElse(sprite, cursorProvider.getDefaultCursor().getSprite());
 		}
 
 		setSpriteToDraw(sprite);
