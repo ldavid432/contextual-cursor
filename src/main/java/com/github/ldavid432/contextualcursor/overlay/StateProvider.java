@@ -101,8 +101,13 @@ public class StateProvider implements ProviderCallbacks
 			}
 		}
 
-		// Selection takes precedence over menu entries
-		Sprite sprite = selectedItemProvider.getSelectedSprite();
+		Sprite sprite = null;
+
+		if (cache.isCursorInBounds())
+		{
+			// Selections take precedence over menu entries
+			sprite = selectedItemProvider.getSelectedSprite();
+		}
 
 		if (sprite == null)
 		{

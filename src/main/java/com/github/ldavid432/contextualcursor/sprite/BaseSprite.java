@@ -35,7 +35,12 @@ public abstract class BaseSprite implements Sprite
 
 	protected double getScale(SpriteContext context)
 	{
-		return context.getCursorScale();
+		return context.getCache().getCursorScale();
+	}
+
+	protected boolean isSmoothScalingEnabled(SpriteContext context)
+	{
+		return context.getCache().isCursorSmoothScalingEnabled();
 	}
 
 	@Override
@@ -45,7 +50,7 @@ public abstract class BaseSprite implements Sprite
 		{
 			image = getBaseImage(context);
 
-			image = scaleImage(image, getScale(context), context.isSmoothScalingEnabled());
+			image = scaleImage(image, getScale(context), isSmoothScalingEnabled(context));
 
 			if (isInverted)
 			{

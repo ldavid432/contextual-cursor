@@ -24,7 +24,13 @@ public class ItemSprite extends BaseSprite
 	@Override
 	protected double getScale(SpriteContext context)
 	{
-		return context.getItemScale();
+		return context.getCache().getItemScale();
+	}
+
+	@Override
+	protected boolean isSmoothScalingEnabled(SpriteContext context)
+	{
+		return context.getCache().isItemSmoothScalingEnabled();
 	}
 
 	@Override
