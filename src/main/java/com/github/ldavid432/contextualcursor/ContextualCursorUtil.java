@@ -39,11 +39,6 @@ import net.runelite.client.util.ImageUtil;
 @Slf4j
 public class ContextualCursorUtil
 {
-	public static BufferedImage scaleImage(BufferedImage image, ContextualCursorCache cache)
-	{
-		return scaleImage(image, cache.getCursorScale(), cache.isCursorSmoothScalingEnabled());
-	}
-
 	public static BufferedImage scaleImage(BufferedImage image, double scale, boolean isSmoothScaling)
 	{
 		if (scale == 1.0)

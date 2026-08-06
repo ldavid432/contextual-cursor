@@ -548,6 +548,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			genericSpacerTooltip = null;
 		}
 		genericCursor = null;
+		persistedSprite.clearImage();
 	}
 
 	public void updateTheme()
