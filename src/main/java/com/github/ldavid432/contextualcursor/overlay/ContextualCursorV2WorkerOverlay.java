@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Color;
@@ -30,6 +31,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 	private final ContextualCursorPlugin plugin;
 	private final TooltipManager tooltipManager;
 	private final MenuEntryProvider menuEntryProvider;
+	private final ContextualCursorCache cache;
 
 	@Inject
 	void init()
@@ -49,7 +51,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isOverlayV2())
+		if (!cache.isOverlayV2())
 		{
 			return null;
 		}
@@ -70,7 +72,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 
 	private void debugTooltip(boolean isIgnored, MenuEntry entry)
 	{
-		if (entry == null || !plugin.isDebugTooltipEnabled())
+		if (entry == null || !cache.isDebugTooltipEnabled())
 		{
 			return;
 		}

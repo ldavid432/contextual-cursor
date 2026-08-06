@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.isExternalCustomCursor;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
@@ -9,7 +10,6 @@ import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
-import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -35,10 +35,10 @@ public class StateProvider implements ProviderCallbacks
 	private final CursorProvider cursorProvider;
 	private final MenuEntryProvider menuEntryProvider;
 	private final SpriteProvider spriteProvider;
-	private final ContextualCursorPlugin plugin;
 	private final SelectedItemProvider selectedItemProvider;
 	private final ClientUI clientUI;
 	private final SpriteContext spriteContext;
+	private final ContextualCursorCache cache;
 
 	private Tooltip contextualCursorSpacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
@@ -89,9 +89,9 @@ public class StateProvider implements ProviderCallbacks
 			return ContextualCursorState.externalCursor(currentCursor);
 		}
 
-		if (plugin.isAltPressed())
+		if (cache.isAltPressed())
 		{
-			if (plugin.isCustomCursorPluginEnabled())
+			if (cache.isCustomCursorPluginEnabled())
 			{
 				return ContextualCursorState.externalCursor(lastExternalCustomCursor);
 			}
@@ -107,7 +107,7 @@ public class StateProvider implements ProviderCallbacks
 		if (sprite == null)
 		{
 			MenuEntry menuEntry = null;
-			if (plugin.isCursorInBounds())
+			if (cache.isCursorInBounds())
 			{
 				menuEntry = menuEntryProvider.getMenuEntry();
 			}
@@ -130,11 +130,11 @@ public class StateProvider implements ProviderCallbacks
 		{
 			return ContextualCursorState.externalCursor(lastExternalCustomCursor);
 		}
-		else if (plugin.canOverrideDefaultCursor())
+		else if (cache.canOverrideDefaultCursor())
 		{
 			return pluginDefaultCursorState();
 		}
-		else if (!plugin.isCustomCursorPluginEnabled())
+		else if (!cache.isCustomCursorPluginEnabled())
 		{
 			return ContextualCursorState.clearCursor();
 		}
@@ -144,9 +144,9 @@ public class StateProvider implements ProviderCallbacks
 
 	private ContextualCursorState pluginDefaultCursorState()
 	{
-		if (plugin.isDefaultCursorOverlayEnabled())
+		if (cache.isDefaultCursorOverlayEnabled())
 		{
-			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
+			if (!cache.isLoggedOut() && cache.isCursorInBounds())
 			{
 				return ContextualCursorState.genericCursorOverlay(cursorProvider.getDefaultCursor(), defaultCursorSpacerTooltip);
 			}
@@ -170,13 +170,13 @@ public class StateProvider implements ProviderCallbacks
 	{
 		// TODO: Cache the scaled point?
 		OffsetCursor contextualCursor = new OffsetCursor(sprite, cursorProvider.getForegroundCursorCenter());
-		contextualCursor.updateScale(plugin.getCursorScale());
+		contextualCursor.updateScale(cache.getCursorScale());
 
-		if (plugin.isCursorBackgroundHidden())
+		if (cache.isCursorBackgroundHidden())
 		{
 			// Merge default state + contextual state
 			ContextualCursorState defaultState = defaultCursorState();
-			if (plugin.canDefaultCursorOverrideWithOverlay())
+			if (cache.canDefaultCursorOverrideWithOverlay())
 			{
 				return ContextualCursorState.contextualCursor(
 					contextualCursor,
@@ -205,7 +205,7 @@ public class StateProvider implements ProviderCallbacks
 
 	public void updateScale()
 	{
-		int spacerHeight = (int) ((40 * plugin.getCursorScale()) - 30);
+		int spacerHeight = (int) ((40 * cache.getCursorScale()) - 30);
 		if (spacerHeight > 0)
 		{
 			contextualCursorSpacerTooltip = new ContextualCursorTooltip("contextual-cursor-spacer", spacerHeight);
@@ -215,7 +215,7 @@ public class StateProvider implements ProviderCallbacks
 			contextualCursorSpacerTooltip = null;
 		}
 
-		spacerHeight = (int) ((25 * plugin.getCursorScale()) - 30);
+		spacerHeight = (int) ((25 * cache.getCursorScale()) - 30);
 		if (spacerHeight > 0)
 		{
 			defaultCursorSpacerTooltip = new ContextualCursorTooltip("default-cursor-spacer", spacerHeight);

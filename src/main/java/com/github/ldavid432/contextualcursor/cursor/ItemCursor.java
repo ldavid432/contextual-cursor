@@ -1,12 +1,12 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
-import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import lombok.AllArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.api.MenuEntry;
@@ -15,7 +15,7 @@ import net.runelite.api.MenuEntry;
 public class ItemCursor implements Cursor
 {
 	private Client client;
-	private ContextualCursorPlugin plugin;
+	private ContextualCursorCache cache;
 
 	@Override
 	public Sprite getSprite(MenuEntry menuEntry)
@@ -32,7 +32,7 @@ public class ItemCursor implements Cursor
 	public MenuEntryMatcher getMatcher()
 	{
 		return hasAllOf(
-			e -> plugin.isShowUseItemCursorEnabled(),
+			e -> cache.isShowUseItemCursorEnabled(),
 			e -> client.isWidgetSelected() && client.getSelectedWidget() != null && client.getSelectedWidget().getItemId() > 0,
 			isWidgetTarget(),
 			hasOption("use")

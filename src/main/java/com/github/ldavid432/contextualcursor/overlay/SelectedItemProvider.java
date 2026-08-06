@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import com.google.common.cache.CacheBuilder;
@@ -22,7 +23,7 @@ import net.runelite.api.widgets.Widget;
 public class SelectedItemProvider
 {
 	private final Client client;
-	private final ContextualCursorPlugin plugin;
+	private final ContextualCursorCache cache;
 
 	private Sprite persistedSprite = null;
 	private final LoadingCache<Integer, Sprite> itemSpriteCache = CacheBuilder
@@ -64,7 +65,7 @@ public class SelectedItemProvider
 				return;
 			}
 
-			if (plugin.isShowUseItemCursorEnabled() && plugin.isPersistItems() && selectedWidget.getItemId() > 0)
+			if (cache.isShowUseItemCursorEnabled() && cache.isPersistItems() && selectedWidget.getItemId() > 0)
 			{
 				try
 				{
@@ -75,7 +76,7 @@ public class SelectedItemProvider
 					log.error("Error persisting item", e);
 				}
 			}
-			else if (plugin.isPersistSpells() &&
+			else if (cache.isPersistSpells() &&
 				selectedWidget.getParent() != null &&
 				selectedWidget.getParent().getId() == InterfaceID.MagicSpellbook.SPELLLAYER)
 			{

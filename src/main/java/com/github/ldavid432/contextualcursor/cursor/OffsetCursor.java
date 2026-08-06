@@ -3,11 +3,15 @@ package com.github.ldavid432.contextualcursor.cursor;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_POINT;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import net.runelite.api.Point;
 
+@ToString
+@EqualsAndHashCode(of = {"sprite", "offset"})
 @RequiredArgsConstructor
 public class OffsetCursor
 {

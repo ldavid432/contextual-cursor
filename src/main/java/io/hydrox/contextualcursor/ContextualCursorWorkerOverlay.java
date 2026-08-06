@@ -25,6 +25,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -39,6 +40,7 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 import java.util.stream.Stream;
 import javax.inject.Inject;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Menu;
@@ -55,6 +57,7 @@ import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 import net.runelite.client.util.ColorUtil;
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ContextualCursorWorkerOverlay extends Overlay
 {
 	public static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
@@ -73,6 +76,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	private final TooltipManager tooltipManager;
 	private final CursorProvider cursorProvider;
 	private final SpriteContext spriteContext;
+	private final ContextualCursorCache cache;
 
 	// Last top level menu entry that has a submenu
 	private MenuEntry lastSubmenuEntry;
@@ -86,20 +90,13 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	public Cursor genericCursor;
 
 	@Inject
-	ContextualCursorWorkerOverlay(Client client, ClientUI clientUI, ContextualCursorPlugin plugin,
-	                              TooltipManager tooltipManager, CursorProvider cursorProvider, SpriteContext spriteContext)
+	void init()
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		// Also allow on world map and welcome screen
 		drawAfterInterface(InterfaceID.TOPLEVEL_DISPLAY);
 		setPriority(1f);
-		this.client = client;
-		this.clientUI = clientUI;
-		this.plugin = plugin;
-		this.tooltipManager = tooltipManager;
-		this.cursorProvider = cursorProvider;
-		this.spriteContext = spriteContext;
 	}
 
 	private void storeOriginalCursor()
@@ -146,7 +143,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	void shutdown()
 	{
 		genericCursor = null;
-		if (!plugin.isCustomCursorPluginEnabled())
+		if (!cache.isCustomCursorPluginEnabled())
 		{
 			clientUI.resetCursor();
 		}
@@ -154,7 +151,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	void resetCursor()
 	{
-		if (plugin.isOverlayV2()) return;
+		if (cache.isOverlayV2()) return;
 
 		if (cursorOverriden)
 		{
@@ -167,11 +164,11 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			}
 		}
 
-		if (plugin.canOverrideDefaultCursor())
+		if (cache.canOverrideDefaultCursor())
 		{
 			setGenericCursor();
 		}
-		else if (!plugin.isCustomCursorPluginEnabled())
+		else if (!cache.isCustomCursorPluginEnabled())
 		{
 			log.debug("Resetting cursor (resetCursor)");
 			clientUI.resetCursor();
@@ -202,9 +199,9 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private void setGenericCursor()
 	{
-		if (plugin.isDefaultCursorOverlayEnabled())
+		if (cache.isDefaultCursorOverlayEnabled())
 		{
-			if (!plugin.isLoggedOut() && plugin.isCursorInBounds())
+			if (!cache.isLoggedOut() && cache.isCursorInBounds())
 			{
 				log.debug("Restoring Generic overlay cursor");
 				clientUI.setCursor(BLANK_MOUSE);
@@ -256,7 +253,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (plugin.isOverlayV2() || plugin.isAltPressed() || !plugin.isCursorInBounds())
+		if (cache.isOverlayV2() || cache.isAltPressed() || !cache.isCursorInBounds())
 		{
 			return null;
 		}
@@ -301,7 +298,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			{
 				resetCursor();
 			}
-			else if (plugin.canDefaultCursorOverrideWithOverlay())
+			else if (cache.canDefaultCursorOverrideWithOverlay())
 			{
 				if (genericSpacerTooltip != null)
 				{
@@ -417,7 +414,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 					return false;
 				}
 				// TODO: Separate these two booleans, theoretically we should grab the sprite from the plugin when isShowUseItemCursorEnabled is on? - if other item sprites are added then isPersistItems grab find those too
-				if (plugin.isShowUseItemCursorEnabled() && plugin.isPersistItems() && selectedWidget.getItemId() > 0)
+				if (cache.isShowUseItemCursorEnabled() && cache.isPersistItems() && selectedWidget.getItemId() > 0)
 				{
 					log.debug("Persisting item {}", selectedWidget.getItemId());
 					// TODO: Item sprite cache
@@ -425,7 +422,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 					setSpriteToDraw(persistedSprite);
 					return true;
 				}
-				else if (plugin.isPersistSpells() &&
+				else if (cache.isPersistSpells() &&
 					selectedWidget.getParent() != null &&
 					selectedWidget.getParent().getId() == InterfaceID.MagicSpellbook.SPELLLAYER)
 				{
@@ -480,7 +477,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	private void debugTooltip(boolean isIgnored, MenuEntry entry)
 	{
-		if (entry == null || !plugin.isDebugTooltipEnabled())
+		if (entry == null || !cache.isDebugTooltipEnabled())
 		{
 			return;
 		}
@@ -527,7 +524,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	public void updateScale()
 	{
-		int spacerHeight = (int) ((40 * plugin.getCursorScale()) - 30);
+		int spacerHeight = (int) ((40 * cache.getCursorScale()) - 30);
 		if (spacerHeight > 0)
 		{
 			spacerTooltip = new Tooltip(
@@ -539,7 +536,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 			spacerTooltip = null;
 		}
 
-		spacerHeight = (int) ((25 * plugin.getCursorScale()) - 30);
+		spacerHeight = (int) ((25 * cache.getCursorScale()) - 30);
 		if (spacerHeight > 0)
 		{
 			genericSpacerTooltip = new Tooltip(
@@ -560,7 +557,7 @@ public class ContextualCursorWorkerOverlay extends Overlay
 
 	public void genericOverlayToggled()
 	{
-		if (!plugin.canOverrideDefaultCursor())
+		if (!cache.canOverrideDefaultCursor())
 		{
 			return;
 		}

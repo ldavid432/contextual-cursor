@@ -25,6 +25,7 @@
  */
 package io.hydrox.contextualcursor;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -33,12 +34,14 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
+import lombok.RequiredArgsConstructor;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ContextualCursorDrawOverlay extends Overlay
 {
 	//The pointer sticks out to the left slightly, so this makes sure it's point to the correct spot
@@ -50,33 +53,30 @@ public class ContextualCursorDrawOverlay extends Overlay
 	private final ContextualCursorPlugin plugin;
 	private final SpriteContext spriteContext;
 	private final CursorProvider cursorProvider;
+	private final ContextualCursorCache cache;
 
 	private Point scaledCenterPoint = CENTRAL_POINT;
 	private Point cursorOffset = POINTER_OFFSET;
 
 	@Inject
-	ContextualCursorDrawOverlay(Client client, ContextualCursorPlugin plugin, SpriteContext spriteContext, CursorProvider cursorProvider)
+	void init()
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);
 		setPriority(1f);
-		this.client = client;
-		this.plugin = plugin;
-		this.spriteContext = spriteContext;
-		this.cursorProvider = cursorProvider;
 	}
 
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (plugin.isOverlayV2()) return null;
+		if (cache.isOverlayV2()) return null;
 
 		Sprite sprite = plugin.getSpriteToDraw();
 		boolean isDefaultCursorOverlay = false;
 
 		if (sprite == null)
 		{
-			if (plugin.canDefaultCursorOverrideWithOverlay())
+			if (cache.canDefaultCursorOverrideWithOverlay())
 			{
 				isDefaultCursorOverlay = true;
 				sprite = cursorProvider.getDefaultCursor().getSprite();
@@ -112,8 +112,8 @@ public class ContextualCursorDrawOverlay extends Overlay
 
 	public void updateScale()
 	{
-		scaledCenterPoint = scalePoint(CENTRAL_POINT, plugin.getCursorScale());
-		cursorOffset = scalePoint(POINTER_OFFSET, plugin.getCursorScale());
+		scaledCenterPoint = scalePoint(CENTRAL_POINT, cache.getCursorScale());
+		cursorOffset = scalePoint(POINTER_OFFSET, cache.getCursorScale());
 	}
 
 }
