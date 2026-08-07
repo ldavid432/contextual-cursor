@@ -21,6 +21,8 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
     - The only real drawback is that the overlay is slightly slower than the actual cursor speed, so it will lag behind slightly. 
     **Typically, this is not noticeable.**
     - Also note: The overlay cursor will not be visible on the RL side panel or when you are logged out (will default to system cursor).
+- Misc
+  - Hide background - hides the contextual cursor background, so you'll see your regular mouse cursor plus a floating sprite on hover
 
 ### Missing Features vs RSHD (and other known issues):
 * RL tooltips are partially underneath the cursor when they're displayed below the cursor

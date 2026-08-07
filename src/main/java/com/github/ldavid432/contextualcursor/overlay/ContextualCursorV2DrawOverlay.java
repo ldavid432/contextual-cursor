@@ -2,13 +2,13 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.BLANK_CURSOR_NAME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_POINT;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.GENERIC_CURSOR_NAME;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics2D;

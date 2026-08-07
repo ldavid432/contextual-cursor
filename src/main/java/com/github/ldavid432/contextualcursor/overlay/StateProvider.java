@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.GENERIC_CURSOR_NAME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.isExternalCustomCursor;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
@@ -10,7 +11,6 @@ import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -173,9 +173,7 @@ public class StateProvider implements ProviderCallbacks
 
 	private ContextualCursorState contextualCursor(Sprite sprite)
 	{
-		// TODO: Cache the scaled point?
 		OffsetCursor contextualCursor = new OffsetCursor(sprite, cursorProvider.getForegroundCursorCenter());
-		contextualCursor.updateScale(cache.getCursorScale());
 
 		if (cache.isCursorBackgroundHidden())
 		{

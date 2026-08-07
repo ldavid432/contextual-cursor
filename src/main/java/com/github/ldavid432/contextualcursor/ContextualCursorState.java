@@ -1,7 +1,7 @@
 package com.github.ldavid432.contextualcursor;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.BLANK_MOUSE;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_MOUSE;
 import java.awt.Cursor;
 import javax.annotation.Nullable;
 import lombok.Value;

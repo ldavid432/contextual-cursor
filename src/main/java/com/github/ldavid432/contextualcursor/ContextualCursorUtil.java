@@ -15,11 +15,10 @@ import com.github.ldavid432.contextualcursor.sprite.BaseSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.gson.Gson;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.BLANK_CURSOR_NAME;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.GENERIC_CURSOR_NAME;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -231,5 +230,14 @@ public class ContextualCursorUtil
 	}
 
 	public static Point EMPTY_POINT = new Point(0, 0);
+	public static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
+	public static final String GENERIC_CURSOR_NAME = "contextual-cursor-generic";
+	public static final java.awt.Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(
+		new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB),
+		new java.awt.Point(0, 0),
+		BLANK_CURSOR_NAME
+	);
+	public static final int MENU_OPTION_HEIGHT = 15;
+	public static final int MENU_EXTRA_TOP = 4;
 
 }

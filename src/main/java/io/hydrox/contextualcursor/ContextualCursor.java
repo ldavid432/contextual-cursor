@@ -48,14 +48,13 @@ import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
-import static io.hydrox.contextualcursor.ContextualCursorDrawOverlay.CENTRAL_POINT;
-import static io.hydrox.contextualcursor.ContextualCursorDrawOverlay.POINTER_OFFSET;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.Point;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.SpriteID;
 
@@ -248,8 +247,8 @@ public enum ContextualCursor implements Cursor
 		return new ContextualCursorDefinition(
 			List.of(values()),
 			new OffsetCursor(resourceSprite().fileName("generic" + (isOSRS ? "_osrs" : "")).build()),
-			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), POINTER_OFFSET),
-			CENTRAL_POINT
+			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), new Point(-5, 0)),
+			new Point(16, 18)
 		);
 	}
 }

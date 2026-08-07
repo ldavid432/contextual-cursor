@@ -33,7 +33,6 @@ public class ContextualCursorCache
 			config.shouldPersistSpells(),
 			config.shouldPersistItems(),
 			config.isShowUseItemCursorEnabled(),
-			config.isOverlayV2(),
 			config.isCursorBackgroundHidden(),
 			config.isDebugTooltipEnabled(),
 			config.getCursorTheme(),
@@ -54,7 +53,6 @@ public class ContextualCursorCache
 	private boolean isPersistSpells;
 	private boolean isPersistItems;
 	private boolean isShowUseItemCursorEnabled;
-	private boolean isOverlayV2;
 	private boolean isCursorBackgroundHidden;
 	private boolean isDebugTooltipEnabled;
 	private CursorTheme cursorTheme;

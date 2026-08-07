@@ -1,9 +1,9 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.MENU_EXTRA_TOP;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.MENU_OPTION_HEIGHT;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.MENU_EXTRA_TOP;
-import static io.hydrox.contextualcursor.ContextualCursorWorkerOverlay.MENU_OPTION_HEIGHT;
 import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
