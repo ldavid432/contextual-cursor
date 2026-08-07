@@ -1,18 +1,12 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_POINT;
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.With;
-import net.runelite.api.Point;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ContextualCursorDefinition
 {
 	@With
@@ -25,11 +19,10 @@ public class ContextualCursorDefinition
 	private final OffsetCursor backgroundCursor;
 
 	@With
-	private final Point foregroundCursorCenter;
+	private final ScaledPoint foregroundCursorCenter;
 
-	private transient Point scaledForegroundCursorCenter = EMPTY_POINT;
-
-	public void clearImages() {
+	public void clearImages()
+	{
 		for (Cursor cursor : getCursors())
 		{
 			cursor.clearImage();
@@ -42,11 +35,6 @@ public class ContextualCursorDefinition
 	{
 		defaultCursor.updateScale(scale);
 		backgroundCursor.updateScale(scale);
-		scaledForegroundCursorCenter = scalePoint(foregroundCursorCenter, scale);
-	}
-
-	public Point getForegroundCursorCenter()
-	{
-		return scaledForegroundCursorCenter;
+		foregroundCursorCenter.updateScale(scale);
 	}
 }

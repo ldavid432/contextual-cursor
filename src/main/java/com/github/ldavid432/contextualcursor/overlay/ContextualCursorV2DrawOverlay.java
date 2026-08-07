@@ -1,11 +1,11 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
-import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.BLANK_CURSOR_NAME;
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_POINT;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_SCALED_POINT;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.GENERIC_CURSOR_NAME;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
+import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
@@ -35,7 +35,6 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 	private final ContextualCursorPlugin plugin;
 	private final ClientUI clientUi;
 	private final SpriteContext spriteContext;
-	private final ContextualCursorCache cache;
 
 	@Inject
 	void init()
@@ -117,7 +116,7 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 			BufferedImage foregroundImage = spriteImageOrNull(foreground.getSprite());
 			if (foregroundImage != null)
 			{
-				Point backgroundOffset = background != null ? background.getOffset() : EMPTY_POINT;
+				ScaledPoint backgroundOffset = background != null ? background.getOffset() : EMPTY_SCALED_POINT;
 				final int spriteX = backgroundOffset.getX() + foreground.getOffset().getX() - foregroundImage.getWidth(null) / 2;
 				final int spriteY = backgroundOffset.getY() + foreground.getOffset().getY() - foregroundImage.getHeight(null) / 2;
 				graphics.drawImage(foregroundImage, mousePos.getX() + spriteX, mousePos.getY() + spriteY, null);

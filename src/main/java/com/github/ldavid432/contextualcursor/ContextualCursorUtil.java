@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
+import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
@@ -229,7 +230,7 @@ public class ContextualCursorUtil
 		return !cursor.getName().equals(BLANK_CURSOR_NAME) && !cursor.getName().equals(GENERIC_CURSOR_NAME) && cursor.getType() == java.awt.Cursor.CUSTOM_CURSOR;
 	}
 
-	public static Point EMPTY_POINT = new Point(0, 0);
+	public static ScaledPoint EMPTY_SCALED_POINT = new ScaledPoint(0, 0);
 	public static final String BLANK_CURSOR_NAME = "contextual-cursor-blank";
 	public static final String GENERIC_CURSOR_NAME = "contextual-cursor-generic";
 	public static final java.awt.Cursor BLANK_MOUSE = Toolkit.getDefaultToolkit().createCustomCursor(

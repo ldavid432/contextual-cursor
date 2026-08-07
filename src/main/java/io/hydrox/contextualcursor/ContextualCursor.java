@@ -28,6 +28,7 @@ package io.hydrox.contextualcursor;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
+import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
@@ -54,7 +55,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.Point;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.SpriteID;
 
@@ -246,9 +246,9 @@ public enum ContextualCursor implements Cursor
 	{
 		return new ContextualCursorDefinition(
 			List.of(values()),
-			new OffsetCursor(resourceSprite().fileName("generic" + (isOSRS ? "_osrs" : "")).build()),
-			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), new Point(-5, 0)),
-			new Point(16, 18)
+			new OffsetCursor(resourceSprite().fileName("generic" + (isOSRS ? "_osrs" : "")).build(), new ScaledPoint(0, 0)),
+			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), new ScaledPoint(-5, 0)),
+			new ScaledPoint(16, 18)
 		);
 	}
 }

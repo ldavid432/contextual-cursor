@@ -1,14 +1,11 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_POINT;
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.scalePoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import net.runelite.api.Point;
 
 @ToString
 @EqualsAndHashCode(of = {"sprite", "offset"})
@@ -17,25 +14,13 @@ public class OffsetCursor
 {
 	@Getter
 	private final Sprite sprite;
+	@Getter
 	@NonNull
-	private final Point offset;
-
-	@NonNull
-	private transient Point scaledOffset = EMPTY_POINT;
-
-	public OffsetCursor(Sprite sprite)
-	{
-		this.sprite = sprite;
-		this.offset = EMPTY_POINT;
-	}
-
-	public Point getOffset()
-	{
-		return scaledOffset;
-	}
+	private final ScaledPoint offset;
 
 	public void updateScale(double scale)
 	{
-		scaledOffset = scalePoint(offset, scale);
+		offset.updateScale(scale);
 	}
 }
+
