@@ -48,11 +48,6 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!cache.isOverlayV2())
-		{
-			return null;
-		}
-
 		final ContextualCursorState nextState = plugin.getNextState();
 		ContextualCursorState currentState = plugin.getCurrentState();
 
