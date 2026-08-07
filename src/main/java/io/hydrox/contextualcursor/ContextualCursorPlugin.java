@@ -239,6 +239,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Override
 	protected void shutDown()
 	{
+		callCallbacks(ProviderCallbacks::onShutdown);
+
 		callbacks.remove(cursorProvider);
 		callbacks.remove(stateProvider);
 		callbacks.remove(selectedItemProvider);
