@@ -30,7 +30,7 @@ public class ContextualCursorDefinitionContentMatchTest
 	@Test
 	public void test_EveryEnumCursor_HasIdenticalJsonContent()
 	{
-		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "local-cursors");
+		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "rs2-cursors");
 
 		ContextualCursor[] enumCursors = ContextualCursor.values();
 		List<? extends Cursor> jsonCursors = definition.getCursors();
@@ -228,7 +228,7 @@ public class ContextualCursorDefinitionContentMatchTest
 	@Test
 	public void test_DefaultAndBackgroundSprites_AreIdentical()
 	{
-		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "local-cursors");
+		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "rs2-cursors");
 
 		Sprite defaultSprite = definition.getDefaultCursor().getSprite();
 		Sprite backgroundSprite = definition.getBackgroundCursor().getSprite();
@@ -260,7 +260,7 @@ public class ContextualCursorDefinitionContentMatchTest
 	@Test
 	public void test_AllCursors_AreJsonCursorType()
 	{
-		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "local-cursors");
+		ContextualCursorDefinition definition = loadLocalCursorDefinition(gson, "rs2-cursors");
 
 		for (int i = 0; i < definition.getCursors().size(); i++)
 		{
