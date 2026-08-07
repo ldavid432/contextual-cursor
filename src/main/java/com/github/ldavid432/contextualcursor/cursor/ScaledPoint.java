@@ -3,7 +3,8 @@ package com.github.ldavid432.contextualcursor.cursor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ScaledPoint {
+public class ScaledPoint
+{
 	private final int x;
 	private final int y;
 
@@ -19,7 +20,7 @@ public class ScaledPoint {
 	{
 		return scaledY;
 	}
-	
+
 	public void updateScale(double scale)
 	{
 		scaledX = (int) (x * scale);

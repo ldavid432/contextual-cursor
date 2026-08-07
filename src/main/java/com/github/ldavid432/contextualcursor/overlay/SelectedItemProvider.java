@@ -46,7 +46,8 @@ public class SelectedItemProvider implements ProviderCallbacks
 		);
 
 	@Delegate
-	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
+	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks()
+	{
 		@Override
 		public void onScaleSmoothingChange(boolean cursorSmoothing, boolean itemSmoothing)
 		{
@@ -99,7 +100,8 @@ public class SelectedItemProvider implements ProviderCallbacks
 				{
 					log.debug("Persisting item {}", selectedWidget.getItemId());
 					persistedSprite = itemSpriteCache.get(selectedWidget.getItemId());
-				} catch (ExecutionException e)
+				}
+				catch (ExecutionException e)
 				{
 					log.error("Error persisting item", e);
 				}

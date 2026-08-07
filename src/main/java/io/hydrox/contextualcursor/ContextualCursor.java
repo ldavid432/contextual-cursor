@@ -166,7 +166,7 @@ public enum ContextualCursor implements Cursor
 	HUNTER(SpriteID.Staticons2.HUNTER, "catch", "lay", "set-trap", "fur clothing", "fur-clothing",
 		"quick-falcon", "trap", "tease", "hide-in", "spear",
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
-	MAGIC(SpriteID.Staticons.MAGIC,"spellbook", "teleport", "teleport menu", "study",
+	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu", "study",
 		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip", "mine-through"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter", "bask", "sacrifice", "worship", "bless", "recharge-prayer"),

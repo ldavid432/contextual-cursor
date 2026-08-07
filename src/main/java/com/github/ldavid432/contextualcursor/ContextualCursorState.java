@@ -8,7 +8,8 @@ import lombok.Value;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
 
 @Value(staticConstructor = "state")
-public class ContextualCursorState {
+public class ContextualCursorState
+{
 	// actual cursor
 	@Nullable
 	Cursor cursor;

@@ -95,7 +95,7 @@ public class ContextualCursorUtil
 	}
 
 	public static void handleChangelog(ContextualCursorConfig config, ChatMessageManager chatMessageManager, Client client,
-									   boolean isCustomCursorPluginEnabled)
+	                                   boolean isCustomCursorPluginEnabled)
 	{
 		if (config.getLastSeenVersion() >= ContextualCursorConfig.CURRENT_VERSION)
 		{
