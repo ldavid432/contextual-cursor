@@ -96,6 +96,8 @@ public enum ContextualCursor implements Cursor
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
 	SEARCH("search", "examine", "view", "inspect", "investigate", "peek", "admire", "look", "check",
 		optionStartsWith("look-"),
+		optionStartsWith("check-"),
+		optionStartsWith("check "),
 		hasAllOf(hasOption("search"), not(targetNamed("wiki"))),
 		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
 	),
