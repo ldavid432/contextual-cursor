@@ -1,19 +1,24 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
+import com.github.ldavid432.contextualcursor.config.CursorBackgroundMode;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import java.util.Objects;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.RequiredArgsConstructor;
 import net.runelite.api.MenuEntry;
 
 // TODO: This is really small, is it needed?
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SpriteProvider
 {
-	@Inject
-	private CursorProvider cursorProvider;
+	private final CursorProvider cursorProvider;
+	private final ContextualCursorCache cache;
 
+	@Nullable
 	public Sprite getSprite(MenuEntry menuEntry, MenuEntry lastSubmenuEntry, boolean isSubMenu)
 	{
 		Sprite sprite = cursorProvider.getSprite(menuEntry);
@@ -25,7 +30,10 @@ public class SpriteProvider
 		}
 		else
 		{
-			sprite = Objects.requireNonNullElse(sprite, cursorProvider.getDefaultCursor().getSprite());
+			if (sprite == null && cache.getCursorBackgroundMode() == CursorBackgroundMode.FOR_ANY_ACTION)
+			{
+				sprite = cursorProvider.getDefaultCursor().getSprite();
+			}
 		}
 
 		return sprite;

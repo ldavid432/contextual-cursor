@@ -1,5 +1,11 @@
 package com.github.ldavid432.contextualcursor;
 
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_BACKGROUND_MODE;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GROUP;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.HIDE_CURSOR_BACKGROUND;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.LAST_UPDATE_SEEN;
+import com.github.ldavid432.contextualcursor.config.CursorBackgroundMode;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
@@ -33,6 +39,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.Point;
 import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.chat.QueuedMessage;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.ImageUtil;
 
@@ -95,7 +102,7 @@ public class ContextualCursorUtil
 	}
 
 	public static void handleChangelog(ContextualCursorConfig config, ChatMessageManager chatMessageManager, Client client,
-	                                   boolean isCustomCursorPluginEnabled)
+	                                   boolean isCustomCursorPluginEnabled, ConfigManager configManager)
 	{
 		if (config.getLastSeenVersion() >= ContextualCursorConfig.CURRENT_VERSION)
 		{
@@ -125,7 +132,7 @@ public class ContextualCursorUtil
 				{
 					// Ideally this would be true by default, but we don't want to suddenly enable it for everyone who's been using this plugin for years.
 					// For now only enable by default for new users (if they don't already have a custom cursor)
-					config.setCustomCursorEnabled(true);
+					configManager.setConfiguration(GROUP, CUSTOM_CURSOR, true);
 				}
 			}
 		}
@@ -149,12 +156,31 @@ public class ContextualCursorUtil
 				.append(changelogLine("These new additions can be configured in the settings if desired (default on)"));
 		}
 
+		// 2.1.0
+		if (config.getLastSeenVersion() < 4)
+		{
+			// Migrate cursor hiding boolean to CursorBackgroundMode
+			if (configManager.getConfiguration(GROUP, HIDE_CURSOR_BACKGROUND, Boolean.class) == Boolean.TRUE)
+			{
+				configManager.setConfiguration(GROUP, CURSOR_BACKGROUND_MODE, CursorBackgroundMode.NEVER);
+			}
+			configManager.unsetConfiguration(GROUP, HIDE_CURSOR_BACKGROUND);
+
+			if (client.getGameState() != GameState.LOGGED_IN)
+			{
+				// Existing install
+				builder
+					.append(changelogLine("A new option determining when to show the contextual background was added!"))
+					.append(changelogLine("By default it now shows for only contextual actions instead of all actions"))
+					.append(changelogLine("This can be configured in the settings if you preferred the previous behavior"));
+			}
+		}
+
 		if (builder.length() != 0)
 		{
 			builder.insert(0, changelogLine("Contextual Cursor has been updated!", true, false));
 			int lastNewlineIndex = builder.lastIndexOf("<br>");
 			builder.replace(lastNewlineIndex, lastNewlineIndex + 4, "");
-
 
 			chatMessageManager.queue(
 				QueuedMessage.builder()
@@ -164,7 +190,7 @@ public class ContextualCursorUtil
 			);
 		}
 
-		config.setLastSeenVersion(ContextualCursorConfig.CURRENT_VERSION);
+		configManager.setConfiguration(GROUP, LAST_UPDATE_SEEN, ContextualCursorConfig.CURRENT_VERSION);
 	}
 
 	private static String changelogLine(String text)

@@ -27,11 +27,11 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorConfig;
+import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_BACKGROUND_MODE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CURSOR_THEME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.CUSTOM_CURSOR;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEBUG_TOOLTIP;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.DEFAULT_CURSOR_OVERLAY;
-import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.HIDE_CURSOR_BACKGROUND;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.ITEM_SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.PERSIST_ITEMS;
@@ -127,6 +127,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private ChatMessageManager chatMessageManager;
 
 	@Inject
+	private ConfigManager configManager;
+
+	@Inject
 	private CursorProvider cursorProvider;
 
 	@Inject
@@ -200,7 +203,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		updateIgnores();
 		updateScale();
 
-		handleChangelog(config, chatMessageManager, client, cache.isCustomCursorPluginEnabled());
+		handleChangelog(config, chatMessageManager, client, cache.isCustomCursorPluginEnabled(), configManager);
 	}
 
 	private void updateCursorDefinition()
@@ -228,7 +231,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 		List<Cursor> cursors = new ArrayList<>(definition.getCursors());
 		cursors.add(0, new ItemCursor(client, cache));
-		cursors.add(new SpellCursor());
+		cursors.add(1, new SpellCursor());
 
 		definition = definition.withCursors(cursors);
 		definition.updateScale(cache.getCursorScale());
@@ -361,9 +364,9 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			{
 				cache.setShowUseItemCursorEnabled(config.isShowUseItemCursorEnabled());
 			}
-			else if (event.getKey().equals(HIDE_CURSOR_BACKGROUND))
+			else if (event.getKey().equals(CURSOR_BACKGROUND_MODE))
 			{
-				cache.setCursorBackgroundHidden(config.isCursorBackgroundHidden());
+				cache.setCursorBackgroundMode(config.getCursorBackgroundMode());
 			}
 		}
 		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))

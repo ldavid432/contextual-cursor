@@ -18,8 +18,8 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 - Default cursor
   - Override the default mouse cursor (if custom cursor plugin is OFF) to match your theme
   - Use overlay for default cursor - replaces the default cursor with a RuneLite overlay
-    - The main benefits of this are: Better scaling (size isn't limited by the OS) and improved color support 
-    (Java **significantly** whitewashes the default cursor colors)
+    - The main benefits of this are: Better scaling (size isn't limited by the OS) and improved color support for AMD GPUs on Windows
+    (AMD GPUs on Windows **significantly** whitewash the default cursor colors)
     - The only real drawback is that the overlay is slightly slower than the actual cursor speed, so it will lag behind slightly. 
     **Typically, this is not noticeable.**
     - Also note: The overlay cursor will not be visible on the RL side panel or when you are logged out (will default to system cursor).
@@ -29,7 +29,7 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
   - Persist Items - When an item is selected for use always show the cursor (even if you aren't hovering another item)
   - Persist Spells - When a spell is selected for manual cast always show the cursor (even if you aren't hovering a target)
 
-### Missing Features vs RSHD (and other known issues):
+### Known issues:
 * RL tooltips are partially underneath the cursor when they're displayed below the cursor
 * Many things that should have contextual cursors don't. **Feel free to make an issue suggesting them.**
 * Some menu options may have overlapping functions in different places which currently result in mismatched cursors. **Feel free to make an issue about any you find.**

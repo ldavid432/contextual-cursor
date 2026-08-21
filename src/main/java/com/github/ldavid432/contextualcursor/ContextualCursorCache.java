@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.mouseInsideBounds;
+import com.github.ldavid432.contextualcursor.config.CursorBackgroundMode;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,9 +34,9 @@ public class ContextualCursorCache
 			config.shouldPersistSpells(),
 			config.shouldPersistItems(),
 			config.isShowUseItemCursorEnabled(),
-			config.isCursorBackgroundHidden(),
 			config.isDebugTooltipEnabled(),
 			config.getCursorTheme(),
+			config.getCursorBackgroundMode(),
 			pluginManager.isPluginActive(customCursorPlugin),
 			client.getGameState() != GameState.LOGGED_IN,
 			mouseInsideBounds(client.getMouseCanvasPosition(), client),
@@ -53,9 +54,9 @@ public class ContextualCursorCache
 	private boolean isPersistSpells;
 	private boolean isPersistItems;
 	private boolean isShowUseItemCursorEnabled;
-	private boolean isCursorBackgroundHidden;
 	private boolean isDebugTooltipEnabled;
 	private CursorTheme cursorTheme;
+	private CursorBackgroundMode cursorBackgroundMode;
 
 	// non-config values
 	private boolean isCustomCursorPluginEnabled;

@@ -1,6 +1,7 @@
 package com.github.ldavid432.contextualcursor;
 
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.GROUP;
+import com.github.ldavid432.contextualcursor.config.CursorBackgroundMode;
 import com.github.ldavid432.contextualcursor.config.CursorSource;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import net.runelite.client.config.Config;
@@ -27,6 +28,8 @@ public interface ContextualCursorConfig extends Config
 	String PERSIST_ITEMS = "persistItems";
 	String PERSIST_SPELLS = "persistSpells";
 	String HIDE_CURSOR_BACKGROUND = "hideCursorBackground";
+	String CURSOR_BACKGROUND_MODE = "cursorBackgroundMode";
+	String LAST_UPDATE_SEEN = "lastUpdateSeen";
 
 	@ConfigSection(
 		name = "Theme",
@@ -50,16 +53,19 @@ public interface ContextualCursorConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = HIDE_CURSOR_BACKGROUND,
-		name = "Hide Cursor Background",
-		description = "Hides the contextual cursor background<br>" +
-			"The default cursor will remain visible when hovering.",
+		keyName = CURSOR_BACKGROUND_MODE,
+		name = "Background",
+		description = "Set when to show the contextual background frame<br>" +
+			"Never: Always keep the default cursor shown, contextual sprites will float next to it<br>" +
+			"For contextual actions: Show the background behinds contextual sprites only (same as RS2)<br>" +
+			"For any action: Show the background on all <strong>non-ignored</strong> actions, even non-contextual actions<br>" +
+			"Previously, 'For any action' was the default",
 		position = 1,
 		section = themeSection
 	)
-	default boolean isCursorBackgroundHidden()
+	default CursorBackgroundMode getCursorBackgroundMode()
 	{
-		return false;
+		return CursorBackgroundMode.FOR_CONTEXTUAL;
 	}
 
 	@ConfigItem(
@@ -107,13 +113,6 @@ public interface ContextualCursorConfig extends Config
 	{
 		return false;
 	}
-
-	@ConfigItem(
-		name = "",
-		description = "",
-		keyName = CUSTOM_CURSOR
-	)
-	void setCustomCursorEnabled(boolean enabled);
 
 	@ConfigItem(
 		name = "Use overlay for default cursor",
@@ -351,24 +350,17 @@ public interface ContextualCursorConfig extends Config
 		return false;
 	}
 
-	int CURRENT_VERSION = 3;
+	int CURRENT_VERSION = 4;
 
 	@ConfigItem(
-		name = "",
+		name = "Last seen version",
 		description = "",
-		keyName = "lastUpdateSeen",
+		keyName = LAST_UPDATE_SEEN,
 		hidden = true
 	)
 	default int getLastSeenVersion()
 	{
 		return 0;
 	}
-
-	@ConfigItem(
-		name = "",
-		description = "",
-		keyName = "lastUpdateSeen"
-	)
-	void setLastSeenVersion(int lastSeenVersion);
 
 }

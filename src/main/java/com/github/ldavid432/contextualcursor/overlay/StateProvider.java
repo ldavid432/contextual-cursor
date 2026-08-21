@@ -4,6 +4,7 @@ import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.GENERIC_CURSOR_NAME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.isExternalCustomCursor;
+import com.github.ldavid432.contextualcursor.config.CursorBackgroundMode;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
@@ -15,6 +16,7 @@ import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -123,6 +125,11 @@ public class StateProvider implements ProviderCallbacks
 			}
 
 			sprite = spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu());
+
+			if (sprite == null)
+			{
+				return defaultCursorState();
+			}
 		}
 
 		return contextualCursor(sprite);
@@ -171,11 +178,11 @@ public class StateProvider implements ProviderCallbacks
 		}
 	}
 
-	private ContextualCursorState contextualCursor(Sprite sprite)
+	private ContextualCursorState contextualCursor(@Nonnull Sprite sprite)
 	{
 		OffsetCursor contextualCursor = new OffsetCursor(sprite, cursorProvider.getForegroundCursorCenter());
 
-		if (cache.isCursorBackgroundHidden())
+		if (cache.getCursorBackgroundMode() == CursorBackgroundMode.NEVER)
 		{
 			// Merge default state + contextual state
 			ContextualCursorState defaultState = defaultCursorState();
