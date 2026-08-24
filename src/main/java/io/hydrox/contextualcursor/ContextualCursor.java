@@ -113,6 +113,7 @@ public enum ContextualCursor implements Cursor
 		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
 	),
 	SKUll(SpriteID.HEADICONS_PK, "skull"),
+	STATS(SpriteID.SideiconsInterface.STATS, "statistics", "stats", "view stats", "league-statistics"),
 	TALK("talk", "talk", "talk-to", "talk to", "command", optionStartsWith("tell-")),
 	TRAVEL("travel", "travel", "zanaris", "charter", "transport", "follow", "quick-travel", "fly",
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
