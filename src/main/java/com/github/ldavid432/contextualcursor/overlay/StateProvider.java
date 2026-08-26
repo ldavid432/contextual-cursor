@@ -16,6 +16,9 @@ import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,10 +40,12 @@ public class StateProvider implements ProviderCallbacks
 	private final CursorProvider cursorProvider;
 	private final MenuEntryProvider menuEntryProvider;
 	private final SpriteProvider spriteProvider;
-	private final SelectedItemProvider selectedItemProvider;
+	private final SelectedWidgetProvider selectedWidgetProvider;
 	private final ClientUI clientUI;
 	private final SpriteContext spriteContext;
 	private final ContextualCursorCache cache;
+	private final ItemProvider itemProvider;
+	private final SpellProvider spellProvider;
 
 	private Tooltip contextualCursorSpacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
@@ -103,36 +108,32 @@ public class StateProvider implements ProviderCallbacks
 			}
 		}
 
-		Sprite sprite = null;
-
-		if (cache.isCursorInBounds())
+		if (!cache.isCursorInBounds())
 		{
-			// Selections take precedence over menu entries
-			sprite = selectedItemProvider.getSelectedSprite();
+			return defaultCursorState();
 		}
 
-		if (sprite == null)
+		MenuEntry menuEntry = menuEntryProvider.getMenuEntry();
+
+		Sprite widgetSprite = selectedWidgetProvider.getSelectedSprite();
+
+		if (menuEntry == null && widgetSprite == null)
 		{
-			MenuEntry menuEntry = null;
-			if (cache.isCursorInBounds())
-			{
-				menuEntry = menuEntryProvider.getMenuEntry();
-			}
-
-			if (menuEntry == null)
-			{
-				return defaultCursorState();
-			}
-
-			sprite = spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu());
-
-			if (sprite == null)
-			{
-				return defaultCursorState();
-			}
+			return defaultCursorState();
 		}
 
-		return contextualCursor(sprite);
+		// Lazily find the first non-null Sprite
+		return Stream.<Supplier<Sprite>>of(
+				() -> itemProvider.getItemSprite(menuEntry),
+				() -> spellProvider.getSpellSprite(menuEntry),
+				() -> widgetSprite,
+				() -> spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu())
+			)
+			.map(Supplier::get)
+			.filter(Objects::nonNull)
+			.findFirst()
+			.map(this::contextualCursor)
+			.orElseGet(this::defaultCursorState);
 	}
 
 	// Reset cursor to a default cursor state, one of: no custom cursor, external custom cursor, our custom cursor, or our custom overlay

@@ -13,6 +13,9 @@ public class ContextualCursorDefinition
 	private final List<? extends Cursor> cursors;
 
 	@With
+	private final List<? extends Cursor> itemCursors;
+
+	@With
 	private final OffsetCursor defaultCursor;
 
 	@With

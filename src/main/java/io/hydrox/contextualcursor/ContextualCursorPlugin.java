@@ -48,12 +48,10 @@ import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
-import com.github.ldavid432.contextualcursor.cursor.ItemCursor;
-import com.github.ldavid432.contextualcursor.cursor.SpellCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2DrawOverlay;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2WorkerOverlay;
-import com.github.ldavid432.contextualcursor.overlay.SelectedItemProvider;
+import com.github.ldavid432.contextualcursor.overlay.SelectedWidgetProvider;
 import com.github.ldavid432.contextualcursor.overlay.StateProvider;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.google.gson.Gson;
@@ -136,7 +134,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	private StateProvider stateProvider;
 
 	@Inject
-	private SelectedItemProvider selectedItemProvider;
+	private SelectedWidgetProvider selectedWidgetProvider;
 
 	@Getter
 	@Setter
@@ -197,7 +195,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		// Provide initial values to all subscribers
 		callbacks.add(cursorProvider);
 		callbacks.add(stateProvider);
-		callbacks.add(selectedItemProvider);
+		callbacks.add(selectedWidgetProvider);
 		updateScaleEnabled();
 		updateTheme();
 		updateIgnores();
@@ -230,8 +228,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		assert definition != null;
 
 		List<Cursor> cursors = new ArrayList<>(definition.getCursors());
-		cursors.add(0, new ItemCursor(client, cache));
-		cursors.add(1, new SpellCursor());
 
 		definition = definition.withCursors(cursors);
 		definition.updateScale(cache.getCursorScale());
@@ -246,7 +242,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 		callbacks.remove(cursorProvider);
 		callbacks.remove(stateProvider);
-		callbacks.remove(selectedItemProvider);
+		callbacks.remove(selectedWidgetProvider);
 
 		overlayManager.remove(workerOverlayV2);
 		overlayManager.remove(drawOverlayV2);

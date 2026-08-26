@@ -27,6 +27,7 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
+import com.github.ldavid432.contextualcursor.cursor.local.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
@@ -261,6 +262,7 @@ public enum ContextualCursor implements Cursor
 	{
 		return new ContextualCursorDefinition(
 			List.of(values()),
+			List.of(ItemCursor.values()),
 			new OffsetCursor(resourceSprite().fileName("generic" + (isOSRS ? "_osrs" : "")).build(), new ScaledPoint(0, 0)),
 			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), new ScaledPoint(-5, 0)),
 			new ScaledPoint(16, 18)

@@ -25,7 +25,7 @@ import net.runelite.api.widgets.Widget;
 @Slf4j
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class SelectedItemProvider implements ProviderCallbacks
+public class SelectedWidgetProvider implements ProviderCallbacks
 {
 	private final Client client;
 	private final ContextualCursorCache cache;
