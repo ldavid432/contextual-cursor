@@ -5,7 +5,6 @@ import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,18 +40,7 @@ public class ItemProvider
 			}
 		}
 
-		// Show the item being used, not the item being used on
-		int itemId = getItemId(menuEntry);
-
-		if (cache.isShowUseItemCursorEnabled())
-		{
-			// TODO: Caching
-			return itemSprite().id(itemId).build();
-		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	private Integer getItemId(MenuEntry menuEntry)
