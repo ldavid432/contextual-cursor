@@ -74,10 +74,11 @@ public enum ContextualCursor implements Cursor
 	DROP("drop", "drop", "empty", "deposit", "quick-deposit", "empty basket", "bank-cargo", "store",
 		"place-item", "discard",
 		optionStartsWith("deposit-"),
+		optionStartsWith("store-"),
 		optionStartsWith("remove-")),
 	EAT("eat", "eat", "eat-from", "guzzle"),
 	ENTER("enter", "climb-into", "enter", "go-through", "pass-through", "pass", "climb-through",
-		"quick-enter", "walk-through", "quick-slide", "climb-under", "quick-pass",
+		"quick-enter", "walk-through", "quick-slide", "climb-under", "quick-pass", "home",
 		optionStartsWith("enter-")),
 	EQUIP("equip", "wield", "wear", "equip"),
 	EXCHANGE(SpriteID.GeSmallicons.GUIDE_PRICE, "exchange", "trade", "trade with", "buy-boat", "buy", "trade-in",
@@ -86,17 +87,17 @@ public enum ContextualCursor implements Cursor
 	EXIT("exit", "exit", "exit-through", "escape", "quick-escape", "leave", "quick-exit", "disembark",
 		optionStartsWith("exit-")),
 	FRIEND(SpriteID.SideiconsInterface.FRIENDS, "add friend"),
-	HEAL("heal", "heal", "help"),
+	HEAL("heal", "heal", "help", "apply", "medic"),
 	IGNORE(SpriteID.SideiconsInterface.IGNORES, "add ignore"),
-	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task", "remove", "dismiss"),
+	IMPOSSIBLE("impossible", "destroy", "stop-navigating", "cancel-task", "remove", "dismiss", "forfeit"),
 	LADDER("ladder", "climb"),
 	LADDER_DOWN("ladder_down", "climb-down", "climb down", "bottom-floor", "go-down", "descend", "walk-down"),
-	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor"),
+	LADDER_UP("ladder_up", "climb-up", "climb up", "top-floor", "walk-up"),
 	LISTEN("listen", "listen", optionStartsWith("listen-")),
 	MUSIC(SpriteID.SideiconsInterface.MUSIC, "play"),
 	OPEN("open", "open", "release", "quick-open"),
 	PICK_LOCK("picklock", "pick-lock", "picklock"),
-	PICK_UP("pick_up", "take", "withdraw", "fill", "collect-from", "pick-up", "collect",
+	PICK_UP("pick_up", "take", "withdraw", "fill", "collect-from", "pick-up", "collect", "claim",
 		optionStartsWith("take-"), optionStartsWith("take "),
 		hasAllOf(hasOption("harvest"), isNpc()),  // Various NPC corpses
 		hasAllOf(MenuEntryMatchers.hasOption("search", "big-search"), targetStartsWith("reward"))  // various minigame reward objects
@@ -107,23 +108,25 @@ public enum ContextualCursor implements Cursor
 	PUSH("push", "push"),
 	READ("read", "read", "story", "guide", "log"),
 	REPORT(SpriteID.PvpwIcons.DEADMAN_EXCLAMATION_MARK_SKULLED_WARNING, "report"),
-	SEARCH("search", "examine", "view", "inspect", "investigate", "peek", "admire", "look", "check", "prospect",
+	SEARCH("search", "examine", "view", "inspect", "investigate", "peek", "admire", "look", "check",
+		"prospect", "observe", "peer-into", "scry",
 		optionStartsWith("look-"), optionStartsWith("look "),
 		optionStartsWith("check-"), optionStartsWith("check "),
 		hasAllOf(hasOption("search"), not(targetNamed("wiki"))),
 		hasAllOf(hasOption("lookup"), not(targetNamed("wiki")), not(targetStartsWith("wiki ->")))
 	),
 	SKUll(SpriteID.HEADICONS_PK, "skull"),
-	STATS(SpriteID.SideiconsInterface.STATS, "statistics", "stats", "view stats", "league-statistics"),
+	STATS(SpriteID.SideiconsInterface.STATS, "statistics", "stats", "view stats", "league-statistics", "lap-count"),
 	TALK("talk", "talk", "talk-to", "talk to", "command", optionStartsWith("tell-")),
 	TRAVEL("travel", "travel", "zanaris", "charter", "transport", "follow", "quick-travel", "fly",
+		"glider", optionStartsWith("gilder-to"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
 	UNCHARGE("uncharge", "uncharge", "unload"),
 	UNLOCK("unlock", "unlock",
 		// "Use foo key --> something" | "Use foo key bar --> something"
 		hasAllOf(hasOption("use"), isWidgetTarget(), hasAnyOf(targetContains("key ->"), hasAllOf(targetContains(" key "), not(targetContains("half")), targetContains(" ->"))))),
 	ROPE("untie", "tether", "tie-rope", isWidgetTargetOption("use", "rope")),
-	USE("use", "use", "pet", "touch", "rub"),
+	USE("use", "use", "pet", "touch", "rub", "feel"),
 	WIKI("wiki", "lookup-entity", targetNamed("wiki"), targetStartsWith("wiki ->")),
 
 	// Sailing
@@ -156,7 +159,7 @@ public enum ContextualCursor implements Cursor
 		optionStartsWith("jump-"),
 		optionStartsWith("swing-"), optionStartsWith("swing "),
 		hasAllOf(hasOption("navigate"), not(targetNamed("helm")))), // underwater agility obstacles
-	ATTACK(SpriteID.Staticons.ATTACK, "attack"),
+	ATTACK(SpriteID.Staticons.ATTACK, "attack", "hit"),
 	CONSTRUCTION(SpriteID.Staticons2.CONSTRUCTION, "build", "modify", "upgrade", "build-trap",
 		hasAllOf(hasOption("craft"), targetNamed("shipwrights' workbench"))),
 	COOKING(SpriteID.Staticons.COOKING, "cook", "churn", "cook-at", "prepare-fish"),
@@ -170,22 +173,22 @@ public enum ContextualCursor implements Cursor
 		hasAllOf(hasAnyOf(hasOption("pick"), optionStartsWith("pick-")), isObject()), // Avoid zygomites, use pick-x for fruit trees
 		hasAllOf(hasOption("tend-to"), targetStartsWith("flowering bush"))
 	),
-	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "rub-together", "burn-down",
+	FIREMAKING(SpriteID.Staticons.FIREMAKING, "light", "rub-together", "burn-down", "burn",
 		hasAllOf(hasOption("feed"), targetNamed("brazier")), // avoid feeding duke
 		hasAllOf(hasOption("tend-to"), targetEndsWith("campfire"))), // avoid flowering bushes
 	FISHING(SpriteID.Staticons.FISHING, "net", "lure", "small net", "harpoon", "cage", "big net",
-		"use-rod", "fish", "take-net", "fish-in", hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
+		"use-rod", "fish", "take-net", "fish-in", "rod-fish", hasAllOf(hasOption("bait"), isNpc())), // Bait fishing spots
 	FLETCHING(SpriteID.Staticons.FLETCHING, "carve", "decorate", "fletch"),
 	HERBLORE(SpriteID.Staticons.HERBLORE, "potions",
 		hasAllOf(MenuEntryMatchers.hasOption("clean"), targetStartsWith("grimy"))),
 	HUNTER(SpriteID.Staticons2.HUNTER, "catch", "lay", "set-trap", "fur clothing", "fur-clothing",
-		"quick-falcon", "trap", "tease", "hide-in", "spear",
+		"quick-falcon", "trap", "tease", "hide-in", "spear", "rumour",
 		hasAllOf(hasOption("bait"), isObject())), // Crab traps
 	MAGIC(SpriteID.Staticons.MAGIC, "spellbook", "teleport", "teleport menu", "study",
 		hasAllOf(hasOption("venerate"), not(targetNamed("dark altar")))), // PoH spellbook altars
 	MINING(SpriteID.Staticons.MINING, "mine", "smash-to-bits", "chip", "mine-through"),
 	PRAYER(SpriteID.Staticons.PRAYER, "pray", "bury", "pray-at", "offer-fish", "scatter", "bask", "sacrifice",
-		"worship", "bless", "recharge-prayer", "make-offering"),
+		"worship", "bless", "recharge-prayer", "make-offering", "preach"),
 	RANGED(SpriteID.Staticons.RANGED, "fire", "fire-at", "shoot-at"),
 	RUNECRAFTING(SpriteID.Staticons2.RUNECRAFT, "craft-rune", "imbue", "reinvigorate",
 		hasAllOf(hasOption("venerate"), targetNamed("dark altar"))), // Avoid PoH spellbook altars
@@ -194,7 +197,7 @@ public enum ContextualCursor implements Cursor
 	STRENGTH(SpriteID.Staticons.STRENGTH, "bang", "move"),
 	THIEVING(SpriteID.Staticons.THIEVING, "pickpocket", "search for traps", "bribe", "disarm", "distract", "pick-pocket",
 		optionStartsWith("steal-"), optionStartsWith("steal ")),
-	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack"),
+	WOODCUTTING(SpriteID.Staticons.WOODCUTTING, "chop down", "chop-down", "chop", "cut", "hack", "cut-down"),
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank",
 		"manage-crew", "quick-board"),

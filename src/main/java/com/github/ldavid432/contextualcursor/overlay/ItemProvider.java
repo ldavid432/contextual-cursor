@@ -1,6 +1,5 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
-import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
@@ -22,7 +21,6 @@ public class ItemProvider
 {
 	private final Client client;
 	private final CursorProvider cursorProvider;
-	private final ContextualCursorCache cache;
 
 	@Nullable
 	public Sprite getItemSprite(@Nullable MenuEntry menuEntry)
@@ -43,7 +41,7 @@ public class ItemProvider
 		return null;
 	}
 
-	private Integer getItemId(MenuEntry menuEntry)
+	private int getItemId(MenuEntry menuEntry)
 	{
 		if (menuEntry != null && menuEntry.getItemId() >= 0)
 		{
