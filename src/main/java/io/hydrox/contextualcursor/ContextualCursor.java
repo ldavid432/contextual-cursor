@@ -27,9 +27,9 @@ package io.hydrox.contextualcursor;
 
 import com.github.ldavid432.contextualcursor.cursor.ContextualCursorDefinition;
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
-import com.github.ldavid432.contextualcursor.cursor.local.ItemCursor;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
+import com.github.ldavid432.contextualcursor.cursor.local.ItemCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
@@ -45,13 +45,13 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetStartsWith;
-import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
+import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
+import com.github.ldavid432.contextualcursor.sprite.ItemSprite;
+import com.github.ldavid432.contextualcursor.sprite.ResourceSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.itemSprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.resourceSprite;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +103,7 @@ public enum ContextualCursor implements Cursor
 		hasAllOf(MenuEntryMatchers.hasOption("search", "big-search"), targetStartsWith("reward"))  // various minigame reward objects
 	),
 	PLANK("plank", "buy-plank"),
-	PROD(itemSprite().id(ItemID.CATTLEPROD), hasOption("prod")),
+	PROD(new ItemSprite(ItemID.CATTLEPROD), hasOption("prod")),
 	PULL("pull", "pull"),
 	PUSH("push", "push"),
 	READ("read", "read", "story", "guide", "log"),
@@ -211,17 +211,17 @@ public enum ContextualCursor implements Cursor
 
 	ContextualCursor(String cursorPath, Object... matchers)
 	{
-		this(resourceSprite().fileName(cursorPath), assembleMatcher(matchers));
+		this(new ResourceSprite(cursorPath), assembleMatcher(matchers));
 	}
 
 	ContextualCursor(int spriteID, Object... matchers)
 	{
-		this(cacheSprite().id(spriteID), assembleMatcher(matchers));
+		this(new CacheSprite(spriteID), assembleMatcher(matchers));
 	}
 
-	ContextualCursor(BaseSpriteBuilder<?, ?> spriteBuilder, MenuEntryMatcher matcher)
+	ContextualCursor(@Nonnull Sprite sprite, MenuEntryMatcher matcher)
 	{
-		this.sprite = spriteBuilder.build();
+		this.sprite = sprite;
 		this.matcher = matcher;
 	}
 
@@ -229,12 +229,6 @@ public enum ContextualCursor implements Cursor
 	public Sprite getSprite(MenuEntry menuEntry)
 	{
 		return sprite;
-	}
-
-	@Override
-	public void clearImage()
-	{
-		sprite.clearImage();
 	}
 
 	private static MenuEntryMatcher assembleMatcher(Object... inputMatchers)
@@ -267,8 +261,8 @@ public enum ContextualCursor implements Cursor
 		return new ContextualCursorDefinition(
 			List.of(values()),
 			List.of(ItemCursor.values()),
-			new OffsetCursor(resourceSprite().fileName("generic" + (isOSRS ? "_osrs" : "")).build(), new ScaledPoint(0, 0)),
-			new OffsetCursor(resourceSprite().fileName("blank" + (isOSRS ? "_osrs" : "")).build(), new ScaledPoint(-5, 0)),
+			new OffsetCursor(new ResourceSprite("generic" + (isOSRS ? "_osrs" : "")), new ScaledPoint(0, 0)),
+			new OffsetCursor(new ResourceSprite("blank" + (isOSRS ? "_osrs" : "")), new ScaledPoint(-5, 0)),
 			new ScaledPoint(16, 18)
 		);
 	}

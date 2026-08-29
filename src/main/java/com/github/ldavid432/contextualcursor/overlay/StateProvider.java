@@ -11,7 +11,6 @@ import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -42,7 +41,6 @@ public class StateProvider implements ProviderCallbacks
 	private final SpriteProvider spriteProvider;
 	private final SelectedWidgetProvider selectedWidgetProvider;
 	private final ClientUI clientUI;
-	private final SpriteContext spriteContext;
 	private final ContextualCursorCache cache;
 	private final ItemProvider itemProvider;
 	private final SpellProvider spellProvider;
@@ -239,7 +237,7 @@ public class StateProvider implements ProviderCallbacks
 
 	private Cursor createGenericCursor()
 	{
-		BufferedImage icon = cursorProvider.getDefaultCursor().getSprite().getImage(spriteContext);
+		BufferedImage icon = cache.getImage(cursorProvider.getDefaultCursor().getSprite());
 		BufferedImage result = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();

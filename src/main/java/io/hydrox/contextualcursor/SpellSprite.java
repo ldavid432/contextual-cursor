@@ -25,9 +25,8 @@
  */
 package io.hydrox.contextualcursor;
 
-import com.github.ldavid432.contextualcursor.sprite.BaseSprite.BaseSpriteBuilder;
+import com.github.ldavid432.contextualcursor.sprite.CacheSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import static com.github.ldavid432.contextualcursor.sprite.Sprite.cacheSprite;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -143,19 +142,19 @@ public enum SpellSprite
 	@Getter
 	private final int interfaceID;
 
-	SpellSprite(BaseSpriteBuilder<?, ?> spriteBuilder, int interfaceID)
+	SpellSprite(Sprite sprite, int interfaceID)
 	{
-		this(null, spriteBuilder.build(), interfaceID);
+		this(null, sprite, interfaceID);
 	}
 
 	SpellSprite(int spriteID, int interfaceID)
 	{
-		this(cacheSprite().id(spriteID), interfaceID);
+		this(new CacheSprite(spriteID), interfaceID);
 	}
 
 	SpellSprite(String name, int spriteID, int interfaceID)
 	{
-		this(name, cacheSprite().id(spriteID).build(), interfaceID);
+		this(name, new CacheSprite(spriteID), interfaceID);
 	}
 
 	private String getName()
@@ -178,11 +177,4 @@ public enum SpellSprite
 		return map.get(spell);
 	}
 
-	public static void clearImages()
-	{
-		for (SpellSprite spell : map.values())
-		{
-			spell.sprite.clearImage();
-		}
-	}
 }

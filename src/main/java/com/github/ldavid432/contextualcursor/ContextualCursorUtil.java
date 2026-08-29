@@ -18,7 +18,6 @@ import com.github.ldavid432.contextualcursor.serialization.adapters.CursorAdapte
 import com.github.ldavid432.contextualcursor.serialization.adapters.MenuEntryMatcherAdapter;
 import com.github.ldavid432.contextualcursor.serialization.adapters.SkipFieldDefaultsTypeAdapterFactory;
 import com.github.ldavid432.contextualcursor.serialization.adapters.SpriteAdapter;
-import com.github.ldavid432.contextualcursor.sprite.BaseSprite;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import com.google.gson.Gson;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
@@ -214,7 +213,8 @@ public class ContextualCursorUtil
 			.registerTypeAdapterFactory(
 				// Avoid deserializing some default values to reduce the file size
 				SkipFieldDefaultsTypeAdapterFactory.builder()
-					.add(BaseSprite.class, "isInverted", false)
+					// Technically the field is not on Sprite, but all subclasses add the field so it should be fine
+					.add(Sprite.class, "isInverted", false)
 					.add(SimpleStringMatcher.class, "predicate", StringPredicate.EQUALS)
 					.add(CompositeMatcher.class, "operator", Operator.OR)
 					.build()

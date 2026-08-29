@@ -24,16 +24,6 @@ public class ContextualCursorDefinition
 	@With
 	private final ScaledPoint foregroundCursorCenter;
 
-	public void clearImages()
-	{
-		for (Cursor cursor : getCursors())
-		{
-			cursor.clearImage();
-		}
-		defaultCursor.getSprite().clearImage();
-		backgroundCursor.getSprite().clearImage();
-	}
-
 	public void updateScale(double scale)
 	{
 		defaultCursor.updateScale(scale);

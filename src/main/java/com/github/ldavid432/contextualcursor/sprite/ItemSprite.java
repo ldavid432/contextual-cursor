@@ -1,41 +1,12 @@
 package com.github.ldavid432.contextualcursor.sprite;
 
-import java.awt.image.BufferedImage;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.Value;
 
-@ToString(of = "id")
-@SuperBuilder
-@EqualsAndHashCode(of = {"id", "quantity"}, callSuper = true)
-public class ItemSprite extends BaseSprite
+@Value
+public class ItemSprite implements Sprite
 {
-
-	private final int id;
-
-	@Builder.Default
-	private final int quantity = 1;
-
-	@Getter
-	private final String type = "item";
-
-	@Override
-	protected double getScale(SpriteContext context)
-	{
-		return context.getCache().getItemScale();
-	}
-
-	@Override
-	protected boolean isSmoothScalingEnabled(SpriteContext context)
-	{
-		return context.getCache().isItemSmoothScalingEnabled();
-	}
-
-	@Override
-	protected BufferedImage getBaseImage(SpriteContext context)
-	{
-		return context.getItemManager().getImage(id, quantity, false);
-	}
+	int id;
+	int quantity = 1;
+	String type = "item";
+	boolean isInverted = false;
 }

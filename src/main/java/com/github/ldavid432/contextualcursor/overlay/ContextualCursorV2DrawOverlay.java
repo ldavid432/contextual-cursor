@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.ContextualCursorCache;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.BLANK_CURSOR_NAME;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.EMPTY_SCALED_POINT;
@@ -7,7 +8,6 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.GENERIC
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.cursor.ScaledPoint;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
-import com.github.ldavid432.contextualcursor.sprite.SpriteContext;
 import io.hydrox.contextualcursor.ContextualCursorPlugin;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -34,7 +34,7 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
 	private final ClientUI clientUi;
-	private final SpriteContext spriteContext;
+	private final ContextualCursorCache cache;
 
 	@Inject
 	void init()
@@ -127,7 +127,7 @@ public class ContextualCursorV2DrawOverlay extends Overlay
 	@Nullable
 	private BufferedImage spriteImageOrNull(Sprite sprite)
 	{
-		return sprite != null ? sprite.getImage(spriteContext) : null;
+		return sprite != null ? cache.getImage(sprite) : null;
 	}
 
 }

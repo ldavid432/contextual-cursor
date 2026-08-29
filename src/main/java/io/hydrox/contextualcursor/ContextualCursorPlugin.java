@@ -51,7 +51,6 @@ import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.menuentry.MenuTarget;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2DrawOverlay;
 import com.github.ldavid432.contextualcursor.overlay.ContextualCursorV2WorkerOverlay;
-import com.github.ldavid432.contextualcursor.overlay.SelectedWidgetProvider;
 import com.github.ldavid432.contextualcursor.overlay.StateProvider;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.google.gson.Gson;
@@ -133,9 +132,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Inject
 	private StateProvider stateProvider;
 
-	@Inject
-	private SelectedWidgetProvider selectedWidgetProvider;
-
 	@Getter
 	@Setter
 	@Nullable
@@ -195,7 +191,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		// Provide initial values to all subscribers
 		callbacks.add(cursorProvider);
 		callbacks.add(stateProvider);
-		callbacks.add(selectedWidgetProvider);
+		callbacks.add(cache);
 		updateScaleEnabled();
 		updateTheme();
 		updateIgnores();
@@ -242,7 +238,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 		callbacks.remove(cursorProvider);
 		callbacks.remove(stateProvider);
-		callbacks.remove(selectedWidgetProvider);
+		callbacks.remove(cache);
 
 		overlayManager.remove(workerOverlayV2);
 		overlayManager.remove(drawOverlayV2);

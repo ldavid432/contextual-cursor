@@ -1,10 +1,10 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
-import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import javax.inject.Singleton;
+import lombok.Setter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuEntry;
@@ -13,6 +13,7 @@ import net.runelite.api.MenuEntry;
 @Singleton
 public class CursorProvider implements ProviderCallbacks
 {
+	@Setter
 	@Delegate
 	private ContextualCursorDefinition definition;
 
@@ -22,48 +23,12 @@ public class CursorProvider implements ProviderCallbacks
 		@Override
 		public void onScaleChange(double cursorScale, double itemScale)
 		{
-			clearImages();
 			if (definition != null)
 			{
 				definition.updateScale(cursorScale);
 			}
 		}
-
-		@Override
-		public void onScaleSmoothingChange(boolean cursorSmoothing, boolean itemSmoothing)
-		{
-			clearImages();
-		}
-
-		@Override
-		public void onThemeChange(CursorTheme theme)
-		{
-			clearImages();
-		}
-
-		@Override
-		public void onShutdown()
-		{
-			clearImages();
-		}
 	};
-
-	public void clearImages()
-	{
-		if (definition != null)
-		{
-			definition.clearImages();
-		}
-	}
-
-	public void setDefinition(ContextualCursorDefinition definition)
-	{
-		if (this.definition != null)
-		{
-			clearImages();
-		}
-		this.definition = definition;
-	}
 
 	public Sprite getSprite(MenuEntry menuEntry)
 	{
