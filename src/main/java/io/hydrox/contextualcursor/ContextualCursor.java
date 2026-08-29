@@ -200,6 +200,9 @@ public enum ContextualCursor implements Cursor
 	SAILING(SpriteID.Staticons2.SAILING, "board", "board-previous", "board-friend", "dock", "customise-boat",
 		"recover-boat", "sort-salvage", "chart", "pry-open", "collect-data", "start-trial", "start-previous-rank",
 		"manage-crew", "quick-board"),
+
+	// Portal nexus + jewellery box destinations only - all other menu options covered by other cursors above
+	TELEPORT_OBJECT("enter", hasAnyOf(targetNamed("portal nexus"), targetEndsWith("jewellery box"))),
 	;
 
 	@NonNull
