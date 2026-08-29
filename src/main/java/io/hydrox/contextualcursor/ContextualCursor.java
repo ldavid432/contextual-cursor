@@ -55,7 +55,6 @@ import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.SpriteID;
 
@@ -223,12 +222,6 @@ public enum ContextualCursor implements Cursor
 	{
 		this.sprite = sprite;
 		this.matcher = matcher;
-	}
-
-	@Override
-	public Sprite getSprite(MenuEntry menuEntry)
-	{
-		return sprite;
 	}
 
 	private static MenuEntryMatcher assembleMatcher(Object... inputMatchers)

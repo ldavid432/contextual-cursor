@@ -50,7 +50,7 @@ public class ContextualCursorDefinitionContentMatchTest
 			verifyMatcherContent(i, cursorName, enumCursor.getMatcher(), jsonCursor.getMatcher());
 
 			// Verify sprite content is identical
-			verifySpritContent(i, cursorName, enumCursor.getSprite(null), jsonCursor.getSprite(null));
+			verifySpritContent(i, cursorName, enumCursor.getSprite(), jsonCursor.getSprite());
 		}
 	}
 

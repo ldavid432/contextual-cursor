@@ -11,7 +11,6 @@ import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import net.runelite.api.MenuEntry;
 import net.runelite.api.gameval.SpriteID;
 
 /**
@@ -37,11 +36,4 @@ public enum ItemCursor implements Cursor
 	private final Sprite sprite;
 	@Getter
 	private final MenuEntryMatcher matcher;
-
-
-	@Override
-	public Sprite getSprite(MenuEntry menuEntry)
-	{
-		return sprite;
-	}
 }

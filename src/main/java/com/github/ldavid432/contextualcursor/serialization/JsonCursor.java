@@ -5,20 +5,12 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.runelite.api.MenuEntry;
 
 @AllArgsConstructor
 public class JsonCursor implements Cursor
 {
+	@Getter
 	private Sprite sprite;
 	@Getter
 	private MenuEntryMatcher matcher;
-
-	@Override
-	public Sprite getSprite(MenuEntry menuEntry)
-	{
-		// For now, we will just support static sprites with JSON.
-		// Dynamic ones like the spellbook or item cursors will stay in Java.
-		return sprite;
-	}
 }

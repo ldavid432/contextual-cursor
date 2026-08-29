@@ -34,7 +34,7 @@ public class ItemProvider
 		{
 			if (cursor.getMatcher().matches(menuEntry))
 			{
-				return cursor.getSprite(menuEntry);
+				return cursor.getSprite();
 			}
 		}
 
