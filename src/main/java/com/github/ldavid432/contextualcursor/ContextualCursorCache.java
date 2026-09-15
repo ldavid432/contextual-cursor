@@ -12,9 +12,8 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Delegate;
 import net.runelite.api.Client;
@@ -30,36 +29,38 @@ import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
 @Setter
 @Getter
 @Singleton
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ContextualCursorCache implements ProviderCallbacks
 {
 	private final Client client;
+	private final ContextualCursorConfig config;
+	private final PluginManager pluginManager;
+	private final CustomCursorPlugin customCursorPlugin;
+	private final ItemManager itemManager;
+	private final SpriteManager spriteManager;
 
-	@Inject
-	public ContextualCursorCache(ContextualCursorConfig config, PluginManager pluginManager, CustomCursorPlugin customCursorPlugin,
-	                             Client client, ItemManager itemManager, SpriteManager spriteManager)
+	public void init()
 	{
-		this(
-			client,
-			(double) config.getCursorScale() / 100,
-			(double) config.getItemScale() / 100,
-			config.isCursorSmoothScalingEnabled(),
-			config.isItemSmoothScalingEnabled(),
-			config.isCustomDefaultCursorEnabled(),
-			config.isDefaultCursorOverlayEnabled(),
-			config.shouldPersistSpells(),
-			config.shouldPersistItems(),
-			config.isShowUseItemCursorEnabled(),
-			config.isDebugTooltipEnabled(),
-			config.getCursorTheme(),
-			config.getCursorBackgroundMode(),
-			pluginManager.isPluginActive(customCursorPlugin),
-			client.getGameState() != GameState.LOGGED_IN,
-			mouseInsideBounds(client.getMouseCanvasPosition(), client),
-			false,
-			null
-		);
-		spriteCache = new ImageCache(this, client, itemManager, spriteManager);
+		cursorScale = (double) config.getCursorScale() / 100;
+		itemScale = (double) config.getItemScale() / 100;
+		isCursorSmoothScalingEnabled = config.isCursorSmoothScalingEnabled();
+		isItemSmoothScalingEnabled = config.isItemSmoothScalingEnabled();
+		isCustomDefaultCursorEnabled = config.isCustomDefaultCursorEnabled();
+		isDefaultCursorOverlayEnabled = config.isDefaultCursorOverlayEnabled();
+		isPersistSpells = config.shouldPersistSpells();
+		isPersistItems = config.shouldPersistItems();
+		isShowUseItemCursorEnabled = config.isShowUseItemCursorEnabled();
+		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
+		cursorTheme = config.getCursorTheme();
+		cursorBackgroundMode = config.getCursorBackgroundMode();
+		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
+		isLoggedOut = client.getGameState() != GameState.LOGGED_IN;
+		isCursorInBounds = mouseInsideBounds(client.getMouseCanvasPosition(), client);
+		altPressed = false;
+		if (spriteCache == null)
+		{
+			spriteCache = new ImageCache(this, client, itemManager, spriteManager);
+		}
 	}
 
 	// config values
@@ -85,7 +86,8 @@ public class ContextualCursorCache implements ProviderCallbacks
 	private ImageCache spriteCache;
 
 	@Delegate
-	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks() {
+	private final ProviderCallbacks callbacks = new EmptyProviderCallbacks()
+	{
 		@Override
 		public void onScaleSmoothingChange(boolean cursorSmoothing, boolean itemSmoothing)
 		{

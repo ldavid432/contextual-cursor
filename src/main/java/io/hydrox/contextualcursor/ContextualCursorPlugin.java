@@ -177,6 +177,8 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
+		cache.init();
+
 		contextualCursorGson = buildGson(runeliteGson);
 
 		updateCursorDefinition();
