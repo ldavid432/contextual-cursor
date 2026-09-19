@@ -16,18 +16,20 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Delegate;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.PluginManager;
-import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
 
 /**
  * Caches config values as well as sprite images
  */
 @Setter
 @Getter
+@Slf4j
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ContextualCursorCache implements ProviderCallbacks
@@ -35,7 +37,7 @@ public class ContextualCursorCache implements ProviderCallbacks
 	private final Client client;
 	private final ContextualCursorConfig config;
 	private final PluginManager pluginManager;
-	private final CustomCursorPlugin customCursorPlugin;
+	private final ConfigManager configManager;
 	private final ItemManager itemManager;
 	private final SpriteManager spriteManager;
 
@@ -53,7 +55,7 @@ public class ContextualCursorCache implements ProviderCallbacks
 		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
 		cursorTheme = config.getCursorTheme();
 		cursorBackgroundMode = config.getCursorBackgroundMode();
-		isCustomCursorPluginEnabled = pluginManager.isPluginActive(customCursorPlugin);
+		isCustomCursorPluginEnabled = configManager.getConfiguration("runelite", "customcursorplugin", Boolean.class);
 		isLoggedOut = client.getGameState() != GameState.LOGGED_IN;
 		isCursorInBounds = mouseInsideBounds(client.getMouseCanvasPosition(), client);
 		altPressed = false;

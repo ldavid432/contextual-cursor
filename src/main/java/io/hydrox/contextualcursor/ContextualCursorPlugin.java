@@ -83,9 +83,7 @@ import net.runelite.client.input.MouseAdapter;
 import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.customcursor.CustomCursorPlugin;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
@@ -94,7 +92,6 @@ import net.runelite.client.ui.overlay.OverlayManager;
 	tags = {"cursor", "rs3", "rs2", "rshd", "context", "theme", "hover"}
 )
 @Slf4j
-@PluginDependency(CustomCursorPlugin.class)
 public class ContextualCursorPlugin extends Plugin implements KeyListener
 {
 	@Inject
