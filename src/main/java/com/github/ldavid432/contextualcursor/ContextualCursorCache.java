@@ -58,7 +58,7 @@ public class ContextualCursorCache implements ProviderCallbacks
 		isCustomCursorPluginEnabled = configManager.getConfiguration("runelite", "customcursorplugin", Boolean.class);
 		isLoggedOut = client.getGameState() != GameState.LOGGED_IN;
 		isCursorInBounds = mouseInsideBounds(client.getMouseCanvasPosition(), client);
-		altPressed = false;
+		dragPressed = false;
 		if (spriteCache == null)
 		{
 			spriteCache = new ImageCache(this, client, itemManager, spriteManager);
@@ -83,7 +83,7 @@ public class ContextualCursorCache implements ProviderCallbacks
 	private boolean isCustomCursorPluginEnabled;
 	private boolean isLoggedOut;
 	private boolean isCursorInBounds;
-	private boolean altPressed;
+	private boolean dragPressed;
 
 	private ImageCache spriteCache;
 

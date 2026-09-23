@@ -252,5 +252,6 @@ public class ContextualCursorUtil
 	);
 	public static final int MENU_OPTION_HEIGHT = 15;
 	public static final int MENU_EXTRA_TOP = 4;
+	public static final String DRAG_KEYBIND_KEY = "dragHotkey";
 
 }

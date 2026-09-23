@@ -94,7 +94,7 @@ public class StateProvider implements ProviderCallbacks
 			return ContextualCursorState.externalCursor(currentCursor);
 		}
 
-		if (cache.isAltPressed())
+		if (cache.isDragPressed())
 		{
 			if (cache.isCustomCursorPluginEnabled())
 			{
@@ -211,7 +211,6 @@ public class StateProvider implements ProviderCallbacks
 				return ContextualCursorState.contextualCursor(
 					contextualCursor,
 					defaultState.getCursorBackground(),
-					// TODO: Maybe this spacer should be smaller
 					contextualCursorSpacerTooltip
 				);
 			}

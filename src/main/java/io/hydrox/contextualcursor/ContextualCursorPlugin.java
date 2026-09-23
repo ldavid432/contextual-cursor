@@ -40,6 +40,7 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
+import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.DRAG_KEYBIND_KEY;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadLocalCursorDefinition;
@@ -56,7 +57,6 @@ import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,12 +75,12 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.config.Keybind;
+import net.runelite.client.config.RuneLiteConfig;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.input.MouseAdapter;
-import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -155,26 +155,17 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
 
-	private final MouseListener mouseListener = new MouseAdapter()
-	{
-		@Override
-		public MouseEvent mouseEntered(MouseEvent mouseEvent)
-		{
-			cache.setAltPressed(mouseEvent.isAltDown());
-			return mouseEvent;
-		}
-
-		@Override
-		public MouseEvent mouseExited(MouseEvent mouseEvent)
-		{
-			cache.setAltPressed(mouseEvent.isAltDown());
-			return mouseEvent;
-		}
-	};
+	private Keybind dragKeyBind = Keybind.ALT;
 
 	protected void startUp()
 	{
 		cache.init();
+
+		dragKeyBind = configManager.getConfiguration(RuneLiteConfig.GROUP_NAME, DRAG_KEYBIND_KEY, Keybind.class);
+		if (dragKeyBind == null)
+		{
+			dragKeyBind = Keybind.ALT;
+		}
 
 		contextualCursorGson = buildGson(runeliteGson);
 
@@ -185,7 +176,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		overlayManager.add(workerOverlayV2);
 		overlayManager.add(drawOverlayV2);
 		keyManager.registerKeyListener(this);
-		mouseManager.registerMouseListener(mouseListener);
 
 		// Provide initial values to all subscribers
 		callbacks.add(cursorProvider);
@@ -243,7 +233,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		overlayManager.remove(drawOverlayV2);
 
 		keyManager.unregisterKeyListener(this);
-		mouseManager.unregisterMouseListener(mouseListener);
 
 		previousState = null;
 		currentState = null;
@@ -287,18 +276,18 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent keyEvent)
 	{
-		if (config.getHideKeybind().matches(keyEvent))
+		if (dragKeyBind.matches(keyEvent))
 		{
-			cache.setAltPressed(keyEvent.isAltDown());
+			cache.setDragPressed(true);
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent keyEvent)
 	{
-		if (config.getHideKeybind().matches(keyEvent))
+		if (dragKeyBind.matches(keyEvent))
 		{
-			cache.setAltPressed(keyEvent.isAltDown());
+			cache.setDragPressed(false);
 		}
 	}
 
@@ -364,7 +353,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 				cache.setCursorBackgroundMode(config.getCursorBackgroundMode());
 			}
 		}
-		else if ("runelite".equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))
+		else if (RuneLiteConfig.GROUP_NAME.equals(event.getGroup()) && "customcursorplugin".equals(event.getKey()))
 		{
 			cache.setCustomCursorPluginEnabled(Boolean.parseBoolean(event.getNewValue()));
 			// Delaying this until after CustomCursorPlugin has run its shutdown which clears the cursor
@@ -374,6 +363,27 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 					stateProvider.setLastExternalCustomCursor(null);
 				}
 			});
+		}
+		else if (RuneLiteConfig.GROUP_NAME.equals(event.getGroup()) && DRAG_KEYBIND_KEY.equals(event.getKey()))
+		{
+			if (event.getNewValue() != null)
+			{
+				try
+				{
+					String[] splitStr = event.getNewValue().split(":");
+					int code = Integer.parseInt(splitStr[0]);
+					int mods = Integer.parseInt(splitStr[1]);
+					dragKeyBind = new Keybind(code, mods);
+				}
+				catch (Exception ignored)
+				{
+					dragKeyBind = Keybind.ALT;
+				}
+			}
+			else
+			{
+				dragKeyBind = Keybind.ALT;
+			}
 		}
 	}
 

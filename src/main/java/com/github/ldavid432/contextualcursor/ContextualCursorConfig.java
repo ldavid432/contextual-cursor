@@ -8,7 +8,6 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
-import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Range;
 import net.runelite.client.config.Units;
 
@@ -66,20 +65,6 @@ public interface ContextualCursorConfig extends Config
 	default CursorBackgroundMode getCursorBackgroundMode()
 	{
 		return CursorBackgroundMode.FOR_CONTEXTUAL;
-	}
-
-	@ConfigItem(
-		keyName = "hideKeybind",
-		name = "Hide Cursor Keybind",
-		description = "When held this button will disable the contextual cursor. Default is ALT<br>" +
-			"Note: This will not disable the default cursor override",
-		position = 2,
-		// TODO: Maybe expose this eventually - isn't really useful atm, especially when the key remapping plugin consumes most single characters
-		hidden = true
-	)
-	default Keybind getHideKeybind()
-	{
-		return Keybind.ALT;
 	}
 
 	@ConfigItem(
