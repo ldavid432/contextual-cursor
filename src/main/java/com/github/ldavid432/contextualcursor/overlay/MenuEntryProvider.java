@@ -8,7 +8,6 @@ import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.runelite.api.Client;
@@ -22,10 +21,7 @@ public class MenuEntryProvider
 	private final Client client;
 	private final ContextualCursorPlugin plugin;
 
-	@Getter
 	private MenuEntry lastSubmenuEntry = null;
-	@Getter
-	private boolean isInSubmenu = false;
 
 	@Setter
 	@Nullable
@@ -41,7 +37,6 @@ public class MenuEntryProvider
 		}
 		else
 		{
-			isInSubmenu = false;
 			lastSubmenuEntry = null;
 			final MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 			int last = menuEntries.length - 1;
@@ -55,9 +50,9 @@ public class MenuEntryProvider
 		}
 
 		final com.github.ldavid432.contextualcursor.menuentry.MenuEntry wrappedMenuEntry =
-			com.github.ldavid432.contextualcursor.menuentry.MenuEntry.of(menuEntry);
+			com.github.ldavid432.contextualcursor.menuentry.MenuEntry.of(menuEntry, lastSubmenuEntry);
 
-		if (wrappedMenuEntry != null && !isEntryIgnored(wrappedMenuEntry, isInSubmenu))
+		if (wrappedMenuEntry != null && !isEntryIgnored(wrappedMenuEntry))
 		{
 			if (listener != null)
 			{
@@ -83,7 +78,7 @@ public class MenuEntryProvider
 		//  Not much we can do about it unless there is a way to determine if a submenu is open or closed
 		if (isCursorOutsideMenu(menu) && lastSubmenuEntry1 != null && lastSubmenuEntry1.getSubMenu() != null && !isCursorOutsideMenu(lastSubmenuEntry1.getSubMenu()))
 		{
-			return processSubmenu(lastSubmenuEntry1.getSubMenu());
+			return getHoveredMenuEntry(lastSubmenuEntry1.getSubMenu());
 		}
 		// Outside of parent menu, not in a submenu
 		else if (isCursorOutsideMenu(menu))
@@ -104,21 +99,6 @@ public class MenuEntryProvider
 		{
 			lastSubmenuEntry = hoveredMenuEntry;
 		}
-
-		isInSubmenu = false;
-
-		return hoveredMenuEntry;
-	}
-
-	private MenuEntry processSubmenu(Menu submenu)
-	{
-		final MenuEntry hoveredMenuEntry = getHoveredMenuEntry(submenu);
-		if (hoveredMenuEntry == null)
-		{
-			return null;
-		}
-
-		isInSubmenu = true;
 
 		return hoveredMenuEntry;
 	}
@@ -144,24 +124,16 @@ public class MenuEntryProvider
 		return menu.getMenuX() > client.getMouseCanvasPosition().getX() || menu.getMenuX() + menu.getMenuWidth() < client.getMouseCanvasPosition().getX();
 	}
 
-	private boolean isEntryIgnored(com.github.ldavid432.contextualcursor.menuentry.MenuEntry entry, boolean isInSubmenu)
-	{
-		MenuTarget target = mapTarget(entry, isInSubmenu);
-		return plugin.getIgnoredTargets().getOrDefault(target, false);
-	}
-
-	private MenuTarget mapTarget(com.github.ldavid432.contextualcursor.menuentry.MenuEntry entry, boolean isInSubmenu)
+	private boolean isEntryIgnored(com.github.ldavid432.contextualcursor.menuentry.MenuEntry entry)
 	{
 		for (MenuTarget target : MenuTarget.VALUES)
 		{
-			if (target.getMatcher().matches(entry) ||
-				// isInSubmenu isn't available in the MenuEntryMatcher
-				(target == MenuTarget.ITEM && isInSubmenu && entry.getItemId() != null && entry.getItemId() > 0))
+			if (target.getMatcher().matches(entry))
 			{
-				return target;
+				return plugin.getIgnoredTargets().getOrDefault(target, false);
 			}
 		}
-		return MenuTarget.OTHER;
+		return false;
 	}
 
 }

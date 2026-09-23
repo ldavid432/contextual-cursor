@@ -13,10 +13,13 @@ import net.runelite.api.Player;
 @Value
 public class MenuEntry
 {
+	@Nullable
 	NPC npc;
 
+	@Nullable
 	Player player;
 
+	@Nullable
 	Integer itemId;
 
 	MenuAction type;
@@ -24,6 +27,9 @@ public class MenuEntry
 	String option;
 
 	String target;
+
+	@Nullable
+	MenuEntry parent;
 
 	public String getTarget()
 	{
@@ -51,16 +57,30 @@ public class MenuEntry
 	}
 
 	@Nullable
-	public static MenuEntry of(@Nullable net.runelite.api.MenuEntry entry)
+	public static MenuEntry of(@Nullable net.runelite.api.MenuEntry entry, @Nullable net.runelite.api.MenuEntry parent)
 	{
-		if (entry == null) return null;
+		if (entry == null)
+		{
+			return null;
+		}
+		return of(entry, MenuEntry.of(parent, (MenuEntry) null));
+	}
+
+	@Nullable
+	public static MenuEntry of(@Nullable net.runelite.api.MenuEntry entry, @Nullable MenuEntry parent)
+	{
+		if (entry == null)
+		{
+			return null;
+		}
 		return new MenuEntry(
 			entry.getNpc(),
 			entry.getPlayer(),
 			entry.getItemId() >= 0 ? entry.getItemId() : null,
 			entry.getType(),
 			entry.getOption(),
-			entry.getTarget()
+			entry.getTarget(),
+			parent
 		);
 	}
 }

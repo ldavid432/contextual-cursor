@@ -125,7 +125,7 @@ public class StateProvider implements ProviderCallbacks
 				() -> itemProvider.getItemSprite(menuEntry),
 				() -> spellProvider.getSpellSprite(menuEntry),
 				() -> widgetSprite,
-				() -> getContextualSprite(menuEntry, MenuEntry.of(menuEntryProvider.getLastSubmenuEntry()), menuEntryProvider.isInSubmenu())
+				() -> getContextualSprite(menuEntry)
 			)
 			.map(Supplier::get)
 			.filter(Objects::nonNull)
@@ -135,14 +135,14 @@ public class StateProvider implements ProviderCallbacks
 	}
 
 	@Nullable
-	private Sprite getContextualSprite(MenuEntry menuEntry, MenuEntry lastSubmenuEntry, boolean isSubMenu)
+	private Sprite getContextualSprite(MenuEntry menuEntry)
 	{
 		Sprite sprite = cursorProvider.getSprite(menuEntry);
 
 		// If we don't have a cursor for the submenu entry then use the parent cursor
-		if (sprite == null && isSubMenu && lastSubmenuEntry != null)
+		if (sprite == null && menuEntry.getParent() != null)
 		{
-			sprite = getContextualSprite(lastSubmenuEntry, null, false);
+			sprite = getContextualSprite(menuEntry.getParent());
 		}
 		else
 		{

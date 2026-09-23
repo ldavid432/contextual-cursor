@@ -4,6 +4,7 @@ import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.field.StringField;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
 import com.google.common.annotations.VisibleForTesting;
+import javax.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,11 +20,11 @@ public class SimpleStringMatcher implements MenuEntryMatcher
 	private StringField field;
 	@Getter(onMethod_ = @VisibleForTesting)
 	private StringPredicate predicate;
-	@Getter
+	@SuppressWarnings("unused")
 	private final String type = "string";
 
 	@Override
-	public boolean matches(MenuEntry menuEntry)
+	public boolean matches(@Nonnull MenuEntry menuEntry)
 	{
 		return predicate.apply(
 			field.apply(menuEntry),

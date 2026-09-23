@@ -4,6 +4,7 @@ import com.github.ldavid432.contextualcursor.menuentry.field.StringField;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher.Operator;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.ParentMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.StaticMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
@@ -37,6 +38,11 @@ public class MenuEntryMatchers
 			return matchers[0];
 		}
 		return new CompositeMatcher(Operator.AND, matchers);
+	}
+
+	public static MenuEntryMatcher parentMatches(MenuEntryMatcher matcher)
+	{
+		return new ParentMatcher(matcher);
 	}
 
 	// Menu options

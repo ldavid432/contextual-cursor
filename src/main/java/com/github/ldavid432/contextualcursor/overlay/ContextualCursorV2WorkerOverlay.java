@@ -86,7 +86,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 		}
 
 		String item = null;
-		if (entry.isItemOp() || entry.getItemId() > 0)
+		if (entry.isItemOp() || entry.getItemId() >= 0)
 		{
 			item = String.format("Item: isItemOp=%s, id=%s", entry.isItemOp(), entry.getItemId());
 		}

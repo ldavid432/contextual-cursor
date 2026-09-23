@@ -175,8 +175,8 @@ public class ContextualCursorDefinitionContentMatchTest
 	                                     NotMatcher enumMatcher,
 	                                     NotMatcher jsonMatcher)
 	{
-		MenuEntryMatcher enumParent = enumMatcher.getParent();
-		MenuEntryMatcher jsonParent = jsonMatcher.getParent();
+		MenuEntryMatcher enumParent = enumMatcher.getMatcher();
+		MenuEntryMatcher jsonParent = jsonMatcher.getMatcher();
 
 		assert enumParent != null && jsonParent != null :
 			String.format("[%d] %s: NotMatcher has null parent", index, cursorName);

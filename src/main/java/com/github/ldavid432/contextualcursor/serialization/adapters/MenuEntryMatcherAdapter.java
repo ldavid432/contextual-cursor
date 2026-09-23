@@ -3,6 +3,7 @@ package com.github.ldavid432.contextualcursor.serialization.adapters;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.CompositeMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.NotMatcher;
+import com.github.ldavid432.contextualcursor.menuentry.matchers.ParentMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.SimpleStringMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.matchers.StaticMatcher;
 import com.google.gson.JsonDeserializationContext;
@@ -56,6 +57,9 @@ public class MenuEntryMatcherAdapter implements JsonSerializer<MenuEntryMatcher>
 				break;
 			case "string":
 				matcher = context.deserialize(object, SimpleStringMatcher.class);
+				break;
+			case "parent":
+				matcher = context.deserialize(object, ParentMatcher.class);
 				break;
 		}
 
