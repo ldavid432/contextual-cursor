@@ -258,7 +258,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		}
 	}
 
-	// TODO: Show while hopping?
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
@@ -266,6 +265,11 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		{
 			case LOGGED_IN:
 				cache.setLoggedOut(false);
+				break;
+			case HOPPING:
+				cache.setLoggedOut(true);
+				nextState = stateProvider.defaultCursorState();
+				drawOverlayV2.render(null);
 				break;
 			case LOGIN_SCREEN:
 				cache.setLoggedOut(true);
