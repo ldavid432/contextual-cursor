@@ -118,7 +118,7 @@ public enum ContextualCursor implements Cursor
 	STATS(SpriteID.SideiconsInterface.STATS, "statistics", "stats", "view stats", "league-statistics", "lap-count"),
 	TALK("talk", "talk", "talk-to", "talk to", "command", optionStartsWith("tell-")),
 	TRAVEL("travel", "travel", "zanaris", "charter", "transport", "follow", "quick-travel", "fly",
-		"glider", optionStartsWith("gilder-to"),
+		"glider", "ferry", optionStartsWith("gilder-to"),
 		optionStartsWith("last-destination"), optionStartsWith("charter-to")),
 	UNCHARGE("uncharge", "uncharge", "unload"),
 	UNLOCK("unlock", "unlock",
