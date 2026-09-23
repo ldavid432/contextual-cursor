@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,6 @@ public class StateProvider implements ProviderCallbacks
 {
 	private final CursorProvider cursorProvider;
 	private final MenuEntryProvider menuEntryProvider;
-	private final SpriteProvider spriteProvider;
 	private final SelectedWidgetProvider selectedWidgetProvider;
 	private final ClientUI clientUI;
 	private final ContextualCursorCache cache;
@@ -125,13 +125,34 @@ public class StateProvider implements ProviderCallbacks
 				() -> itemProvider.getItemSprite(menuEntry),
 				() -> spellProvider.getSpellSprite(menuEntry),
 				() -> widgetSprite,
-				() -> spriteProvider.getSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu())
+				() -> getContextualSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu())
 			)
 			.map(Supplier::get)
 			.filter(Objects::nonNull)
 			.findFirst()
 			.map(this::contextualCursor)
 			.orElseGet(this::defaultCursorState);
+	}
+
+	@Nullable
+	private Sprite getContextualSprite(MenuEntry menuEntry, MenuEntry lastSubmenuEntry, boolean isSubMenu)
+	{
+		Sprite sprite = cursorProvider.getSprite(menuEntry);
+
+		// If we don't have a cursor for the submenu entry then use the parent cursor
+		if (sprite == null && isSubMenu && lastSubmenuEntry != null)
+		{
+			sprite = getContextualSprite(lastSubmenuEntry, null, false);
+		}
+		else
+		{
+			if (sprite == null && cache.getCursorBackgroundMode() == CursorBackgroundMode.FOR_ANY_ACTION)
+			{
+				sprite = cursorProvider.getDefaultCursor().getSprite();
+			}
+		}
+
+		return sprite;
 	}
 
 	// Reset cursor to a default cursor state, one of: no custom cursor, external custom cursor, our custom cursor, or our custom overlay
