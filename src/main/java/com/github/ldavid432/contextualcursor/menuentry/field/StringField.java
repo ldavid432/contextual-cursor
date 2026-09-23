@@ -4,7 +4,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import java.util.function.Function;
 import lombok.AllArgsConstructor;
 import lombok.experimental.Delegate;
-import net.runelite.api.MenuEntry;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @AllArgsConstructor
 public enum StringField

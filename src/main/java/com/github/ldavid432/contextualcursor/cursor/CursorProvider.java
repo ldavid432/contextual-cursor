@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import lombok.Setter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.MenuEntry;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @Slf4j
 @Singleton

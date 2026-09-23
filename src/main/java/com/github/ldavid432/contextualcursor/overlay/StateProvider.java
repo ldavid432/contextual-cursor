@@ -8,6 +8,7 @@ import com.github.ldavid432.contextualcursor.config.CursorBackgroundMode;
 import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -27,7 +28,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.MenuEntry;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.overlay.components.ImageComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
@@ -125,7 +125,7 @@ public class StateProvider implements ProviderCallbacks
 				() -> itemProvider.getItemSprite(menuEntry),
 				() -> spellProvider.getSpellSprite(menuEntry),
 				() -> widgetSprite,
-				() -> getContextualSprite(menuEntry, menuEntryProvider.getLastSubmenuEntry(), menuEntryProvider.isInSubmenu())
+				() -> getContextualSprite(menuEntry, MenuEntry.of(menuEntryProvider.getLastSubmenuEntry()), menuEntryProvider.isInSubmenu())
 			)
 			.map(Supplier::get)
 			.filter(Objects::nonNull)

@@ -31,7 +31,7 @@ public class MenuEntryProvider
 	@Nullable
 	private BiFunction<MenuEntry, Boolean, Void> listener = null;
 
-	public MenuEntry getMenuEntry()
+	public com.github.ldavid432.contextualcursor.menuentry.MenuEntry getMenuEntry()
 	{
 		final MenuEntry menuEntry;
 
@@ -54,13 +54,16 @@ public class MenuEntryProvider
 			menuEntry = menuEntries[last];
 		}
 
-		if (menuEntry != null && !isEntryIgnored(menuEntry, isInSubmenu))
+		final com.github.ldavid432.contextualcursor.menuentry.MenuEntry wrappedMenuEntry =
+			com.github.ldavid432.contextualcursor.menuentry.MenuEntry.of(menuEntry);
+
+		if (wrappedMenuEntry != null && !isEntryIgnored(wrappedMenuEntry, isInSubmenu))
 		{
 			if (listener != null)
 			{
 				listener.apply(menuEntry, false);
 			}
-			return menuEntry;
+			return wrappedMenuEntry;
 		}
 		else
 		{
@@ -141,19 +144,19 @@ public class MenuEntryProvider
 		return menu.getMenuX() > client.getMouseCanvasPosition().getX() || menu.getMenuX() + menu.getMenuWidth() < client.getMouseCanvasPosition().getX();
 	}
 
-	private boolean isEntryIgnored(MenuEntry entry, boolean isInSubmenu)
+	private boolean isEntryIgnored(com.github.ldavid432.contextualcursor.menuentry.MenuEntry entry, boolean isInSubmenu)
 	{
 		MenuTarget target = mapTarget(entry, isInSubmenu);
 		return plugin.getIgnoredTargets().getOrDefault(target, false);
 	}
 
-	private MenuTarget mapTarget(MenuEntry entry, boolean isInSubmenu)
+	private MenuTarget mapTarget(com.github.ldavid432.contextualcursor.menuentry.MenuEntry entry, boolean isInSubmenu)
 	{
 		for (MenuTarget target : MenuTarget.VALUES)
 		{
 			if (target.getMatcher().matches(entry) ||
 				// isInSubmenu isn't available in the MenuEntryMatcher
-				(target == MenuTarget.ITEM && isInSubmenu && entry.getItemId() > 0))
+				(target == MenuTarget.ITEM && isInSubmenu && entry.getItemId() != null && entry.getItemId() > 0))
 			{
 				return target;
 			}

@@ -65,6 +65,7 @@ public class ContextualCursorV2WorkerOverlay extends Overlay
 		return null;
 	}
 
+	// Intentionally using net.runelite.api.MenuEntry instead of our own
 	private void debugTooltip(boolean isIgnored, MenuEntry entry)
 	{
 		if (entry == null || !cache.isDebugTooltipEnabled())

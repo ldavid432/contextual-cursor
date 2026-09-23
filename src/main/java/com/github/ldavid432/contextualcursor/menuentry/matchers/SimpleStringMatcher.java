@@ -7,7 +7,7 @@ import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import net.runelite.api.MenuEntry;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @ToString
 @AllArgsConstructor

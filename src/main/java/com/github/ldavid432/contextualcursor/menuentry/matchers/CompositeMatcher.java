@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import net.runelite.api.MenuEntry;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @ToString
 @RequiredArgsConstructor

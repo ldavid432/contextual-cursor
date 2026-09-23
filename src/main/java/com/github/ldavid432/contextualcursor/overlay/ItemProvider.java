@@ -2,6 +2,7 @@ package com.github.ldavid432.contextualcursor.overlay;
 
 import com.github.ldavid432.contextualcursor.cursor.Cursor;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import javax.annotation.Nullable;
@@ -9,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.AllArgsConstructor;
 import net.runelite.api.Client;
-import net.runelite.api.MenuEntry;
 
 /**
  * Provides sprites for item interactions. Primarily the function of this class is to get triggered before SelectedWidgetProvider.
@@ -25,7 +25,7 @@ public class ItemProvider
 	@Nullable
 	public Sprite getItemSprite(@Nullable MenuEntry menuEntry)
 	{
-		if (menuEntry == null || !hasOption("use").matches(menuEntry) || getItemId(menuEntry) < 0)
+		if (menuEntry == null || !hasOption("use").matches(menuEntry) || getItemId(menuEntry) != null)
 		{
 			return null;
 		}
@@ -41,9 +41,9 @@ public class ItemProvider
 		return null;
 	}
 
-	private int getItemId(MenuEntry menuEntry)
+	private Integer getItemId(MenuEntry menuEntry)
 	{
-		if (menuEntry != null && menuEntry.getItemId() >= 0)
+		if (menuEntry != null && menuEntry.getItemId() != null)
 		{
 			return menuEntry.getItemId();
 		}
@@ -53,7 +53,7 @@ public class ItemProvider
 		}
 		else
 		{
-			return -1;
+			return null;
 		}
 	}
 }

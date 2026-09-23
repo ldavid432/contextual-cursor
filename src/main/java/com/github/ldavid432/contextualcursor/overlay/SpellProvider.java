@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.overlay;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
 import io.hydrox.contextualcursor.SpellSprite;
@@ -9,7 +10,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.AllArgsConstructor;
-import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
 
 @Singleton

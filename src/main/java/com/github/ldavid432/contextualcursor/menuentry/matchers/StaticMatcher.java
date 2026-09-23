@@ -1,15 +1,13 @@
 package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
-import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTarget;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.menuActionIsAnyOf;
 import lombok.AllArgsConstructor;
 import lombok.experimental.Delegate;
 import net.runelite.api.MenuAction;
-import net.runelite.api.MenuEntry;
 
 /**
  * Matchers that take no parameters, these will always be static. We can optimize serialization by making these an enum
@@ -33,12 +31,10 @@ public enum StaticMatcher implements MenuEntryMatcher
 	IS_MOVEMENT(MenuAction.WALK, MenuAction.SET_HEADING),
 	IS_INTERFACE(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY),
 	IS_CANCEL(MenuAction.CANCEL),
-	IS_SPELL(hasAllOf(isWidgetTarget(), hasOption("cast", "resurrect", "reanimate"))),
-	IS_ITEM(MenuEntry::isItemOp),
-	HAS_ITEM_ID(entry -> entry.getItemId() > 0),
-	IS_INTERFACE_ITEM(hasAnyOf(IS_ITEM, hasAllOf(HAS_ITEM_ID, hasOption("use", "examine")))),
-	IS_NPC(e -> e.getNpc() != null),
-	IS_PLAYER(e -> e.getPlayer() != null),
+	IS_SPELL(hasAllOf(IS_WIDGET_TARGET, hasOption("cast", "resurrect", "reanimate"))),
+	IS_INTERFACE_ITEM(MenuEntry::isTargetItem),
+	IS_NPC(MenuEntry::isTargetNpc),
+	IS_PLAYER(MenuEntry::isTargetPlayer),
 	;
 
 	StaticMatcher(MenuAction... actions)
