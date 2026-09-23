@@ -41,6 +41,7 @@ import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.isWidgetTargetOption;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.not;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.optionStartsWith;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.parentMatches;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetContains;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetEndsWith;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.targetNamed;
@@ -144,11 +145,14 @@ public enum ContextualCursor implements Cursor
 	WIND(SpriteID.IconSailingFacilities24x24._7, "release-mote",
 		hasAllOf(hasOption("harvest"), targetNamed("crystal extractor"))),
 
-	// PoH altar spellbooks
+	// Spellbook swapping
 	ANCIENT_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ANCIENT_MAGICKS, "ancient"),
 	ARCEUUS_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_ARCEUUS, "arceuus"),
-	// TODO: Magic cape spellbook swap
-	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC, hasAllOf(hasOption("standard"), hasAnyOf(targetEndsWith("altar"), targetStartsWith("altar")))), // Avoid DKs lair
+	// Avoid DKs lair, target POH altars and magic/max capes
+	STANDARD_SPELLBOOK(SpriteID.SideiconsInterface.MAGIC,
+		hasAllOf(hasOption("standard"),
+			hasAnyOf(targetEndsWith("altar"), targetStartsWith("altar"), parentMatches(
+				hasAnyOf(targetStartsWith("magic cape"), targetNamed("max cape")))))),
 	LUNAR_SPELLBOOK(SpriteID.SideiconsInterface.SPELLBOOK_LUNAR, "lunar"),
 
 	// Skills
