@@ -55,7 +55,7 @@ public class ContextualCursorCache implements ProviderCallbacks
 		isDebugTooltipEnabled = config.isDebugTooltipEnabled();
 		cursorTheme = config.getCursorTheme();
 		cursorBackgroundMode = config.getCursorBackgroundMode();
-		isCustomCursorPluginEnabled = configManager.getConfiguration("runelite", "customcursorplugin", Boolean.class);
+		isCustomCursorPluginEnabled = configManager.getConfiguration("runelite", "customcursorplugin", Boolean.class) == Boolean.TRUE;
 		isLoggedOut = client.getGameState() != GameState.LOGGED_IN;
 		isCursorInBounds = mouseInsideBounds(client.getMouseCanvasPosition(), client);
 		altPressed = false;
