@@ -25,7 +25,7 @@ public class ItemProvider
 	@Nullable
 	public Sprite getItemSprite(@Nullable MenuEntry menuEntry)
 	{
-		if (menuEntry == null || !hasOption("use").matches(menuEntry) || getItemId(menuEntry) != null)
+		if (menuEntry == null || !hasOption("use").matches(menuEntry) || getItemId(menuEntry) == null)
 		{
 			return null;
 		}
