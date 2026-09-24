@@ -10,7 +10,7 @@ import net.runelite.api.Player;
 /**
  * Wraps net.runelite.api.MenuEntry so we can add our own logic
  */
-@Value
+@Value(staticConstructor = "of")
 public class MenuEntry
 {
 	@Nullable
@@ -21,6 +21,8 @@ public class MenuEntry
 
 	@Nullable
 	Integer itemId;
+
+	boolean isItemOp;
 
 	MenuAction type;
 
@@ -73,10 +75,11 @@ public class MenuEntry
 		{
 			return null;
 		}
-		return new MenuEntry(
+		return of(
 			entry.getNpc(),
 			entry.getPlayer(),
 			entry.getItemId() >= 0 ? entry.getItemId() : null,
+			entry.isItemOp(),
 			entry.getType(),
 			entry.getOption(),
 			entry.getTarget(),

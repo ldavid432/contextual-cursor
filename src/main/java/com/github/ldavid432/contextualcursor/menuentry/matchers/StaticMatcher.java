@@ -32,7 +32,7 @@ public enum StaticMatcher implements MenuEntryMatcher
 	IS_INTERFACE(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY),
 	IS_CANCEL(MenuAction.CANCEL),
 	IS_SPELL(hasAllOf(IS_WIDGET_TARGET, hasOption("cast", "resurrect", "reanimate"))),
-	IS_INTERFACE_ITEM(MenuEntry::isTargetItem),
+	IS_INTERFACE_ITEM(e -> e.isItemOp() || (e.isTargetItem() && e.getParent() != null)),
 	IS_NPC(MenuEntry::isTargetNpc),
 	IS_PLAYER(MenuEntry::isTargetPlayer),
 	;
