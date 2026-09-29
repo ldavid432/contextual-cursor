@@ -1,10 +1,10 @@
 package com.github.ldavid432.contextualcursor.menuentry.field;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.sanitize;
 import java.util.function.Function;
 import lombok.AllArgsConstructor;
 import lombok.experimental.Delegate;
-import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @AllArgsConstructor
 public enum StringField

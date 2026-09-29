@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.cursor;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
@@ -7,7 +8,6 @@ import javax.inject.Singleton;
 import lombok.Setter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @Slf4j
 @Singleton

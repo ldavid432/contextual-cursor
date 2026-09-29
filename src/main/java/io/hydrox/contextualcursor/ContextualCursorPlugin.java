@@ -81,7 +81,6 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -104,9 +103,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 	@Inject
 	private KeyManager keyManager;
-
-	@Inject
-	private MouseManager mouseManager;
 
 	@Inject
 	private ContextualCursorConfig config;

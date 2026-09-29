@@ -1,5 +1,6 @@
 package com.github.ldavid432.contextualcursor.menuentry.matchers;
 
+import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import com.github.ldavid432.contextualcursor.menuentry.field.StringField;
 import com.github.ldavid432.contextualcursor.menuentry.predicates.StringPredicate;
@@ -8,7 +9,6 @@ import javax.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 
 @ToString
 @AllArgsConstructor
