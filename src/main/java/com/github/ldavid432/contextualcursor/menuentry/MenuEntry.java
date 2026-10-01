@@ -58,6 +58,11 @@ public class MenuEntry
 		return itemId != null;
 	}
 
+	public boolean isSubmenuEntry()
+	{
+		return parent != null;
+	}
+
 	@Nullable
 	public static MenuEntry of(@Nullable net.runelite.api.MenuEntry entry, @Nullable net.runelite.api.MenuEntry parent)
 	{

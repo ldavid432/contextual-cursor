@@ -3,6 +3,7 @@ package com.github.ldavid432.contextualcursor.menuentry.matchers;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatcher;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAllOf;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasAnyOf;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.menuActionIsAnyOf;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,10 @@ public enum StaticMatcher implements MenuEntryMatcher
 	IS_INTERFACE(MenuAction.CC_OP, MenuAction.CC_OP_LOW_PRIORITY),
 	IS_CANCEL(MenuAction.CANCEL),
 	IS_SPELL(hasAllOf(IS_WIDGET_TARGET, hasOption("cast", "resurrect", "reanimate"))),
-	IS_INTERFACE_ITEM(e -> e.isItemOp() || (e.isTargetItem() && e.getParent() != null)),
+	IS_ITEM_OP(MenuEntry::isItemOp),
+	IS_SPECIAL_ITEM_OP(hasAllOf(MenuEntry::isTargetItem, hasOption("use", "examine"))),
+	IS_SUBMENU_ITEM(hasAllOf(MenuEntry::isTargetItem, MenuEntry::isSubmenuEntry)),
+	IS_INTERFACE_ITEM(hasAnyOf(IS_ITEM_OP, IS_SPECIAL_ITEM_OP, IS_SUBMENU_ITEM)),
 	IS_NPC(MenuEntry::isTargetNpc),
 	IS_PLAYER(MenuEntry::isTargetPlayer),
 	;
