@@ -40,7 +40,6 @@ import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.SCALE_SMOOTHING;
 import static com.github.ldavid432.contextualcursor.ContextualCursorConfig.USE_ITEM_CURSOR;
 import com.github.ldavid432.contextualcursor.ContextualCursorState;
-import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.DRAG_KEYBIND_KEY;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.buildGson;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.handleChangelog;
 import static com.github.ldavid432.contextualcursor.ContextualCursorUtil.loadLocalCursorDefinition;
@@ -75,7 +74,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.config.Keybind;
 import net.runelite.client.config.RuneLiteConfig;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -151,17 +149,13 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
 
-	private Keybind dragKeyBind = Keybind.ALT;
+	private RuneLiteConfig runeLiteConfig;
 
 	protected void startUp()
 	{
-		cache.init();
+		runeLiteConfig = configManager.getConfig(RuneLiteConfig.class);
 
-		dragKeyBind = configManager.getConfiguration(RuneLiteConfig.GROUP_NAME, DRAG_KEYBIND_KEY, Keybind.class);
-		if (dragKeyBind == null)
-		{
-			dragKeyBind = Keybind.ALT;
-		}
+		cache.init();
 
 		contextualCursorGson = buildGson(runeliteGson);
 
@@ -269,10 +263,11 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		}
 	}
 
+	// TODO: Switch to HotkeyListener ?
 	@Override
 	public void keyPressed(KeyEvent keyEvent)
 	{
-		if (dragKeyBind.matches(keyEvent))
+		if (runeLiteConfig.dragHotkey().matches(keyEvent))
 		{
 			cache.setDragPressed(true);
 		}
@@ -281,7 +276,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent keyEvent)
 	{
-		if (dragKeyBind.matches(keyEvent))
+		if (runeLiteConfig.dragHotkey().matches(keyEvent))
 		{
 			cache.setDragPressed(false);
 		}
@@ -359,27 +354,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 					stateProvider.setLastExternalCustomCursor(null);
 				}
 			});
-		}
-		else if (RuneLiteConfig.GROUP_NAME.equals(event.getGroup()) && DRAG_KEYBIND_KEY.equals(event.getKey()))
-		{
-			if (event.getNewValue() != null)
-			{
-				try
-				{
-					String[] splitStr = event.getNewValue().split(":");
-					int code = Integer.parseInt(splitStr[0]);
-					int mods = Integer.parseInt(splitStr[1]);
-					dragKeyBind = new Keybind(code, mods);
-				}
-				catch (Exception ignored)
-				{
-					dragKeyBind = Keybind.ALT;
-				}
-			}
-			else
-			{
-				dragKeyBind = Keybind.ALT;
-			}
 		}
 	}
 
