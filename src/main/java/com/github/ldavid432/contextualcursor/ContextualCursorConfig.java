@@ -56,7 +56,7 @@ public interface ContextualCursorConfig extends Config
 		name = "Background",
 		description = "Set when to show the contextual background frame<br>" +
 			"Never: Always keep the default cursor shown, contextual sprites will float next to it<br>" +
-			"For contextual actions: Show the background behinds contextual sprites only (same as RS2)<br>" +
+			"For contextual actions: Show the background behinds contextual sprites only<br>" +
 			"For any action: Show the background on all <strong>non-ignored</strong> actions, even non-contextual actions<br>" +
 			"Previously, 'For any action' was the default",
 		position = 1,

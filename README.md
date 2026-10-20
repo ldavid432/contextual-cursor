@@ -20,33 +20,33 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 
 ### Configuration
 
-- Ignores - Disables the contextual cursor from appear on certain targets
+- Ignores - Disables the contextual cursor from appearing on certain targets
     - NPCs, Objects, Ground Items, Inventory Items and/or Spells
 - Scale - Scale up or down the size of the contextual cursor
     - While scaling is supported, the quality of scaled cursors is not guaranteed. Whole numbers work best to preserve
       the quality
-        - The scaling of the default cursor is also limited unless `Use overlay for default cursor` is turned on
+        - The scaling of the default cursor is also limited by your operating system unless `Use overlay for default cursor` is turned on
     - There is also a smooth scaling option which may help for non-whole numbers
     - Item sprites also have a separate scale and smooth scaling configuration since they're a bit awkward at full size
-- Theme - Styles the contextual cursor frame/background
-    - RuneScape 2 (default)
-    - OldSchool (custom sprites provided by [Mark7625](https://github.com/Mark7625) that match the osrs UI)
-- Default cursor <img src="src/main/resources/io/hydrox/contextualcursor/cursors/generic.png">
+- Theme - Styles the contextual cursor frame/background, and default cursor (if enabled)
+    - RuneScape 2 <img src="src/main/resources/io/hydrox/contextualcursor/cursors/blank.png"> <img src="src/main/resources/io/hydrox/contextualcursor/cursors/generic.png"> - default
+    - OldSchool <img src="src/main/resources/io/hydrox/contextualcursor/cursors/blank_osrs.png"> <img src="src/main/resources/io/hydrox/contextualcursor/cursors/generic_osrs.png"> - custom sprites provided by [Mark7625](https://github.com/Mark7625) that match the osrs UI
+- Default cursor
     - Override the default mouse cursor (if custom cursor plugin is OFF) to match your theme
     - Use overlay for default cursor - replaces the default cursor with a RuneLite overlay
         - The main benefits of this are: Better scaling (size isn't limited by the OS) and improved color support for
           AMD GPUs on Windows (AMD GPUs on Windows **significantly** whitewash the default cursor colors)
         - The only real drawback is that the overlay is slightly slower than the actual cursor speed, so it will lag
           behind slightly. **Typically, this is not noticeable.**
-        - Also note: The overlay cursor will not be visible on the RL side panel or when you are logged out (will
-          default to system cursor).
+        - Also note: The overlay cursor will not be visible on the RL side panel, when you are logged out, or while hopping worlds (will default to system cursor).
 - Misc
-    - Hide background - hides the contextual cursor background, so you'll see your regular mouse cursor plus a floating
-      sprite on hover
+    - Cursor background mode 
+      - Never - hides the contextual cursor background, so you'll see your regular mouse cursor plus a floating sprite on hover
+      - For contextual - If the hovered menu entry has an associated sprite it will show the background - this is the default
+      - For any action - Show the background over any non-ignored hovered menu entry. The sprite will be the default cursor if no sprite is associated.
     - Use Item - shows an item in the cursor when using two items on each other
     - Persist Items - When an item is selected for use always show the cursor (even if you aren't hovering another item)
-    - Persist Spells - When a spell is selected for manual cast always show the cursor (even if you aren't hovering a
-      target)
+    - Persist Spells - When a spell is selected for manual cast always show the cursor (even if you aren't hovering a target)
 
 ### More Screenshots
 
@@ -70,3 +70,5 @@ Special interaction cursor:
       for the not open submenu
     * If you pass over a menu entry that opens a submenu and then proceed to the one next to it (closing the menu), then
       moving your cursor slightly out of the menu (without closing it) you may see the submenu icon pop up
+* If you set `cursor background mode` to `Never` but don't enable `Use overlay for default cursor` then the cursor sprite will lag behind the cursor
+  * This is the same lag that is present with `Use overlay for default cursor`, just more noticeable
