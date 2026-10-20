@@ -4,6 +4,20 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 
 ![Install Count](https://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/installs/plugin/contextual-cursor) ![Install Count](https://img.shields.io/endpoint?url=https://api.runelite.net/pluginhub/shields/rank/plugin/contextual-cursor)
 
+<img src="docs/eat.png">
+
+<img src="docs/equip.png">
+
+<img src="docs/drink.png">
+
+<img src="docs/spell.png">
+
+<br>
+
+<img src="docs/fill.png">
+
+<img src="docs/empty.png">
+
 ### Configuration
 
 - Ignores - Disables the contextual cursor from appear on certain targets
@@ -17,7 +31,7 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
 - Theme - Styles the contextual cursor frame/background
     - RuneScape 2 (default)
     - OldSchool (custom sprites provided by [Mark7625](https://github.com/Mark7625) that match the osrs UI)
-- Default cursor
+- Default cursor <img src="src/main/resources/io/hydrox/contextualcursor/cursors/generic.png">
     - Override the default mouse cursor (if custom cursor plugin is OFF) to match your theme
     - Use overlay for default cursor - replaces the default cursor with a RuneLite overlay
         - The main benefits of this are: Better scaling (size isn't limited by the OS) and improved color support for
@@ -33,6 +47,16 @@ Remember how RSHD had a custom mouse cursor when you hovered over stuff? Well it
     - Persist Items - When an item is selected for use always show the cursor (even if you aren't hovering another item)
     - Persist Spells - When a spell is selected for manual cast always show the cursor (even if you aren't hovering a
       target)
+
+### More Screenshots
+
+Item cursor:
+
+<img src="docs/item.png">
+
+Special interaction cursor:
+
+<img src="docs/special.png">
 
 ### Known issues:
 
