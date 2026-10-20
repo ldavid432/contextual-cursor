@@ -9,9 +9,11 @@ import com.github.ldavid432.contextualcursor.config.CursorTheme;
 import com.github.ldavid432.contextualcursor.cursor.CursorProvider;
 import com.github.ldavid432.contextualcursor.cursor.OffsetCursor;
 import com.github.ldavid432.contextualcursor.menuentry.MenuEntry;
+import static com.github.ldavid432.contextualcursor.menuentry.MenuEntryMatchers.hasOption;
 import com.github.ldavid432.contextualcursor.provider.EmptyProviderCallbacks;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.github.ldavid432.contextualcursor.sprite.Sprite;
+import io.hydrox.contextualcursor.SpellSprite;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -43,7 +45,6 @@ public class StateProvider implements ProviderCallbacks
 	private final ClientUI clientUI;
 	private final ContextualCursorCache cache;
 	private final ItemProvider itemProvider;
-	private final SpellProvider spellProvider;
 
 	private Tooltip contextualCursorSpacerTooltip;
 	private Tooltip defaultCursorSpacerTooltip;
@@ -123,7 +124,7 @@ public class StateProvider implements ProviderCallbacks
 		// Lazily find the first non-null Sprite
 		return Stream.<Supplier<Sprite>>of(
 				() -> itemProvider.getItemSprite(menuEntry),
-				() -> spellProvider.getSpellSprite(menuEntry),
+				() -> getSpellSprite(menuEntry),
 				() -> widgetSprite,
 				() -> getContextualSprite(menuEntry)
 			)
@@ -153,6 +154,23 @@ public class StateProvider implements ProviderCallbacks
 		}
 
 		return sprite;
+	}
+
+	@Nullable
+	public Sprite getSpellSprite(@Nullable MenuEntry menuEntry)
+	{
+		if (menuEntry == null || !hasOption("cast", "resurrect", "reanimate").matches(menuEntry))
+		{
+			return null;
+		}
+
+		final SpellSprite spell = SpellSprite.get(menuEntry.getTarget().toLowerCase().replaceAll(" -> .*", ""));
+		if (spell == null)
+		{
+			return null;
+		}
+
+		return spell.getSprite();
 	}
 
 	// Reset cursor to a default cursor state, one of: no custom cursor, external custom cursor, our custom cursor, or our custom overlay
