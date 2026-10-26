@@ -55,7 +55,6 @@ import com.github.ldavid432.contextualcursor.overlay.StateProvider;
 import com.github.ldavid432.contextualcursor.provider.ProviderCallbacks;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,11 +76,11 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.RuneLiteConfig;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.HotkeyListener;
 
 @PluginDescriptor(
 	name = "Contextual Cursor",
@@ -89,7 +88,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 	tags = {"cursor", "rs3", "rs2", "rshd", "context", "theme", "hover"}
 )
 @Slf4j
-public class ContextualCursorPlugin extends Plugin implements KeyListener
+public class ContextualCursorPlugin extends Plugin
 {
 	@Inject
 	private ContextualCursorV2DrawOverlay drawOverlayV2;
@@ -149,12 +148,10 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 	@Getter
 	private final Map<MenuTarget, Boolean> ignoredTargets = new HashMap<>();
 
-	private RuneLiteConfig runeLiteConfig;
+	private HotkeyListener hotkeyListener;
 
 	protected void startUp()
 	{
-		runeLiteConfig = configManager.getConfig(RuneLiteConfig.class);
-
 		cache.init();
 
 		contextualCursorGson = buildGson(runeliteGson);
@@ -165,7 +162,23 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 
 		overlayManager.add(workerOverlayV2);
 		overlayManager.add(drawOverlayV2);
-		keyManager.registerKeyListener(this);
+
+		RuneLiteConfig runeLiteConfig = configManager.getConfig(RuneLiteConfig.class);
+		hotkeyListener = new HotkeyListener(runeLiteConfig::dragHotkey)
+		{
+			@Override
+			public void hotkeyPressed()
+			{
+				cache.setDragPressed(true);
+			}
+
+			@Override
+			public void hotkeyReleased()
+			{
+				cache.setDragPressed(false);
+			}
+		};
+		keyManager.registerKeyListener(hotkeyListener);
 
 		// Provide initial values to all subscribers
 		callbacks.add(cursorProvider);
@@ -222,7 +235,7 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 		overlayManager.remove(workerOverlayV2);
 		overlayManager.remove(drawOverlayV2);
 
-		keyManager.unregisterKeyListener(this);
+		keyManager.unregisterKeyListener(hotkeyListener);
 
 		previousState = null;
 		currentState = null;
@@ -261,31 +274,6 @@ public class ContextualCursorPlugin extends Plugin implements KeyListener
 			default:
 				break;
 		}
-	}
-
-	// TODO: Switch to HotkeyListener ?
-	@Override
-	public void keyPressed(KeyEvent keyEvent)
-	{
-		if (runeLiteConfig.dragHotkey().matches(keyEvent))
-		{
-			cache.setDragPressed(true);
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent keyEvent)
-	{
-		if (runeLiteConfig.dragHotkey().matches(keyEvent))
-		{
-			cache.setDragPressed(false);
-		}
-	}
-
-	@Override
-	public void keyTyped(KeyEvent keyEvent)
-	{
-
 	}
 
 	@Provides
